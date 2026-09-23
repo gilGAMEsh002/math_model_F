@@ -1,0 +1,2 @@
+real_attachments/** -text
+*.jsonl.xz filter=lfs diff=lfs merge=lfs -text

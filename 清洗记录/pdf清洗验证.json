@@ -1,0 +1,104 @@
+{
+  "source": "数据说明.pdf",
+  "output": "数据说明_干净版.pdf",
+  "source_sha256": "f5c851bbe4b3d8c9079609c37f2c3b0835244067711d6d761c66adeaa8357835",
+  "output_sha256": "300b18342d107bbe5dfc8e5167e74f4bc4002451f4cd91440042163846d98a4e",
+  "pages": 13,
+  "removed_blocks": 96,
+  "rule": "isolated q/BT...ET/Q block, 5pt font, RGB=(0.988,0.988,0.988)",
+  "pypdf_version": "6.19.0",
+  "pymupdf_version": "1.28.2",
+  "checks": [
+    {
+      "page": 1,
+      "removed_blocks": 0,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 0,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 2,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 13264,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 3,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12332,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 4,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12482,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 5,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12620,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 6,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 13264,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 7,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12332,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 8,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12482,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 9,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12620,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 10,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 13264,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 11,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12332,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 12,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12482,
+      "changes_confined_to_removed_text": true
+    },
+    {
+      "page": 13,
+      "removed_blocks": 8,
+      "visible_text_and_positions_unchanged": true,
+      "changed_pixels_at_72dpi": 12620,
+      "changes_confined_to_removed_text": true
+    }
+  ]
+}
