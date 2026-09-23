@@ -1,0 +1,18 @@
+﻿mixture_domain,quality_domain,mapping_type,note,n,q_equal,q_entropy,q_resolved,conflict_rate,mapped,mixture_col
+arxiv,arxiv,direct,配方域名与质量信号域名一致,17523.0,0.6198105310482823,0.4682781431107432,0.5508864227164122,0.5238828967642527,True,train_the_pile_arxiv
+github,github,direct,配方域名与质量信号域名一致,203752.0,0.5392320705191772,0.3589240375823751,0.49145729148452905,0.020309003101810042,True,train_the_pile_github
+stackexchange,stackexchange,direct,配方域名与质量信号域名一致,10000.0,0.6535113601752659,0.48716201015913013,0.60413013527202,0.0035,True,train_the_pile_stackexchange
+wikipedia_en,wikipedia,near_direct,名称略有差异，语义对应,10000.0,0.6124107352384236,0.4004865595095231,0.5470245928631126,0.0933,True,train_the_pile_wikipedia_en
+gutenberg_pg_19,book,near_direct,书籍类文本，可参考 book 域质量信号,171.0,0.5324885235712373,0.3527948026574569,0.47529581119233993,0.2982456140350877,True,train_the_pile_gutenberg_pg_19
+pile_cc,commoncrawl,near_direct,网页抓取类文本，可参考 commoncrawl 域质量信号,9640.0,0.6188671120821864,0.3977643487398037,0.5589267335359777,0.12033195020746888,True,train_the_pile_pile_cc
+dm_mathematics,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_dm_mathematics
+freelaw,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_freelaw
+nih_exporter,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_nih_exporter
+pubmed_central,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_pubmed_central
+philpapers,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_philpapers
+enron_emails,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_enron_emails
+ubuntu_irc,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_ubuntu_irc
+europarl,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_europarl
+hackernews,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_hackernews
+pubmed_abstracts,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_pubmed_abstracts
+uspto_backgrounds,,inferred,无同名质量域，需自行建立关联,,,,,,False,train_the_pile_uspto_backgrounds

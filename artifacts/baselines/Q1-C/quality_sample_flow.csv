@@ -1,0 +1,2 @@
+﻿A1_rows,A2_rows,A3_rows,concat_rows,merged_rows,dropped_duplicates,overlap_A1_A2_arxiv,overlap_A1_A3_github,overlap_A2_A3,merged_by_domain
+51230,17523,203752,272505,261086,11419,1419,10000,0,"{'arxiv': 17523, 'book': 171, 'c4': 10000, 'commoncrawl': 9640, 'github': 203752, 'stackexchange': 10000, 'wikipedia': 10000}"

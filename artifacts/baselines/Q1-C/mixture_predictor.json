@@ -1,0 +1,312 @@
+{
+  "baseline_id": "Q1-C",
+  "input_columns": [
+    "train_the_pile_arxiv",
+    "train_the_pile_freelaw",
+    "train_the_pile_nih_exporter",
+    "train_the_pile_pubmed_central",
+    "train_the_pile_wikipedia_en",
+    "train_the_pile_dm_mathematics",
+    "train_the_pile_github",
+    "train_the_pile_philpapers",
+    "train_the_pile_stackexchange",
+    "train_the_pile_enron_emails",
+    "train_the_pile_gutenberg_pg_19",
+    "train_the_pile_pile_cc",
+    "train_the_pile_ubuntu_irc",
+    "train_the_pile_europarl",
+    "train_the_pile_hackernews",
+    "train_the_pile_pubmed_abstracts",
+    "train_the_pile_uspto_backgrounds"
+  ],
+  "input_units": "行归一化后的训练域配比，非负且和为 1",
+  "n_inputs": 17,
+  "output_columns": [
+    "metric/the_pile_arxiv_val_loss",
+    "metric/the_pile_freelaw_val_loss",
+    "metric/the_pile_pubmed_central_val_loss",
+    "metric/the_pile_wikipedia_en_val_loss",
+    "metric/the_pile_dm_mathematics_val_loss",
+    "metric/the_pile_github_val_loss",
+    "metric/the_pile_stackexchange_val_loss",
+    "metric/the_pile_gutenberg_pg_19_val_loss",
+    "metric/the_pile_pile_cc_val_loss",
+    "metric/the_pile_ubuntu_irc_val_loss",
+    "metric/the_pile_hackernews_val_loss",
+    "metric/the_pile_pubmed_abstracts_val_loss",
+    "metric/the_pile_uspto_backgrounds_val_loss"
+  ],
+  "output_short_names": [
+    "arxiv",
+    "freelaw",
+    "pubmed_central",
+    "wikipedia_en",
+    "dm_mathematics",
+    "github",
+    "stackexchange",
+    "gutenberg_pg_19",
+    "pile_cc",
+    "ubuntu_irc",
+    "hackernews",
+    "pubmed_abstracts",
+    "uspto_backgrounds"
+  ],
+  "output_units": "验证交叉熵 Loss（越低越好）",
+  "n_outputs": 13,
+  "target_weights_v": [
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693
+  ],
+  "target_weights_note": "baseline 令 v 等权，且不随 p 改变（§1.4）",
+  "p0_reference_mixture_mean": [
+    0.11302252583269279,
+    0.0968248321520278,
+    0.00588968021709595,
+    0.11375419105058357,
+    0.07507775607983627,
+    0.0254628540970504,
+    0.11070066007050916,
+    0.005487697351193036,
+    0.09943242344413017,
+    0.002211033043406226,
+    0.04691494424753537,
+    0.11948759779188561,
+    0.019599998284005892,
+    0.012737064754031531,
+    0.011650822378108678,
+    0.06618116611257162,
+    0.07556475309333588
+  ],
+  "training_support": {
+    "train_the_pile_arxiv": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.006003003003003002,
+      "p95": 0.6054450054450052,
+      "max": 0.903096903096903,
+      "mean": 0.11302252583269279,
+      "frac_zero": 0.365234375
+    },
+    "train_the_pile_freelaw": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.004997502497502497,
+      "p95": 0.5724499999999999,
+      "max": 0.993,
+      "mean": 0.0968248321520278,
+      "frac_zero": 0.37109375
+    },
+    "train_the_pile_nih_exporter": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.0,
+      "p95": 0.035035035035035036,
+      "max": 0.058,
+      "mean": 0.00588968021709595,
+      "frac_zero": 0.580078125
+    },
+    "train_the_pile_pubmed_central": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.011988011988011986,
+      "p95": 0.6185604395604395,
+      "max": 0.999,
+      "mean": 0.11375419105058357,
+      "frac_zero": 0.3046875
+    },
+    "train_the_pile_wikipedia_en": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.002003005009017033,
+      "p95": 0.4377026473526473,
+      "max": 0.7087087087087087,
+      "mean": 0.07507775607983627,
+      "frac_zero": 0.404296875
+    },
+    "train_the_pile_dm_mathematics": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.001,
+      "p95": 0.1502376002376002,
+      "max": 0.2352352352352352,
+      "mean": 0.0254628540970504,
+      "frac_zero": 0.47265625
+    },
+    "train_the_pile_github": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.006,
+      "p95": 0.654104104104104,
+      "max": 0.991,
+      "mean": 0.11070066007050916,
+      "frac_zero": 0.369140625
+    },
+    "train_the_pile_philpapers": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.0,
+      "p95": 0.03403403403403403,
+      "max": 0.055055055055055056,
+      "mean": 0.005487697351193036,
+      "frac_zero": 0.59765625
+    },
+    "train_the_pile_stackexchange": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.005,
+      "p95": 0.49689999999999995,
+      "max": 0.998,
+      "mean": 0.09943242344413017,
+      "frac_zero": 0.380859375
+    },
+    "train_the_pile_enron_emails": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.0,
+      "p95": 0.014985014985014986,
+      "max": 0.026026026026026026,
+      "mean": 0.002211033043406226,
+      "frac_zero": 0.6875
+    },
+    "train_the_pile_gutenberg_pg_19": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.001999000999000999,
+      "p95": 0.24563103792415167,
+      "max": 0.4044044044044044,
+      "mean": 0.04691494424753537,
+      "frac_zero": 0.447265625
+    },
+    "train_the_pile_pile_cc": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.010994505494505492,
+      "p95": 0.6557078057078055,
+      "max": 0.995,
+      "mean": 0.11948759779188561,
+      "frac_zero": 0.306640625
+    },
+    "train_the_pile_ubuntu_irc": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.000999000999000999,
+      "p95": 0.11764560439560434,
+      "max": 0.176,
+      "mean": 0.019599998284005892,
+      "frac_zero": 0.4921875
+    },
+    "train_the_pile_europarl": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.0,
+      "p95": 0.07138532934131735,
+      "max": 0.11711711711711714,
+      "mean": 0.012737064754031531,
+      "frac_zero": 0.515625
+    },
+    "train_the_pile_hackernews": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.0,
+      "p95": 0.0818626873126873,
+      "max": 0.12012012012012012,
+      "mean": 0.011650822378108678,
+      "frac_zero": 0.525390625
+    },
+    "train_the_pile_pubmed_abstracts": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.002002002002002002,
+      "p95": 0.41334999999999994,
+      "max": 0.5754245754245755,
+      "mean": 0.06618116611257162,
+      "frac_zero": 0.4453125
+    },
+    "train_the_pile_uspto_backgrounds": {
+      "min": 0.0,
+      "p05": 0.0,
+      "p50": 0.002997002997002997,
+      "p95": 0.3832199398797595,
+      "max": 0.6793587174348698,
+      "mean": 0.07556475309333588,
+      "frac_zero": 0.40625
+    }
+  },
+  "row_normalization": "p_i := p_i / Σ_j p_j；A4 原始行和 0.996-1.003",
+  "selected_model": {
+    "overall_best": {
+      "kind": "forest",
+      "label": "rf_n600_d12_l1_f1.0",
+      "cv_mean_target_rmse": 0.3871620189446571,
+      "cv_composite_rmse": 0.15538620982757276
+    },
+    "ridge": {
+      "alpha": 0.01
+    },
+    "forest": {
+      "n_estimators": 600,
+      "max_depth": 12,
+      "min_samples_leaf": 1,
+      "max_features": 1.0,
+      "n_jobs": -1
+    },
+    "selection": "A4/A5 内部 5 折 CV，准则 mean_target_rmse；线性与森林分别取各自最优，避免最优超参被另一支覆盖"
+  },
+  "quality_feature": {
+    "definition": "Q(p) = Σ_i p_i q_i，q_i 为训练域对应的质量域质量分",
+    "modes": [
+      "none",
+      "equal",
+      "entropy"
+    ],
+    "primary_unmapped_policy": "exclude",
+    "caveat": "§1.5(7) Q(p) 与完整线性配比变量存在确定关系，不能把两类系数都解释为独立效应"
+  },
+  "frozen_entropy_weights": {
+    "fineweb_edu": 0.018195957378117023,
+    "fluency_en": 0.03540467999897463,
+    "ad_en": 0.011509522611918163,
+    "qurater": 0.013797696604990665,
+    "modernbert_cleanliness": 0.0454487659623483,
+    "modernbert_readability": 0.018400346979125678,
+    "modernbert_reasoning": 0.07759174776396512,
+    "modernbert_professionalism": 0.11844841955336387,
+    "dsir_books": 0.005053571352067379,
+    "dsir_math": 0.004373382451448148,
+    "dsir_wiki": 0.004768566851013404,
+    "rps_doc_word_count": 0.059303952708688525,
+    "rps_doc_num_sentences": 0.06639085922206632,
+    "rps_doc_unigram_entropy": 0.00671729931701675,
+    "rps_doc_frac_unique_words": 0.018589085955183035,
+    "rps_doc_frac_no_alph_words": 0.009842217815161359,
+    "rps_doc_frac_chars_top_2gram": 0.00020110895325454024,
+    "rps_doc_frac_chars_top_3gram": 8.937489827731087e-05,
+    "rps_doc_mean_word_length": 0.06153626828514882,
+    "rps_lines_uppercase_letter_fraction": 0.09630940337110515,
+    "rps_lines_numerical_chars_fraction": 0.27087613378100617,
+    "rps_lines_ending_with_terminal_punctution_mark": 0.05715163818575967
+  },
+  "extrapolation_flags": {
+    "final_test": [
+      "same_scale_1m",
+      "cross_scale_60m",
+      "cross_scale_1B"
+    ],
+    "diagnostic_only": [
+      "est_10b",
+      "est_70b"
+    ],
+    "warning": "森林不作为远距离尺度外推公式；10B/70B 仅为估算表一致性诊断"
+  }
+}
