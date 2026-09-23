@@ -1,0 +1,6 @@
+set,common_n,y_true_max_abs_diff,same_candidates,note
+1m,256,0.0,True,y_true 一致即同一候选集与同一真实 Loss
+60m,256,0.0,True,y_true 一致即同一候选集与同一真实 Loss
+1B,64,0.0,True,y_true 一致即同一候选集与同一真实 Loss
+est_10b,63,0.0,True,y_true 一致即同一候选集与同一真实 Loss
+est_70b,63,0.0,True,y_true 一致即同一候选集与同一真实 Loss

@@ -1,0 +1,60 @@
+diff --git a/research/src/common.py b/research/src/common.py
+index 3bdfe4e..a1a6988 100644
+--- a/research/src/common.py
++++ b/research/src/common.py
+@@ -147,7 +147,24 @@ class Run:
+         (self.dir / "metrics.json").write_text(
+             json.dumps(self.metrics, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+ 
++    def _snapshot_source(self):
++        """Persist the actual research source/config of this run (recoverable), plus git patch."""
++        import tarfile
++        snap = self.dir / "source_snapshot.tar.gz"
++        with tarfile.open(snap, "w:gz") as tf:
++            for rel in ("src", "configs", "protocol.yaml", "requirements.txt"):
++                p = RESEARCH / rel
++                if p.exists():
++                    tf.add(p, arcname=f"research/{rel}")
++        # actual patch since the branch base, so the run's code can be restored
++        patch = subprocess.run(["git", "-C", str(RESEARCH.parent), "diff"],
++                               capture_output=True, text=True).stdout
++        (self.dir / "research.patch").write_text(patch, encoding="utf-8")
++        self.meta["source_snapshot"] = str(snap.relative_to(self.dir))
++        self.meta["patch_bytes"] = len(patch)
++
+     def __enter__(self):
++        self._snapshot_source()
+         return self
+ 
+     def __exit__(self, exc_type, exc, tb):
+diff --git a/research/src/entry.py b/research/src/entry.py
+index d2c3e77..5e1b058 100644
+--- a/research/src/entry.py
++++ b/research/src/entry.py
+@@ -79,7 +79,25 @@ def cmd_check(args):
+ 
+ def cmd_experiment(args):
+     # Path A: run the built-in lightweight acceptance suite.
+-    if args.name == "acceptance":
++    name = args.name
++    # Path C: reproducible three-line comparison (R1).
++    if name == "r1":
++        from .r1_compare import run_r1
++        with Run("r1", command=" ".join(sys.argv)) as run:
++            res = run_r1(run.dir)
++            run.set_metrics(res["summary"])
++            # also drop the summary into reports/ for the paper
++            (RESEARCH / "reports" / "r1_summary.json").write_text(
++                json.dumps(res["summary"], ensure_ascii=False, indent=2), encoding="utf-8")
++            for f in ("r1_q1_metrics.csv", "r1_q1_perdomain.csv", "r1_q1_set_identity.csv",
++                      "r1_q3_degenerate.csv", "r1_q1_comparison.png"):
++                src = run.dir / f
++                if src.exists():
++                    (RESEARCH / "reports" / f).write_bytes(src.read_bytes())
++            run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
++        return
++
++    if name == "acceptance":
+         from .checks import run_acceptance, summarize
+         with Run("acceptance", command=" ".join(sys.argv)) as run:
+             checks = run_acceptance()

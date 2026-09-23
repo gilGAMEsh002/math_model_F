@@ -7,3 +7,4 @@ __pycache__/
 runs/**/*.parquet
 runs/**/*.png
 cfg.local.yaml
+work/

@@ -147,7 +147,24 @@ class Run:
         (self.dir / "metrics.json").write_text(
             json.dumps(self.metrics, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
 
+    def _snapshot_source(self):
+        """Persist the actual research source/config of this run (recoverable), plus git patch."""
+        import tarfile
+        snap = self.dir / "source_snapshot.tar.gz"
+        with tarfile.open(snap, "w:gz") as tf:
+            for rel in ("src", "configs", "protocol.yaml", "requirements.txt"):
+                p = RESEARCH / rel
+                if p.exists():
+                    tf.add(p, arcname=f"research/{rel}")
+        # actual patch since the branch base, so the run's code can be restored
+        patch = subprocess.run(["git", "-C", str(RESEARCH.parent), "diff"],
+                               capture_output=True, text=True).stdout
+        (self.dir / "research.patch").write_text(patch, encoding="utf-8")
+        self.meta["source_snapshot"] = str(snap.relative_to(self.dir))
+        self.meta["patch_bytes"] = len(patch)
+
     def __enter__(self):
+        self._snapshot_source()
         return self
 
     def __exit__(self, exc_type, exc, tb):

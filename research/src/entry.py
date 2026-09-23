@@ -79,7 +79,25 @@ def cmd_check(args):
 
 def cmd_experiment(args):
     # Path A: run the built-in lightweight acceptance suite.
-    if args.name == "acceptance":
+    name = args.name
+    # Path C: reproducible three-line comparison (R1).
+    if name == "r1":
+        from .r1_compare import run_r1
+        with Run("r1", command=" ".join(sys.argv)) as run:
+            res = run_r1(run.dir)
+            run.set_metrics(res["summary"])
+            # also drop the summary into reports/ for the paper
+            (RESEARCH / "reports" / "r1_summary.json").write_text(
+                json.dumps(res["summary"], ensure_ascii=False, indent=2), encoding="utf-8")
+            for f in ("r1_q1_metrics.csv", "r1_q1_perdomain.csv", "r1_q1_set_identity.csv",
+                      "r1_q3_degenerate.csv", "r1_q1_comparison.png"):
+                src = run.dir / f
+                if src.exists():
+                    (RESEARCH / "reports" / f).write_bytes(src.read_bytes())
+            run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
+        return
+
+    if name == "acceptance":
         from .checks import run_acceptance, summarize
         with Run("acceptance", command=" ".join(sys.argv)) as run:
             checks = run_acceptance()
@@ -133,11 +151,38 @@ def cmd_line(args):
             run.log("dry run: not executed (status recorded as planned, NOT a result)")
             run.set_metrics({"executed": False})
             return
-        proc = subprocess.run(cmd, cwd=str(wt), capture_output=True, text=True)
+        # Requirement: never write into the reference worktree. Use an independent
+        # execution copy under research/work/ (git-ignored), with the canonical
+        # read-only real_attachments symlinked in; capture outputs into the run dir.
+        import os
+        import shutil
+        exec_root = RESEARCH / "work" / f"exec-{line}-{run.run_id}"
+        if exec_root.exists():
+            shutil.rmtree(exec_root)
+        shutil.copytree(wt, exec_root,
+                        ignore=shutil.ignore_patterns("real_attachments", ".git", "*.jsonl.xz",
+                                                      "__pycache__", ".venv", "work"))
+        ra = Path(lock["canonical_data"]["real_attachments"])
+        link = exec_root / "real_attachments"
+        try:
+            if ra.exists() and not link.exists():
+                os.symlink(ra, link)
+                run.log(f"linked canonical data (read-only): {ra} -> {link}")
+        except OSError as exc:
+            run.log(f"[warn] could not symlink real_attachments: {exc}")
+        run.log(f"execution copy (reference worktree untouched): {exec_root}")
+        run.set_metrics({"exec_root": str(exec_root)})
+        proc = subprocess.run(cmd, cwd=str(exec_root), capture_output=True, text=True)
         (run.dir / "stdout.txt").write_text(proc.stdout, encoding="utf-8")
         (run.dir / "stderr.txt").write_text(proc.stderr, encoding="utf-8")
+        # copy produced outputs back into the run record
+        outdir = run.dir / "exec_out"
+        for sub in ("artifacts", "results", "reports", "figures"):
+            s = exec_root / sub
+            if s.exists():
+                shutil.copytree(s, outdir / sub, dirs_exist_ok=True)
         run.set_metrics({"executed": True, "returncode": proc.returncode})
-        run.log(f"returncode={proc.returncode}")
+        run.log(f"returncode={proc.returncode}; outputs copied to {outdir}")
         if proc.returncode != 0:
             raise RuntimeError(f"line command failed rc={proc.returncode}")
 

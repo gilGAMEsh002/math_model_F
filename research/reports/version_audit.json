@@ -1,0 +1,94 @@
+{
+  "generated_utc": "2026-09-23T17:02:44Z",
+  "lines": {
+    "A": {
+      "locked_commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932",
+      "head": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932",
+      "head_matches_lock": true,
+      "questions": {
+        "q1": {
+          "run_metadata": "artifacts/baselines/Q1-A/run_metadata.json",
+          "config_hash": "2b87a4144998613f4b1abbb616a4404324d68b73f45bb39f8fb8bba4d98119dd",
+          "input_hashes_present": true,
+          "status": "consistent"
+        },
+        "q2": {
+          "run_metadata": "artifacts/baselines/Q2-A/run_metadata.json",
+          "config_hash": "057bd6256e29ab4b2abb14c585fb2d35f695051a4e8a0ea49740e3e7b79efe2b",
+          "input_hashes_present": true,
+          "status": "consistent"
+        },
+        "q3": {
+          "run_metadata": "artifacts/baselines/Q3-A/run_metadata.json",
+          "config_hash": "661cf35eb42f3f1173f4631b1f8617f4561fd24c97b9a103568a76e473fbfc24",
+          "input_hashes_present": false,
+          "status": "consistent"
+        }
+      }
+    },
+    "B": {
+      "locked_commit": "e498b2c6979a154c15a385a9a315827ef801a169",
+      "head": "e498b2c6979a154c15a385a9a315827ef801a169",
+      "head_matches_lock": true,
+      "questions": {
+        "q1": {
+          "run_metadata": "artifacts/baselines/Q1-A/run_metadata.json",
+          "config_hash": null,
+          "input_hashes_present": false,
+          "status": "no_metadata"
+        },
+        "q2": {
+          "run_metadata": "artifacts/baselines/Q2-A/run_metadata.json",
+          "config_hash": null,
+          "input_hashes_present": false,
+          "status": "no_metadata"
+        },
+        "q3": {
+          "run_metadata": "artifacts/baselines/Q3-A/run_metadata.json",
+          "config_hash": null,
+          "input_hashes_present": false,
+          "status": "consistent",
+          "fix_marker_in_code": true,
+          "results_scale_corrected": true,
+          "note": "B 无 source_hash 元数据；以代码标记 + 结果量级判定（非哈希级证据）"
+        },
+        "q4": {
+          "status": "not_audited_this_round"
+        }
+      }
+    },
+    "C": {
+      "locked_commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378",
+      "head": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378",
+      "head_matches_lock": true,
+      "questions": {
+        "q1": {
+          "run_metadata": "artifacts/baselines/Q1-C/run_metadata.json",
+          "source_dir": "src/baselines/Q1-C",
+          "has_source_hash": false,
+          "recorded_source_hash": null,
+          "recorded_config_hash": "d15692258d17cbb2",
+          "status": "no_source_hash_in_metadata"
+        },
+        "q2": {
+          "run_metadata": "artifacts/baselines/Q2-C/run_metadata.json",
+          "source_dir": "src/baselines/Q2-C",
+          "has_source_hash": false,
+          "recorded_source_hash": null,
+          "recorded_config_hash": "28498c305babc5da",
+          "status": "no_source_hash_in_metadata"
+        },
+        "q3": {
+          "run_metadata": "artifacts/baselines/Q3-C/run_metadata.json",
+          "source_dir": "src/baselines/Q3-C",
+          "has_source_hash": true,
+          "recorded_source_hash": "074f04bd49cc32c7",
+          "recorded_config_hash": "e9bf4f675e3b8003",
+          "status": "consistent",
+          "current_source_hash": "074f04bd49cc32c7",
+          "source_hash_match": true
+        }
+      }
+    }
+  }
+}

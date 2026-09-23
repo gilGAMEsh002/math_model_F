@@ -1,0 +1,188 @@
+diff --git a/research/.gitignore b/research/.gitignore
+index 2fba37e..6ac3546 100644
+--- a/research/.gitignore
++++ b/research/.gitignore
+@@ -7,3 +7,4 @@ __pycache__/
+ runs/**/*.parquet
+ runs/**/*.png
+ cfg.local.yaml
++work/
+diff --git a/research/configs/r1_three_line.yaml b/research/configs/r1_three_line.yaml
+index 526b9c8..db715e7 100644
+--- a/research/configs/r1_three_line.yaml
++++ b/research/configs/r1_three_line.yaml
+@@ -1,8 +1,8 @@
+ # R1（本阶段不执行）：修复后三线的统一口径比较
+ id: R1
+ name: unified_three_line_comparison
+-status: declared
+-run: false            # 本轮仅登记计划；置 true 前需先实现 src/r1_compare.py
++status: completed
++run: true             # 已实现 src/r1_compare.py，入口 experiment --name r1
+ inputs:
+   lines: [A, B, C]
+   frozen_commits:
+@@ -16,8 +16,13 @@ caliber:
+   q2: "B1 主拟合 + B6/B7 质量；B8 单独标注不可池化"
+   q3: "同一成本模型 eta=2e-4、同一预算/上下文情景；C 主表限可信区域内"
+ outputs:
+-  - reports/r1_three_line_comparison.md
+-  - reports/r1_three_line_metrics.csv
++  - reports/R1_三线比较.md
++  - reports/r1_q1_metrics.csv
++  - reports/r1_q1_perdomain.csv
++  - reports/r1_q1_set_identity.csv
++  - reports/r1_q3_degenerate.csv
++  - reports/r1_q1_comparison.png
++completed_run_id: 20260923T170427Z_r1_2979055
+ caveats:
+   - "三条线 Q 坐标不同；跨线 Q 数值不可直接排名"
+   - "10B/70B 为估算/外推，仅诊断"
+diff --git a/research/decisions.md b/research/decisions.md
+index 3172483..eb57003 100644
+--- a/research/decisions.md
++++ b/research/decisions.md
+@@ -26,6 +26,25 @@
+ 4. κ/ρ 未通过可辨识性判定，只能作情景参数。
+ 5. 三条线 Q 坐标不同，跨线比较需固定上游或登记映射假设。
+ 
+-## 3. 选择判据（预先声明，R3 使用）
++## 3. R1 结果（run `20260923T170427Z_r1_2979055`，报告 `reports/R1_三线比较.md`）
++
++- 复用判定：A 全部复用；B-Q3 复用（标记+量级）；C-Q3 复用（source_hash 哈希一致）；C-Q1/Q2 复用（无 source_hash，路径配置变更）。**无需为 R1 重跑 B/C。**
++- Layer B（共同经典模型、κ=0、h=1、C=1e22、ℓ=4096）：A/B/C 最优解一致到 **1.4e-7**（N*≈4.8688B，L≈2.1475）→ 单位/求解器自洽。
++- Layer A（同一候选集，y_true 跨线差=0）：1M 上 C≫B>A（RMSE .117/.199/.228；Spearman .923/.701/.625）；1B 上 B 的 top-1 后悔值 0.333（随机期望仅 0.114，劣于随机）；10B/70B 三线 Spearman 全负且选同一候选。
++- 核心矛盾：**排序质量不跨尺度迁移，后悔值不随 Spearman 单调。**
++
++## 4. 选择判据（预先声明，R2/R3 使用）
++
+ - 若两候选在最小辨别实验下差异落在噪声/情景区间内，则记为**不可区分**，选择更简单、可解释者。
+ - 允许“无增益/无结构转移/不可辨识”作为结论。
++- 已用于挑方法的最终检验集不再称盲测；新增选择只能放训练内部。
++
++## 5. R2 具体任务（本轮登记，未执行）
++
++- **R2a（候选甲）**：固定上游与候选池，在 60M 与 1B 上分别只用 (i) 经典项 (ii) 经典+质量通道 (iii) 经典+配比通道，报告 top-1/top-5 后悔值与随机期望之差及分组 bootstrap 区间。
++  - 入口：`configs/r2a_channels.yaml`；负责人待定；验收：支持/否定条件写入本文件。
++- **R2b（候选乙）**：在同一质量样本与同一预处理下重算 A 与 C 的质量机制（B 需先 `git lfs pull` 获取重建数据），比较质量项符号、幅度与 CI。
++  - 入口：`configs/r2b_quality.yaml`；验收：符号一致且 CI 不含 0 方可保留质量通道。
++- **前置补强**：完成 C 的 Q1 可执行预测器（`R1-Cq1pred`，进行中）；补 Q2 分层比较（`R1-Q2`，planned）。
++- R2 完成后：更新本文件，明确主线候选是否通过辨别实验；未通过者不得写成结论。
++
+diff --git a/research/experiments.csv b/research/experiments.csv
+index 11eff3b..c486829 100644
+--- a/research/experiments.csv
++++ b/research/experiments.csv
+@@ -1,6 +1,8 @@
+ exp_id,name,line,question,kind,status,executed,run_id,planned_command,result_path,notes
+ E0-A,acceptance_light_checks,ALL,ALL,interface_check,done_with_blockers,true,20260923T165441Z_acceptance_2974389,python -m src.entry experiment --name acceptance,reports/acceptance_20260923T165441Z_acceptance_2974389.md,14 项检查：12 pass / 0 fail / 1 blocked / 1 n/a；blocked=C Q1 森林预测器未持久化可执行对象
+-R1,unified_three_line_comparison,A|B|C,Q1-Q3,fixed_upstream_comparison,planned,false,20260923T165516Z_plan_R1_2974663,python -m src.entry experiment --config configs/r1_three_line.yaml,runs/,本轮仅登记计划（config run:false）；实现 src/r1_compare.py 后方可执行
+-R2a,storyline_candidate_a_effective_data,A|B|C,Q2-Q3,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2a_*.yaml,runs/,主线候选甲的最小辨别实验
+-R2b,storyline_candidate_b_source_reconciliation,A|B|C,Q1-Q2,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2b_*.yaml,runs/,主线候选乙的最小辨别实验
++R1,unified_three_line_comparison,A|B|C,Q1-Q3,fixed_upstream_comparison,completed,true,20260923T170427Z_r1_2979055,python -m src.entry experiment --config configs/r1_three_line.yaml,reports/R1_三线比较.md,"Layer A Q1（同候选集, 15 行）+ Layer B Q3 退化对照；见 reports/，每个数字可追溯到 run_id"
+ R3,new_method_ablation_and_storyline_lock,A|B|C,ALL,method_development,pending,false,,python -m src.entry experiment --config configs/r3_*.yaml,runs/,新方法/消融与主线选择记录；更新完整大纲
++R1-Q2,q2_stratified_comparison,A|B|C,Q2,fixed_upstream_comparison,planned,false,,python -m src.entry experiment --config configs/r1_q2.yaml,reports/r1_q2_*.csv,按 真实/半合成/插值/估算 × 经典/质量/来源偏移/配比 分层；未执行
++R1-Cq1pred,c_q1_executable_predictor_rebuild,C,Q1,interface_repair,running,false,,python -m src.c_q1_rebuild,artifacts/c_q1_predictor/,用固定代码/超参/种子重建 C 森林预测器；objectives: equivalent=true 或 说明差异
++R2a,channel_regret_discrimination,A|B|C,Q2-Q3,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2a_channels.yaml,reports/r2a_*.csv,候选甲辨别：经典/质量/配比 三通道 regret vs 随机期望
++R2b,quality_coordinate_reconciliation,A|C,Q1-Q2,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2b_quality.yaml,reports/r2b_*.csv,候选乙辨别：同一质量样本/预处理下比较质量项符号与 CI（B 需先 lfs pull）
+diff --git a/research/src/common.py b/research/src/common.py
+index 3bdfe4e..a1a6988 100644
+--- a/research/src/common.py
++++ b/research/src/common.py
+@@ -147,7 +147,24 @@ class Run:
+         (self.dir / "metrics.json").write_text(
+             json.dumps(self.metrics, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+ 
++    def _snapshot_source(self):
++        """Persist the actual research source/config of this run (recoverable), plus git patch."""
++        import tarfile
++        snap = self.dir / "source_snapshot.tar.gz"
++        with tarfile.open(snap, "w:gz") as tf:
++            for rel in ("src", "configs", "protocol.yaml", "requirements.txt"):
++                p = RESEARCH / rel
++                if p.exists():
++                    tf.add(p, arcname=f"research/{rel}")
++        # actual patch since the branch base, so the run's code can be restored
++        patch = subprocess.run(["git", "-C", str(RESEARCH.parent), "diff"],
++                               capture_output=True, text=True).stdout
++        (self.dir / "research.patch").write_text(patch, encoding="utf-8")
++        self.meta["source_snapshot"] = str(snap.relative_to(self.dir))
++        self.meta["patch_bytes"] = len(patch)
++
+     def __enter__(self):
++        self._snapshot_source()
+         return self
+ 
+     def __exit__(self, exc_type, exc, tb):
+diff --git a/research/src/entry.py b/research/src/entry.py
+index d2c3e77..2d91b8d 100644
+--- a/research/src/entry.py
++++ b/research/src/entry.py
+@@ -79,7 +79,25 @@ def cmd_check(args):
+ 
+ def cmd_experiment(args):
+     # Path A: run the built-in lightweight acceptance suite.
+-    if args.name == "acceptance":
++    name = args.name
++    # Path C: reproducible three-line comparison (R1).
++    if name == "r1":
++        from .r1_compare import run_r1
++        with Run("r1", command=" ".join(sys.argv)) as run:
++            res = run_r1(run.dir)
++            run.set_metrics(res["summary"])
++            # also drop the summary into reports/ for the paper
++            (RESEARCH / "reports" / "r1_summary.json").write_text(
++                json.dumps(res["summary"], ensure_ascii=False, indent=2), encoding="utf-8")
++            for f in ("r1_q1_metrics.csv", "r1_q1_perdomain.csv", "r1_q1_set_identity.csv",
++                      "r1_q3_degenerate.csv", "r1_q1_comparison.png"):
++                src = run.dir / f
++                if src.exists():
++                    (RESEARCH / "reports" / f).write_bytes(src.read_bytes())
++            run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
++        return
++
++    if name == "acceptance":
+         from .checks import run_acceptance, summarize
+         with Run("acceptance", command=" ".join(sys.argv)) as run:
+             checks = run_acceptance()
+@@ -133,11 +151,38 @@ def cmd_line(args):
+             run.log("dry run: not executed (status recorded as planned, NOT a result)")
+             run.set_metrics({"executed": False})
+             return
+-        proc = subprocess.run(cmd, cwd=str(wt), capture_output=True, text=True)
++        # Requirement: never write into the reference worktree. Use an independent
++        # execution copy under research/work/ (git-ignored), with the canonical
++        # read-only real_attachments symlinked in; capture outputs into the run dir.
++        import os
++        import shutil
++        exec_root = RESEARCH / "work" / f"exec-{line}-{run.run_id}"
++        if exec_root.exists():
++            shutil.rmtree(exec_root)
++        shutil.copytree(wt, exec_root,
++                        ignore=shutil.ignore_patterns("real_attachments", ".git", "*.jsonl.xz",
++                                                      "__pycache__", ".venv", "work"))
++        ra = Path(lock["canonical_data"]["real_attachments"])
++        link = exec_root / "real_attachments"
++        try:
++            if ra.exists() and not link.exists():
++                os.symlink(ra, link)
++                run.log(f"linked canonical data (read-only): {ra} -> {link}")
++        except OSError as exc:
++            run.log(f"[warn] could not symlink real_attachments: {exc}")
++        run.log(f"execution copy (reference worktree untouched): {exec_root}")
++        run.set_metrics({"exec_root": str(exec_root)})
++        proc = subprocess.run(cmd, cwd=str(exec_root), capture_output=True, text=True)
+         (run.dir / "stdout.txt").write_text(proc.stdout, encoding="utf-8")
+         (run.dir / "stderr.txt").write_text(proc.stderr, encoding="utf-8")
++        # copy produced outputs back into the run record
++        outdir = run.dir / "exec_out"
++        for sub in ("artifacts", "results", "reports", "figures"):
++            s = exec_root / sub
++            if s.exists():
++                shutil.copytree(s, outdir / sub, dirs_exist_ok=True)
+         run.set_metrics({"executed": True, "returncode": proc.returncode})
+-        run.log(f"returncode={proc.returncode}")
++        run.log(f"returncode={proc.returncode}; outputs copied to {outdir}")
+         if proc.returncode != 0:
+             raise RuntimeError(f"line command failed rc={proc.returncode}")
+ 

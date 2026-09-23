@@ -1,8 +1,8 @@
 # R1（本阶段不执行）：修复后三线的统一口径比较
 id: R1
 name: unified_three_line_comparison
-status: declared
-run: false            # 本轮仅登记计划；置 true 前需先实现 src/r1_compare.py
+status: completed
+run: true             # 已实现 src/r1_compare.py，入口 experiment --name r1
 inputs:
   lines: [A, B, C]
   frozen_commits:
@@ -16,8 +16,13 @@ caliber:
   q2: "B1 主拟合 + B6/B7 质量；B8 单独标注不可池化"
   q3: "同一成本模型 eta=2e-4、同一预算/上下文情景；C 主表限可信区域内"
 outputs:
-  - reports/r1_three_line_comparison.md
-  - reports/r1_three_line_metrics.csv
+  - reports/R1_三线比较.md
+  - reports/r1_q1_metrics.csv
+  - reports/r1_q1_perdomain.csv
+  - reports/r1_q1_set_identity.csv
+  - reports/r1_q3_degenerate.csv
+  - reports/r1_q1_comparison.png
+completed_run_id: 20260923T170427Z_r1_2979055
 caveats:
   - "三条线 Q 坐标不同；跨线 Q 数值不可直接排名"
   - "10B/70B 为估算/外推，仅诊断"
