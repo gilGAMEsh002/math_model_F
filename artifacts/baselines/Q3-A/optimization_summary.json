@@ -20,6 +20,7 @@
   },
   "n_scenarios": 15,
   "max_rel_diff_L_numeric_vs_analytic": 2.151757976766678e-16,
+  "max_rel_diff_N_numeric_vs_analytic": 1.3324843172952698e-07,
   "n_extrapolated": 7,
   "n_boundary": 0,
   "cost_forms_inactive": true

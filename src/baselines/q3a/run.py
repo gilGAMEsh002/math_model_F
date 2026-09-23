@@ -71,12 +71,15 @@ def solve_one(C_flops, ell, theta, gamma, Q0, cfg):
     sup = cfg["data_support"]
     mask = (Ns >= sup["N_B"][0]) & (Ns <= sup["N_B"][1]) & (Ds >= sup["D_B"][0]) & (Ds <= sup["D_B"][1])
     if mask.any():
-        j = int(np.where(mask)[0][np.argmin(Ls[mask])])
+        k = int(np.argmin(Ls[mask]))
+        j = int(np.where(mask)[0][k])
         N_sup, D_sup, L_sup = float(Ns[j]), float(Ds[j]), float(Ls[j])
-        sup_boundary = bool(j in (0, mask.sum() - 1))
+        sup_boundary = bool(k in (0, int(mask.sum()) - 1))
+        sup_feasible = True
     else:
         N_sup = D_sup = L_sup = float("nan")
-        sup_boundary = True
+        sup_boundary = False
+        sup_feasible = False
 
     def flag(N, D):
         return {"N_in_support": bool(sup["N_B"][0] <= N <= sup["N_B"][1]),
@@ -90,6 +93,7 @@ def solve_one(C_flops, ell, theta, gamma, Q0, cfg):
         "rel_diff_N": abs(N_num - N_ana) / (abs(N_ana) + 1e-30),
         "N_support_B": N_sup, "D_support_B": D_sup, "L_support": L_sup,
         "support_optimum_at_boundary": sup_boundary,
+        "support_optimum_feasible": sup_feasible,
         "N_near_search_boundary": bool(i in (0, n_grid - 1)),
     }
     n_actual, d_actual = N_num * 1e9, D_num * 1e9
@@ -174,6 +178,7 @@ def main():
         "theta_units": lp["units"],
         "n_scenarios": len(rows),
         "max_rel_diff_L_numeric_vs_analytic": float(scen["rel_diff_L"].max()),
+        "max_rel_diff_N_numeric_vs_analytic": float(scen["rel_diff_N"].max()),
         "n_extrapolated": int(scen["extrapolation"].sum()),
         "n_boundary": int(scen["N_near_search_boundary"].sum()),
         "cost_forms_inactive": True,

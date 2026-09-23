@@ -35,6 +35,7 @@ def fit_classical(n, d, y, n_starts=40, seed=0, max_nfev=20000):
     y = np.asarray(y, dtype=float)
     rng = np.random.default_rng(seed)
     best = None
+    failed = 0
     starts = [np.array([min(y), -2.0, 0.1, -2.0, 0.1])]
     for _ in range(n_starts):
         starts.append(np.array([
@@ -47,6 +48,7 @@ def fit_classical(n, d, y, n_starts=40, seed=0, max_nfev=20000):
             res = least_squares(_residuals, x0, args=(n, d, y), bounds=(BOUNDS_LOWER, BOUNDS_UPPER),
                                 method="trf", max_nfev=max_nfev)
         except Exception:
+            failed += 1
             continue
         cost = float(np.sum(res.fun ** 2))
         if best is None or cost < best[0]:
@@ -66,7 +68,7 @@ def fit_classical(n, d, y, n_starts=40, seed=0, max_nfev=20000):
         "E": float(theta[0]), "A": float(np.exp(theta[1])), "alpha": float(theta[2]),
         "B": float(np.exp(theta[3])), "beta": float(theta[4]),
         "cost": cost, "rmse": rmse, "n_points": int(len(y)),
-        "n_starts_used": len(starts), "at_bound": at_bound,
+        "n_starts_used": len(starts), "n_starts_failed": failed, "at_bound": at_bound,
     }
 
 

@@ -21,6 +21,7 @@
     "rmse": 0.0001464960899258885,
     "n_points": 1176,
     "n_starts_used": 41,
+    "n_starts_failed": 0,
     "at_bound": [
       false,
       false,

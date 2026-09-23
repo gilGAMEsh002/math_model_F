@@ -39,7 +39,26 @@
     0.06618116611257162,
     0.07556475309333588
   ],
-  "f_p0_eval_loss": 5.3239020523968765,
+  "p0_order": [
+    "arxiv",
+    "freelaw",
+    "nih_exporter",
+    "pubmed_central",
+    "wikipedia_en",
+    "dm_mathematics",
+    "github",
+    "philpapers",
+    "stackexchange",
+    "enron_emails",
+    "gutenberg_pg_19",
+    "pile_cc",
+    "ubuntu_irc",
+    "europarl",
+    "hackernews",
+    "pubmed_abstracts",
+    "uspto_backgrounds"
+  ],
+  "f_p0_eval_loss": 5.3446567761711785,
   "q1_predictor_path": "artifacts/baselines/Q1-A/mixture_predictor.json",
   "supported_range": {
     "N_B": [

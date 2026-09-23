@@ -109,6 +109,7 @@ def main():
         return d.dropna(subset=["N_params_B", "D_tokens_B", "Q_score", "val_loss"])
 
     gamma_results = {}
+    support = {"N_B": [0.070542, 11.965825], "D_B": [0.134, 299.893]}
     for tag in [cfg["fit"]["quality_main"], cfg["fit"]["quality_alt"], cfg["fit"]["quality_large"]]:
         d = load_quality(tag)
         for allow_int in cfg["fit"]["gamma_allow_intercept_scenarios"]:
@@ -116,16 +117,26 @@ def main():
                             theta, allow_intercept=allow_int)
             base = predict_l0(theta, d["N_params_B"], d["D_tokens_B"])
             without = _eval(d["val_loss"].values, base)
+            resid = d["val_loss"].values - base
+            in_sup = ((d["N_params_B"].between(*support["N_B"])) &
+                      (d["D_tokens_B"].between(*support["D_B"]))).values
+            corr_all = float(np.corrcoef(resid, 1 - d["Q_score"])[0, 1]) if len(d) > 2 else None
+            corr_in = float(np.corrcoef(resid[in_sup], 1 - d["Q_score"][in_sup])[0, 1]) \
+                if in_sup.sum() > 2 else None
             res.update({"set": tag, "allow_intercept": allow_int, "without_quality": without,
                         "Q_range": [float(d["Q_score"].min()), float(d["Q_score"].max())],
                         "N_range_B": [float(d["N_params_B"].min()), float(d["N_params_B"].max())],
-                        "D_range_B": [float(d["D_tokens_B"].min()), float(d["D_tokens_B"].max())]})
+                        "D_range_B": [float(d["D_tokens_B"].min()), float(d["D_tokens_B"].max())],
+                        "residual_corr_1_minus_Q_all": corr_all,
+                        "residual_corr_1_minus_Q_in_B1_support": corr_in,
+                        "n_in_B1_support": int(in_sup.sum())})
             gamma_results[f"{tag}_intercept_{allow_int}"] = res
 
     primary_key = f"{cfg['fit']['quality_main']}_intercept_False"
     gamma_primary = gamma_results[primary_key]
 
     # ---------------------------------------------------------------- mixture transfer scenarios (transparent)
+    p0_order = None
     try:
         q1_pred = read_json(q1dir / "mixture_predictor.json")
         q1_hash = sha256_file(q1dir / "mixture_predictor.json")
@@ -133,15 +144,16 @@ def main():
         feat_cols = q1_pred["feature_names"]
         model_q1 = q1_pred["model"]
         pred = read_json(q1dir / "p0.json")
+        p0_order = pred["p0_order"]
         full_map = dict(zip(pred["p0_order"], pred["p0"]))
+        # Q1 protocol: take p0 in p0_order, drop the reference domain, do NOT renormalise.
         x = np.array([full_map[c.replace("train_the_pile_", "")] for c in feat_cols])
-        xr = x / x.sum()
         coef = np.array(model_q1["coef"])
         intercept = np.array(model_q1["intercept"])
-        f_p0 = float(np.dot(eval_weights, intercept + ((xr - np.array(model_q1["feat_mean"])) /
+        f_p0 = float(np.dot(eval_weights, intercept + ((x - np.array(model_q1["feat_mean"])) /
                                                        np.array(model_q1["feat_std"])) @ coef))
         p0 = pred["p0"]
-    except Exception as exc:  # Q1 not available yet
+    except FileNotFoundError as exc:
         q1_pred, q1_hash, f_p0, eval_weights = None, None, None, None
         p0 = None
         gamma_results["_q1_note"] = f"Q1 outputs unavailable: {exc}"
@@ -151,7 +163,9 @@ def main():
         "lambda_scenarios": cfg["fit"]["lambda_scenarios"],
         "f_p0_eval_loss": f_p0,
         "p0": p0 if q1_pred else None,
+        "p0_order": p0_order,
         "q1_predictor_hash": q1_hash,
+        "q1_predictor_path": str((q1dir / "mixture_predictor.json").relative_to(REPO)),
         "q_same_scale_assumption": cfg["fit"]["q_same_scale_assumption"],
     }
 
@@ -161,14 +175,20 @@ def main():
     el_rows = []
     for n, d in rep_points:
         e = elasticities(theta, n, d)
+        L0 = float(predict_l0(theta, n, d))
+        g = gamma_primary["gamma"]
         for q in (0.5, 1.0):
-            g = gamma_primary["gamma"]
-            L = float(predict_l0(theta, n, d)) + g * (1 - q)
+            L = L0 + g * (1 - q)
             el_rows.append({
                 "N_B": n, "D_B": d, "Q": q,
-                "predicted_loss": L,
-                "epsilon_N": float(e["epsilon_N"]), "epsilon_D": float(e["epsilon_D"]),
-                "epsilon_Q": float(-g * q / L) if L else float("nan"),
+                "predicted_loss": L, "classical_loss_L0": L0,
+                # plan section 2.5 definition uses the TOTAL loss L
+                "epsilon_N": float(e["dL_dN"] * n / L),
+                "epsilon_D": float(e["dL_dD"] * d / L),
+                "epsilon_Q": float(-g * q / L),
+                # classical-part denominators, for comparison only
+                "epsilon_N_classical_part": float(e["epsilon_N"]),
+                "epsilon_D_classical_part": float(e["epsilon_D"]),
                 "dL_dN": float(e["dL_dN"]), "dL_dD": float(e["dL_dD"]), "dL_dQ": float(-g),
             })
     pd.DataFrame(el_rows).to_csv(outdir / "elasticities.csv", index=False)
@@ -224,7 +244,8 @@ def main():
         "gamma_r2": gamma_primary["r2"],
         "lambda_default": 0.0,
         "lambda_scenarios": cfg["fit"]["lambda_scenarios"],
-        "p0": transfer["p0"], "f_p0_eval_loss": transfer["f_p0_eval_loss"],
+        "p0": transfer["p0"], "p0_order": transfer["p0_order"],
+        "f_p0_eval_loss": transfer["f_p0_eval_loss"],
         "q1_predictor_path": str((q1dir / "mixture_predictor.json").relative_to(REPO)),
         "supported_range": {"N_B": [float(b1["N_params_B"].min()), float(b1["N_params_B"].max())],
                             "D_B": [float(b1["D_tokens_B"].min()), float(b1["D_tokens_B"].max())],

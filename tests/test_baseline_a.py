@@ -130,11 +130,14 @@ def test_q1_predictor_protocol_reproducible():
     p0 = json.loads((Q1 / "p0.json").read_text(encoding="utf-8"))
     model = mp["model"]
     full = dict(zip(p0["p0_order"], p0["p0"]))
+    # documented protocol: drop the reference domain, do NOT renormalise the 16-vector
     x = np.array([full[c.replace("train_the_pile_", "")] for c in model["feature_columns"]])
-    xr = x / x.sum()
-    pred = ((xr - np.array(model["feat_mean"])) / np.array(model["feat_std"])) @ np.array(model["coef"]) \
-        + np.array(model["intercept"])
+    assert np.allclose(x, np.array(model["feat_mean"]), atol=1e-12)  # p0 is the training mean
+    z = (x - np.array(model["feat_mean"])) / np.array(model["feat_std"])
+    assert np.allclose(z, 0.0)
+    pred = z @ np.array(model["coef"]) + np.array(model["intercept"])
     ev = float(np.array(mp["eval_weights"]) @ pred)
+    assert ev == pytest.approx(float(np.mean(np.array(model["intercept"]))), abs=1e-12)
     lp = json.loads((Q2 / "loss_predictor.json").read_text(encoding="utf-8"))
     assert ev == pytest.approx(lp["f_p0_eval_loss"], abs=1e-9)
     assert len(mp["eval_weights"]) == 13
@@ -149,6 +152,18 @@ def test_q1_evaluation_uses_held_out_sets():
 
 
 # ------------------------------------------------------------------ Q3 optimisation
+def test_gamma_sign_and_b8_in_support_diagnostic():
+    g = json.loads((Q2 / "gamma_estimates.json").read_text(encoding="utf-8"))
+    assert g["B6_intercept_False"]["gamma"] > 0
+    assert g["B7_intercept_False"]["gamma"] > 0
+    # B8's Q-loss relation is inverted even inside B1 support: keep it as a negative
+    # cross-source diagnostic, never pool it into gamma.
+    assert g["B8_intercept_False"]["gamma"] < 0
+    assert g["B8_intercept_False"]["n_in_B1_support"] > 0
+    assert g["B8_intercept_False"]["residual_corr_1_minus_Q_in_B1_support"] < 0
+    assert g["B6_intercept_False"]["residual_corr_1_minus_Q_in_B1_support"] > 0
+
+
 def test_q3_cost_constraint_and_analytic():
     scen = pd.read_csv(Q3 / "optimal_allocations.csv")
     assert abs(scen["cost_constraint_residual"]).max() < 1e-9

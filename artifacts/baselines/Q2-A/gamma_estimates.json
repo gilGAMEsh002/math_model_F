@@ -25,7 +25,10 @@
     "D_range_B": [
       10.0,
       600.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": 0.832853318735615,
+    "residual_corr_1_minus_Q_in_B1_support": 0.8556724154079413,
+    "n_in_B1_support": 168
   },
   "B6_intercept_True": {
     "gamma": 0.36224743522865566,
@@ -53,7 +56,10 @@
     "D_range_B": [
       10.0,
       600.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": 0.832853318735615,
+    "residual_corr_1_minus_Q_in_B1_support": 0.8556724154079413,
+    "n_in_B1_support": 168
   },
   "B7_intercept_False": {
     "gamma": 0.36340448452814883,
@@ -81,7 +87,10 @@
     "D_range_B": [
       10.0,
       600.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": 0.8182072152339049,
+    "residual_corr_1_minus_Q_in_B1_support": 0.844400410639293,
+    "n_in_B1_support": 210
   },
   "B7_intercept_True": {
     "gamma": 0.36199528619528615,
@@ -109,7 +118,10 @@
     "D_range_B": [
       10.0,
       600.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": 0.8182072152339049,
+    "residual_corr_1_minus_Q_in_B1_support": 0.844400410639293,
+    "n_in_B1_support": 210
   },
   "B8_intercept_False": {
     "gamma": -2.091189998836575,
@@ -137,7 +149,10 @@
     "D_range_B": [
       5.0,
       2000.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": -0.9669147490939961,
+    "residual_corr_1_minus_Q_in_B1_support": -0.9880787761251681,
+    "n_in_B1_support": 456
   },
   "B8_intercept_True": {
     "gamma": -1.9830163361362352,
@@ -165,6 +180,9 @@
     "D_range_B": [
       5.0,
       2000.0
-    ]
+    ],
+    "residual_corr_1_minus_Q_all": -0.9669147490939961,
+    "residual_corr_1_minus_Q_in_B1_support": -0.9880787761251681,
+    "n_in_B1_support": 456
   }
 }
