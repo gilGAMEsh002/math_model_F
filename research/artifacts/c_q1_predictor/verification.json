@@ -1,0 +1,209 @@
+{
+  "artifact": "verification of research/artifacts/c_q1_predictor/model.joblib",
+  "checked_utc": "2026-09-23T17:12:14Z",
+  "tolerance": 1e-06,
+  "persisted_object": {
+    "path": "/home/sshuser/projects/数学建模26/F题-研究整合/research/artifacts/c_q1_predictor/model.joblib",
+    "type": "RandomForestRegressor"
+  },
+  "selected_variant": "forest_none",
+  "loaded_by_environment": {
+    "python": "3.14.4",
+    "executable": "/home/sshuser/projects/数学建模26/F题-研究整合/research/.venv/bin/python",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  },
+  "fit_environment": {
+    "python": "3.11.16",
+    "executable": "/tmp/opencode/venv311/bin/python",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.17.1",
+    "sklearn": "1.5.2"
+  },
+  "cross_version_unpickle_warnings": {
+    "n_warnings": 602,
+    "unique": [
+      "InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeRegressor from version 1.5.2 when using version 1.9.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:\nhttps://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations",
+      "InconsistentVersionWarning: Trying to unpickle estimator RandomForestRegressor from version 1.5.2 when using version 1.9.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:\nhttps://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations"
+    ],
+    "note": "scikit-learn raises InconsistentVersionWarning per unpickled tree when loading a 1.5.2 pickle with 1.9.1; predictions were verified identical, see original_commit_result_vs_persisted_object"
+  },
+  "simplex_acceptance": {
+    "p0": {
+      "input_shape": [
+        1,
+        17
+      ],
+      "input_rowsum_min": 1.0,
+      "input_rowsum_max": 1.0,
+      "accepted": true,
+      "output_shape": [
+        1,
+        13
+      ],
+      "output_all_finite": true,
+      "p0_prediction": [
+        4.461749162995625,
+        4.781203614537678,
+        4.633489646881346,
+        5.587793743118407,
+        2.3994750504408566,
+        4.747495679272546,
+        4.940735088291622,
+        5.302651154124548,
+        5.604673567828677,
+        5.343943898295598,
+        5.222444790333037,
+        5.289152265601688,
+        5.023431589698034
+      ]
+    },
+    "dirichlet_uniform": {
+      "input_shape": [
+        5,
+        17
+      ],
+      "input_rowsum_min": 0.9999999999999999,
+      "input_rowsum_max": 1.0,
+      "accepted": true,
+      "output_shape": [
+        5,
+        13
+      ],
+      "output_all_finite": true
+    },
+    "dirichlet_near_p0": {
+      "input_shape": [
+        5,
+        17
+      ],
+      "input_rowsum_min": 0.9999999999999999,
+      "input_rowsum_max": 1.0000000000000002,
+      "accepted": true,
+      "output_shape": [
+        5,
+        13
+      ],
+      "output_all_finite": true
+    }
+  },
+  "row_normalization": {
+    "rule": "p_i := p_i / sum_j p_j  (rows with sum<=0 become all-zero -> 1.0 divisor)",
+    "input_rowsums": [
+      3.0,
+      1.0,
+      0.0
+    ],
+    "normalized_rowsums": [
+      1.0,
+      1.0,
+      0.0
+    ],
+    "positive_rows_sum_to_one_within_1e-12": true,
+    "zero_row_stays_zero": true
+  },
+  "original_commit_result_vs_persisted_object": {
+    "description": "stored predictions from the original run (mixture_predictions.csv, variant forest_none) compared with predictions of the persisted object, loaded and called by the research environment",
+    "per_dataset": [
+      {
+        "dataset": "same_scale_1m",
+        "n_matched": 3584,
+        "max_abs_diff_y_pred": 1.7763568394002505e-15,
+        "median_abs_diff_y_pred": 0.0,
+        "max_abs_diff_y_true": 0.0
+      },
+      {
+        "dataset": "cross_scale_60m",
+        "n_matched": 3584,
+        "max_abs_diff_y_pred": 1.7763568394002505e-15,
+        "median_abs_diff_y_pred": 0.0,
+        "max_abs_diff_y_true": 0.0
+      },
+      {
+        "dataset": "cross_scale_1B",
+        "n_matched": 896,
+        "max_abs_diff_y_pred": 8.881784197001252e-16,
+        "median_abs_diff_y_pred": 0.0,
+        "max_abs_diff_y_true": 0.0
+      },
+      {
+        "dataset": "est_10b",
+        "n_matched": 882,
+        "max_abs_diff_y_pred": 1.7763568394002505e-15,
+        "median_abs_diff_y_pred": 0.0,
+        "max_abs_diff_y_true": 0.0
+      },
+      {
+        "dataset": "est_70b",
+        "n_matched": 882,
+        "max_abs_diff_y_pred": 1.7763568394002505e-15,
+        "median_abs_diff_y_pred": 0.0,
+        "max_abs_diff_y_true": 0.0
+      }
+    ],
+    "overall": {
+      "n": 9828,
+      "max_abs_diff": 1.7763568394002505e-15,
+      "median_abs_diff": 0.0,
+      "max_abs_diff_y_true": 0.0
+    },
+    "equivalent": true,
+    "tolerance": 1e-06
+  },
+  "diagnostic_native_research_env_refit": {
+    "description": "same variant re-fitted from scratch with THIS environment's scikit-learn; isolates the library-version effect",
+    "environment": {
+      "python": "3.14.4",
+      "executable": "/home/sshuser/projects/数学建模26/F题-研究整合/research/.venv/bin/python",
+      "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+      "numpy": "2.5.1",
+      "pandas": "3.0.3",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    },
+    "per_dataset": [
+      {
+        "dataset": "same_scale_1m",
+        "n_matched": 3584,
+        "max_abs_diff_y_pred": 0.012700376510619726,
+        "median_abs_diff_y_pred": 0.0009650306212591886
+      },
+      {
+        "dataset": "cross_scale_60m",
+        "n_matched": 3584,
+        "max_abs_diff_y_pred": 0.012700376510619726,
+        "median_abs_diff_y_pred": 0.0009650306212591886
+      },
+      {
+        "dataset": "cross_scale_1B",
+        "n_matched": 896,
+        "max_abs_diff_y_pred": 0.007990044355392634,
+        "median_abs_diff_y_pred": 0.0012255235513052298
+      },
+      {
+        "dataset": "est_10b",
+        "n_matched": 882,
+        "max_abs_diff_y_pred": 0.0069194801648455595,
+        "median_abs_diff_y_pred": 0.0003847887729984123
+      },
+      {
+        "dataset": "est_70b",
+        "n_matched": 882,
+        "max_abs_diff_y_pred": 0.0069194801648455595,
+        "median_abs_diff_y_pred": 0.0003847887729984123
+      }
+    ],
+    "overall": {
+      "n": 9828,
+      "max_abs_diff": 0.012700376510619726,
+      "median_abs_diff": 0.0008896581331891973
+    },
+    "equivalent": false,
+    "cause": "scikit-learn 1.9.1 vs the original 1.5.2: RandomForest tree-building RNG/seeding changed, so the fitted trees differ (fixed params, seed and data are identical)"
+  }
+}

@@ -1,0 +1,1 @@
+[01:12:55] acceptance summary: {'n': 14, 'pass': 12, 'fail': 1, 'blocked': 0, 'n_a': 1, 'critical_failures': ['4.C-predictor']}

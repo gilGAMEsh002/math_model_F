@@ -72,7 +72,7 @@ def load_a() -> dict:
     return out
 
 
-def load_c(variant: str = "best_entropy_proxyQ") -> dict:
+def load_c(variant: str = "forest_none") -> dict:
     C = LineC()
     df = pd.read_csv(C.root / "artifacts/baselines/Q1-C/mixture_predictions.csv")
     df = df[(df["variant"] == variant) & (df["target"] != "__composite_equal_v__")]
@@ -124,8 +124,12 @@ def load_b() -> dict:
 
 
 # ------------------------------------------------------------------ layer A
-def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    A, B, C = load_a(), load_b(), load_c()
+def layer_a_q1(c_posthoc: str = "best_entropy_proxyQ") -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    A, B, C = load_a(), load_b(), load_c("forest_none")
+    try:
+        Cp = load_c(c_posthoc)          # C's post-hoc/test-informed variant, labelled separately
+    except Exception:
+        Cp = {}
     v = np.full(13, 1.0 / 13)
     rows, perdom, ident = [], [], []
     for key in SETS.values():
@@ -158,10 +162,18 @@ def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
                       "note": "y_true 一致即同一候选集与同一真实 Loss"})
         if ymax >= 1e-6:
             continue
-        for name, Y, Yh in (("A", yA, Yha[idxA]), ("B", yB, Yhb[idxB]), ("C", yC, Yhc[idxC])):
+        variants = [("A", yA, Yha[idxA], A[key]["provenance"]),
+                    ("B", yB, Yhb[idxB], B[key]["provenance"]),
+                    ("C", yC, Yhc[idxC], C[key]["provenance"])]
+        if key in Cp:
+            icp = {x: i for i, x in enumerate(Cp[key]["index"])}
+            if all(x in icp for x in common):
+                Ycp, Yhcp = reord(Cp[key])
+                idxcp = [icp[x] for x in common]
+                variants.append(("C_posthoc", Ycp[idxcp], Yhcp[idxcp], Cp[key]["provenance"]))
+        for name, Y, Yh, prov in variants:
             m = _metrics(Y, Yh, v)
-            m.update({"line": name, "set": key, "n": int(common.size),
-                      "provenance": {"A": A, "B": B, "C": C}[name][key]["provenance"]})
+            m.update({"line": name, "set": key, "n": int(common.size), "provenance": prov})
             rows.append(m)
             for j, t in enumerate(doms):
                 e = Y[:, j] - Yh[:, j]
@@ -301,8 +313,8 @@ def run_r1(outdir: Path) -> dict:
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", default="best_entropy_proxyQ",
-                    help="C Q1 stored variant to use in Layer A (default matches selected_model)")
+    ap.add_argument("--variant", default="forest_none",
+                    help="C Q1 stored variant to use in Layer A (default = CV-selected forest_none)")
     ap.add_argument("--outdir", default=str(RESEARCH / "reports"))
     args = ap.parse_args()
     res = run_r1(Path(args.outdir))

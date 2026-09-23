@@ -123,14 +123,38 @@ def check_3_boundary_and_trust_region() -> list[dict]:
 
 
 def check_4_c_q1_predictor_and_scale() -> list[dict]:
-    """C mixture predictor callable; cross-question normalisation scale frozen."""
+    """C mixture predictor callable (rebuilt); cross-question normalisation scale frozen."""
     out = []
     C = LineC()
     st = C.q1_predictor_status()
-    out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
-                    True, st["executable"],
-                    "pass" if st["executable"] else "blocked",
-                    st["blocker"] or "", "critical"))
+    art = RESEARCH / "artifacts/c_q1_predictor"
+    model_p, proto_p, ver_p = art / "model.joblib", art / "protocol.json", art / "verification.json"
+    if model_p.exists() and ver_p.exists():
+        import json as _json
+        import numpy as np
+        ver = _json.loads(ver_p.read_text(encoding="utf-8"))
+        proto = _json.loads(proto_p.read_text(encoding="utf-8"))
+        block = ver.get("original_commit_result_vs_persisted_object", {})
+        cmp = block.get("overall", {})
+        eq = bool(block.get("equivalent"))
+        import joblib
+        model = joblib.load(model_p)                      # cross-version warning is expected
+        p0 = np.asarray(proto["p0_reference_mixture"], float)
+        pred = model.predict((p0 / p0.sum()).reshape(1, -1))
+        finite = bool(np.all(np.isfinite(pred)) and pred.shape == (1, 13))
+        status = "pass" if (finite and eq) else "fail"
+        out.append(_row("4.C-predictor", "C Q1 predictor executable + faithful to original",
+                        {"finite": True, "equivalent": True},
+                        {"finite": finite, "equivalent": eq,
+                         "max_abs_diff_vs_stored": cmp.get("max_abs_diff")},
+                        status,
+                        f"rebuild variant={proto.get('selected_variant', {}).get('name')}; "
+                        f"fit_env sklearn={ver.get('fit_environment', {}).get('sklearn')}", "critical"))
+    else:
+        out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
+                        True, st["executable"],
+                        "pass" if st["executable"] else "blocked",
+                        st["blocker"] or "", "critical"))
     out.append(_row("4.C-descriptor", "C Q1 descriptor well-formed (17 in / 13 out / v / p0)",
                     {"n_inputs": 17, "n_outputs": 13, "keys_ok": True},
                     {"n_inputs": st["n_inputs"], "n_outputs": st["n_outputs"],

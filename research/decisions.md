@@ -21,7 +21,7 @@
 
 ## 2. 已知阻塞与限制
 1. B 的质量重建数据 `line-b/data/quality_rebuild/*.jsonl.xz` 为 LFS 指针，未 pull，无法复核其质量重建。
-2. C 的 Q1 森林预测器未以可执行对象持久化；Q2/Q3 使用 `quality_linear`/`mixture_l1` 替代。
+2. C 的 Q1 可执行预测器**已补齐**（训练内 CV 选出的 `forest_none`，对拍 max abs diff 1.78e-15；研究产物见 `artifacts/c_q1_predictor/`）。Q2/Q3 仍按原口径使用 `quality_linear`/`mixture_l1` 替代森林。
 3. C 替代表逐对归一化（`substitution_table` 尺度）属 P1，未修。
 4. κ/ρ 未通过可辨识性判定，只能作情景参数。
 5. 三条线 Q 坐标不同，跨线比较需固定上游或登记映射假设。

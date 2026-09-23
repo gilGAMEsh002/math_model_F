@@ -1,0 +1,4 @@
+line,method,N_B,D_B,L,provenance,N_rel_to_A
+A,analytic+grid,4.868754778331719,301.1956329518321,2.147511434602993,A loss_predictor.json (classical),0.0
+B,grid on B loss(),4.868755350530132,301.1955975539428,2.1475114346023774,B q2_scaling_parameters.json + code/q3_optimize.loss,1.1752459072589261e-07
+C,grid on C model (kappa=0),4.868755439478502,301.1955920513338,2.147511434602835,C Q2-C M1 params + Q3-C model.predict(kappa=0),1.3579381441530813e-07

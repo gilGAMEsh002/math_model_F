@@ -83,15 +83,15 @@ C 的分布（以实测提交为准，不按分支名推测）：
 
 ## 6. 轻量验收（E0-A）结果
 
-run_id `20260923T165441Z_acceptance_2974389`，报告见 `reports/acceptance_*.md`：
-**12 pass / 0 fail / 1 blocked / 1 n/a**。
+run_id `20260923T165441Z_acceptance_2974389`（首轮）→ 最新 `20260923T171318Z_acceptance_2983929`，报告见 `reports/acceptance_*.md`：
+**13 pass / 0 fail / 0 blocked / 1 n/a**（C Q1 预测器可执行后由 blocked 转为 pass）。
 
 - 通过：A/B/C 在同一物理点（N=1e9,D=1e11,Q=1,h=1）第二问与第三问损失预测一致（均 2.385578）；
   C 成本按实际个数回算残差 3.1e-15；B 成本残差 2.2e-16；C 在 Q=Q0 的右导数与前向差分一致；
   C 主最优表 720 行全部 `in_trust_l1=True`；C Q1 描述符协议完整；跨问尺度冻结（Q2-C 标定存在）；
   计划/结果分离检查通过；修复证据齐备。
-- **blocked（如实记录，不计通过）**：C 的 Q1 配比预测器**只有描述符**，未持久化森林系数/模型对象，
-  无法对任意合法 p 调用——这是进入 R1 前需要处理的接口缺口。
+- **已解决**：C 的 Q1 配比预测器已重建为可执行对象（`artifacts/c_q1_predictor/`），对拍 `equivalent=true`（n=9828，max abs diff 1.78e-15）；验收 14 项 **13 pass / 0 fail / 0 blocked / 1 n/a**。
+- 仍阻塞：B 的质量重建数据为 LFS 指针，未 pull；B 的质量评分标记为不同样本/复现未完成。
 
 ## 7. 下一阶段（不本轮执行）
 

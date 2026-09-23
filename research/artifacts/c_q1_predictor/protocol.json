@@ -1,0 +1,205 @@
+{
+  "artifact": "Baseline C Q1-C selected mixture predictor",
+  "baseline_id": "Q1-C",
+  "created_utc": "2026-09-23T17:12:12Z",
+  "source": {
+    "fixed_upstream_worktree": "/home/sshuser/projects/数学建模26/F题-upstream/line-c",
+    "source_commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378",
+    "config_path": "/home/sshuser/projects/数学建模26/F题-upstream/line-c/configs/baselines/Q1-C.yaml",
+    "config_sha256": "0f18d02610d73507ad5cf634920dbc45d6a67a086794044ded8066415863ca2a",
+    "config_hash_upstream": "981ef9cf86aaffbf",
+    "a4_mixture": {
+      "path": "real_attachments/A_data_value/regmix_tables/train_mixture_1m.csv",
+      "sha256": "04a32ef4ab594376bf90e11404c033668f887c351d6a03ad3744824c7296a2d8"
+    },
+    "a5_loss": {
+      "path": "real_attachments/A_data_value/regmix_tables/train_pile_loss_1m.csv",
+      "sha256": "49a959aa07ce5c20831d5abe3a7896ff0cd90a398bd407c8913fd5588be0465a"
+    },
+    "descriptor": {
+      "path": "artifacts/baselines/Q1-C/mixture_predictor.json",
+      "sha256": "a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5"
+    },
+    "original_run": {
+      "run_command": "python src/baselines/Q1-C/run_all.py",
+      "run_utc": "2026-09-23T08:12:43Z",
+      "git_rev": "64c4cb1c73eaf27842d27abb948eeb7ebbea5530",
+      "config_hash": "d15692258d17cbb2",
+      "config_yaml_sha256": "bdb41dded43390932a7fc749100d94ef6ac894e671cd61ba2200048c4c81b860",
+      "environment": {
+        "python": "3.11.6",
+        "executable": "D:\\Software\\Python\\python.exe",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "numpy": "2.4.6",
+        "pandas": "3.0.3",
+        "sklearn": "1.5.2",
+        "scipy": "1.17.1",
+        "pyarrow": "24.0.0"
+      },
+      "note": "the original run's config (sha256 ...bdb41dde) differs from the fixed tree's config (sha256 ...0f18d026) only in the non-model upstream.* path strings; all mixture-relevant knobs are identical"
+    }
+  },
+  "selected_variant": {
+    "name": "forest_none",
+    "kind": "forest",
+    "quality_feature_mode": "none",
+    "unmapped_domain_policy": {
+      "applies": false,
+      "reason": "mode 'none' uses only the 17 row-normalised mixture columns; no Q(p) feature is built",
+      "config_primary_unmapped_policy": "exclude",
+      "config_proxy_unmapped_policy": "proxy"
+    },
+    "drop_reference_col": null,
+    "determination_evidence": [
+      "run_mixture calls cv_select(cfg, Xtr, Ytr, cands) with Xtr = normalize_rows(A4) (17 cols, no Q); selection space is mode 'none'",
+      "overall_best label rf_n600_d12_l1_f1.0 with cv_composite_rmse=0.15538620982757276 equals mixture_cv_grid.csv row 0",
+      "the only fitted variant with these params in mode none is forest_none",
+      "verify.py: refit reproduces stored mixture_predictions.csv variant 'forest_none' (no other variant is close)"
+    ]
+  },
+  "frozen_hyperparameters": {
+    "n_estimators": 600,
+    "max_depth": 12,
+    "min_samples_leaf": 1,
+    "max_features": 1.0,
+    "n_jobs": -1
+  },
+  "seed": 20260923,
+  "target_weights_v": [
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693,
+    0.07692307692307693
+  ],
+  "target_weights_note": "baseline 令 v 等权，且不随 p 改变（§1.4）",
+  "input_columns": [
+    "train_the_pile_arxiv",
+    "train_the_pile_freelaw",
+    "train_the_pile_nih_exporter",
+    "train_the_pile_pubmed_central",
+    "train_the_pile_wikipedia_en",
+    "train_the_pile_dm_mathematics",
+    "train_the_pile_github",
+    "train_the_pile_philpapers",
+    "train_the_pile_stackexchange",
+    "train_the_pile_enron_emails",
+    "train_the_pile_gutenberg_pg_19",
+    "train_the_pile_pile_cc",
+    "train_the_pile_ubuntu_irc",
+    "train_the_pile_europarl",
+    "train_the_pile_hackernews",
+    "train_the_pile_pubmed_abstracts",
+    "train_the_pile_uspto_backgrounds"
+  ],
+  "n_inputs": 17,
+  "output_columns": [
+    "metric/the_pile_arxiv_val_loss",
+    "metric/the_pile_freelaw_val_loss",
+    "metric/the_pile_pubmed_central_val_loss",
+    "metric/the_pile_wikipedia_en_val_loss",
+    "metric/the_pile_dm_mathematics_val_loss",
+    "metric/the_pile_github_val_loss",
+    "metric/the_pile_stackexchange_val_loss",
+    "metric/the_pile_gutenberg_pg_19_val_loss",
+    "metric/the_pile_pile_cc_val_loss",
+    "metric/the_pile_ubuntu_irc_val_loss",
+    "metric/the_pile_hackernews_val_loss",
+    "metric/the_pile_pubmed_abstracts_val_loss",
+    "metric/the_pile_uspto_backgrounds_val_loss"
+  ],
+  "output_short_names": [
+    "arxiv",
+    "freelaw",
+    "pubmed_central",
+    "wikipedia_en",
+    "dm_mathematics",
+    "github",
+    "stackexchange",
+    "gutenberg_pg_19",
+    "pile_cc",
+    "ubuntu_irc",
+    "hackernews",
+    "pubmed_abstracts",
+    "uspto_backgrounds"
+  ],
+  "n_outputs": 13,
+  "p0_reference_mixture": [
+    0.11302252583269279,
+    0.0968248321520278,
+    0.00588968021709595,
+    0.11375419105058357,
+    0.07507775607983627,
+    0.0254628540970504,
+    0.11070066007050916,
+    0.005487697351193036,
+    0.09943242344413017,
+    0.002211033043406226,
+    0.04691494424753537,
+    0.11948759779188561,
+    0.019599998284005892,
+    0.012737064754031531,
+    0.011650822378108678,
+    0.06618116611257162,
+    0.07556475309333588
+  ],
+  "p0_note": "p_i := p_i / Σ_j p_j；A4 原始行和 0.996-1.003",
+  "row_normalization": {
+    "rule": "p_i := p_i / sum_j p_j  (rows with sum<=0 become all-zero -> 1.0 divisor)",
+    "applies_to": "both fitting inputs and call-time inputs",
+    "A4_raw_rowsum_range": [
+      0.9960000000000001,
+      1.0030000000000001
+    ],
+    "sums_to_one": true
+  },
+  "input_units": "row-normalised mixture proportions (non-negative, rows sum to 1)",
+  "output_units": "验证交叉熵 Loss（越低越好）",
+  "training": {
+    "n_rows": 512,
+    "n_features": 17,
+    "data_used": [
+      "A4 train_mixture_1m.csv",
+      "A5 train_pile_loss_1m.csv"
+    ],
+    "held_out_sets_not_used_for_fitting": [
+      "A6-A11",
+      "A12-A15"
+    ],
+    "method": "upstream mixture.fit_forest (RandomForestRegressor, multioutput)"
+  },
+  "environment_used_to_fit": {
+    "python": "3.11.16",
+    "executable": "/tmp/opencode/venv311/bin/python",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.17.1",
+    "sklearn": "1.5.2"
+  },
+  "how_to_call": "import sys, joblib, numpy as np\nsys.path.insert(0, '<upstream>/src/baselines/Q1-C')\nfrom mixture import normalize_rows, predict_models\nmodel = joblib.load('research/artifacts/c_q1_predictor/model.joblib')\np = np.asarray(p, dtype=float)                 # (n, 17) non-negative proportions\ny = predict_models(model, normalize_rows(p))   # (n, 13) val losses, config target order\n# e.g. the research environment is enough to load and call this object;\n# scikit-learn emits an InconsistentVersionWarning (1.5.2 -> 1.9.1) but predictions match.\n",
+  "reproduction": {
+    "exact_requires": {
+      "python": "3.11",
+      "numpy": "2.4.6",
+      "pandas": "3.0.3",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.5.2"
+    },
+    "bootstrap": [
+      "python -m venv .venv && .venv/bin/pip install uv",
+      ".venv/bin/uv python install 3.11",
+      ".venv/bin/uv venv --python 3.11 /tmp/opencode/venv311",
+      ".venv/bin/uv pip install --python /tmp/opencode/venv311/bin/python numpy==2.4.6 pandas==3.0.3 scipy==1.17.1 scikit-learn==1.5.2 pyyaml joblib"
+    ],
+    "note": "model.joblib was produced with the pinned versions above; it also loads and predicts in the research venv (see verification.json)"
+  }
+}

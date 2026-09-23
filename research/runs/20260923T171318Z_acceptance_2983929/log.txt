@@ -1,0 +1,1 @@
+[01:13:20] acceptance summary: {'n': 14, 'pass': 13, 'fail': 0, 'blocked': 0, 'n_a': 1, 'critical_failures': []}

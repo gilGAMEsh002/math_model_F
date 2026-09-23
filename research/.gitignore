@@ -8,3 +8,6 @@ runs/**/*.parquet
 runs/**/*.png
 cfg.local.yaml
 work/
+# 大型模型对象（可由 artifacts/c_q1_predictor/rebuild.py 重建，verification.json 已核验）
+artifacts/**/*.joblib
+artifacts/**/*.npz

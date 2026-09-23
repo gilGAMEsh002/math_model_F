@@ -1,0 +1,385 @@
+diff --git a/research/reports/r1_q1_comparison.png b/research/reports/r1_q1_comparison.png
+index cc6fa49..7d6d343 100644
+Binary files a/research/reports/r1_q1_comparison.png and b/research/reports/r1_q1_comparison.png differ
+diff --git a/research/reports/r1_q1_metrics.csv b/research/reports/r1_q1_metrics.csv
+index 873129d..016b61d 100644
+--- a/research/reports/r1_q1_metrics.csv
++++ b/research/reports/r1_q1_metrics.csv
+@@ -1,16 +1,21 @@
+ rmse,mae,r2,spearman,top1_regret,random_expected_regret,top1_is_oracle,line,set,n,provenance
+ 0.22776116608112118,0.1806805323604212,0.3273020581824527,0.6245672636758983,0.7085578808417683,0.5335057505334788,False,A,1m,256,"A baseline-a c8b97cf4 ridge, calibre=A own"
+ 0.1993707010766129,0.15782976218898326,0.4845537127506203,0.7007531757839323,0.4140189060798054,0.5335057505334788,False,B,1m,256,B baseline-b e498b2c6 quadratic ridge (reconstructed from q1_mixture_model.npz)
+-0.11749914973830076,0.09800900652475336,0.8209681944765399,0.92285062371252,0.0,0.5335057505334788,True,C,1m,256,C baseline-c cf765761 forest(best_entropy_proxyQ)
++0.11873852364035359,0.09967837745705581,0.8171714423291659,0.9221210517280842,0.0,0.5335057505334788,True,C,1m,256,C baseline-c cf765761 forest(forest_none)
++0.11749914973830076,0.09800900652475336,0.8209681944765399,0.92285062371252,0.0,0.5335057505334788,True,C_posthoc,1m,256,C baseline-c cf765761 forest(best_entropy_proxyQ)
+ 1.520559116608641,1.5081080429717892,-47.26090432641084,0.5585710402838178,0.617886084776659,0.38028355508756206,False,A,60m,256,"A baseline-a c8b97cf4 ridge, calibre=A own"
+ 1.4668409071902446,1.4562251721518744,-43.91122105107878,0.7063322556649119,0.2878156900405884,0.38028355508756206,False,B,60m,256,B baseline-b e498b2c6 quadratic ridge (reconstructed from q1_mixture_model.npz)
+-1.5076043543306765,1.5023721580605711,-46.44206705767638,0.8424882696269169,0.007963822438166623,0.38028355508756206,False,C,60m,256,C baseline-c cf765761 forest(best_entropy_proxyQ)
++1.5115497301572152,1.5063952099646156,-46.69070218966837,0.8412537193865873,0.007963822438166623,0.38028355508756206,False,C,60m,256,C baseline-c cf765761 forest(forest_none)
++1.5076043543306765,1.5023721580605711,-46.44206705767638,0.8424882696269169,0.007963822438166623,0.38028355508756206,False,C_posthoc,60m,256,C baseline-c cf765761 forest(best_entropy_proxyQ)
+ 3.194228124758537,3.190156513653612,-3781.0164180787738,0.368452380952381,0.11560340569230743,0.11426107478004788,False,A,1B,64,"A baseline-a c8b97cf4 ridge, calibre=A own"
+ 2.830171899637128,2.821885369054061,-2968.0477381157593,0.47760989010989013,0.33293076746153805,0.11426107478004788,False,B,1B,64,B baseline-b e498b2c6 quadratic ridge (reconstructed from q1_mixture_model.npz)
+-2.9312781184294248,2.9294521423792945,-3183.9718881467825,0.6499542124542125,0.06956565961538441,0.11426107478004788,False,C,1B,64,C baseline-c cf765761 forest(best_entropy_proxyQ)
++2.9285626694305606,2.9267613294519697,-3178.073694622038,0.6555860805860806,0.06956565961538441,0.11426107478004788,False,C,1B,64,C baseline-c cf765761 forest(forest_none)
++2.9312781184294248,2.9294521423792945,-3183.9718881467825,0.6499542124542125,0.06956565961538441,0.11426107478004788,False,C_posthoc,1B,64,C baseline-c cf765761 forest(best_entropy_proxyQ)
+ 3.584205710066392,3.5771261922488846,-1389.6102246332823,-0.4494047619047619,0.35872307692307714,0.19945897435897408,False,A,est_10b,63,"A baseline-a c8b97cf4 ridge, calibre=A own"
+ 3.5854290390482273,3.5655957131998264,-1390.559647876569,-0.5786290322580645,0.35872307692307714,0.19945897435897408,False,B,est_10b,63,B baseline-b e498b2c6 quadratic ridge (reconstructed from q1_mixture_model.npz)
+-3.5999415648711235,3.5753205801604238,-1401.8475111920409,-0.7231182795698925,0.35872307692307714,0.19945897435897408,False,C,est_10b,63,C baseline-c cf765761 forest(best_entropy_proxyQ)
++3.6016105601386625,3.5768952725968206,-1403.1485815340484,-0.7192780337941628,0.35872307692307714,0.19945897435897408,False,C,est_10b,63,C baseline-c cf765761 forest(forest_none)
++3.5999415648711235,3.5753205801604238,-1401.8475111920409,-0.7231182795698925,0.35872307692307714,0.19945897435897408,False,C_posthoc,est_10b,63,C baseline-c cf765761 forest(best_entropy_proxyQ)
+ 3.9670592138299274,3.9600392569619487,-1449.6540285701085,-0.5121927803379416,0.40721538461538476,0.22425360195360167,False,A,est_70b,63,"A baseline-a c8b97cf4 ridge, calibre=A own"
+ 3.9676299306206437,3.9485087779128922,-1450.0714522184,-0.6465533794162827,0.40721538461538476,0.22425360195360167,False,B,est_70b,63,B baseline-b e498b2c6 quadratic ridge (reconstructed from q1_mixture_model.npz)
+-3.9819568976127946,3.9582336448734887,-1460.5699050183532,-0.8009312596006144,0.40721538461538476,0.22425360195360167,False,C,est_70b,63,C baseline-c cf765761 forest(best_entropy_proxyQ)
++3.983623970710279,3.959808337309885,-1461.7939533790811,-0.7974750384024577,0.40721538461538476,0.22425360195360167,False,C,est_70b,63,C baseline-c cf765761 forest(forest_none)
++3.9819568976127946,3.9582336448734887,-1460.5699050183532,-0.8009312596006144,0.40721538461538476,0.22425360195360167,False,C_posthoc,est_70b,63,C baseline-c cf765761 forest(best_entropy_proxyQ)
+diff --git a/research/reports/r1_q1_perdomain.csv b/research/reports/r1_q1_perdomain.csv
+index b0997bd..4056d55 100644
+--- a/research/reports/r1_q1_perdomain.csv
++++ b/research/reports/r1_q1_perdomain.csv
+@@ -25,19 +25,32 @@ B,1m,ubuntu_irc,0.7501636254975618,0.05882844265410818
+ B,1m,hackernews,0.20590770134490502,-0.0012146976283758104
+ B,1m,pubmed_abstracts,0.1980891561160673,0.028177243886322832
+ B,1m,uspto_backgrounds,0.20805036689799056,0.00417671731832083
+-C,1m,arxiv,0.3235781149712035,-0.09848575068163574
+-C,1m,freelaw,0.3936186829767872,-0.016665028803612283
+-C,1m,pubmed_central,0.3883351272625067,-0.06120348959687418
+-C,1m,wikipedia_en,0.426263169875225,0.000388748862773243
+-C,1m,dm_mathematics,0.3692995334747363,-0.05920240923591211
+-C,1m,github,0.3653475786349264,-0.09549315963456009
+-C,1m,stackexchange,0.28939396217360225,-0.058560061126459555
+-C,1m,gutenberg_pg_19,0.36185815040357616,-0.045102317885643534
+-C,1m,pile_cc,0.21690259436511278,0.0018171479861724404
+-C,1m,ubuntu_irc,0.3561341150479958,-0.06472958739577159
+-C,1m,hackernews,0.29422020737944954,-0.0252224394921731
+-C,1m,pubmed_abstracts,0.41212112906018505,-0.022607078400610485
+-C,1m,uspto_backgrounds,0.41326517406617114,-0.013952376435606918
++C,1m,arxiv,0.3199692530643725,-0.08497398033647967
++C,1m,freelaw,0.3985979769448637,-0.03049324364691884
++C,1m,pubmed_central,0.3722762436572316,-0.0641626318203958
++C,1m,wikipedia_en,0.43089400670755346,-0.014200684754532775
++C,1m,dm_mathematics,0.36728781093136686,-0.0587857103290162
++C,1m,github,0.3567694042480682,-0.09090455804156541
++C,1m,stackexchange,0.2873130530470632,-0.05305968293701004
++C,1m,gutenberg_pg_19,0.3710767011435128,-0.051345496630214815
++C,1m,pile_cc,0.21967414151586975,-0.005489579855146615
++C,1m,ubuntu_irc,0.3597209437616908,-0.07004361919978158
++C,1m,hackernews,0.29404751376332805,-0.02725274835614164
++C,1m,pubmed_abstracts,0.41051065057541947,-0.033859640552699306
++C,1m,uspto_backgrounds,0.40931960878539947,-0.026745900132589855
++C_posthoc,1m,arxiv,0.3235781149712035,-0.09848575068163574
++C_posthoc,1m,freelaw,0.3936186829767872,-0.016665028803612283
++C_posthoc,1m,pubmed_central,0.3883351272625067,-0.06120348959687418
++C_posthoc,1m,wikipedia_en,0.426263169875225,0.000388748862773243
++C_posthoc,1m,dm_mathematics,0.3692995334747363,-0.05920240923591211
++C_posthoc,1m,github,0.3653475786349264,-0.09549315963456009
++C_posthoc,1m,stackexchange,0.28939396217360225,-0.058560061126459555
++C_posthoc,1m,gutenberg_pg_19,0.36185815040357616,-0.045102317885643534
++C_posthoc,1m,pile_cc,0.21690259436511278,0.0018171479861724404
++C_posthoc,1m,ubuntu_irc,0.3561341150479958,-0.06472958739577159
++C_posthoc,1m,hackernews,0.29422020737944954,-0.0252224394921731
++C_posthoc,1m,pubmed_abstracts,0.41212112906018505,-0.022607078400610485
++C_posthoc,1m,uspto_backgrounds,0.41326517406617114,-0.013952376435606918
+ A,60m,arxiv,1.8318516633414677,-1.7639067532883521
+ A,60m,freelaw,1.4447072083383177,-1.3795956529290034
+ A,60m,pubmed_central,1.7565472284195065,-1.7105357608714589
+@@ -64,19 +77,32 @@ B,60m,ubuntu_irc,1.981889981896212,-1.8676229563369402
+ B,60m,hackernews,0.997053731518571,-0.9775587112150161
+ B,60m,pubmed_abstracts,1.3291601009760994,-1.314086141767173
+ B,60m,uspto_backgrounds,1.3885329922795382,-1.3722364780756586
+-C,60m,arxiv,1.7090641949196275,-1.6920851865549653
+-C,60m,freelaw,1.3978729324127848,-1.359711625077392
+-C,60m,pubmed_central,1.7418063894054916,-1.7250341955152462
+-C,60m,wikipedia_en,1.405942425893412,-1.3519221694087684
+-C,60m,dm_mathematics,1.5404368282747594,-1.360238501688617
+-C,60m,github,2.5500811082304335,-2.5350978452763853
+-C,60m,stackexchange,1.6954574653314245,-1.6817171963373907
+-C,60m,gutenberg_pg_19,1.0578071388330241,-1.0139621413062874
+-C,60m,pile_cc,1.084472247019599,-1.0630857182730447
+-C,60m,ubuntu_irc,2.0195262354526524,-1.99118098638682
+-C,60m,hackernews,1.036389944018027,-1.0015664530788135
+-C,60m,pubmed_abstracts,1.4198754784453615,-1.364870464054106
+-C,60m,uspto_backgrounds,1.4315218772087,-1.3903655718295864
++C,60m,arxiv,1.6970819545015305,-1.6785734162098094
++C,60m,freelaw,1.4122690382805096,-1.3735398399206988
++C,60m,pubmed_central,1.743537141847524,-1.7279933377387677
++C,60m,wikipedia_en,1.4210836800389743,-1.3665116030260744
++C,60m,dm_mathematics,1.54122127244395,-1.3598218027817213
++C,60m,github,2.5453438994169,-2.5305092436833903
++C,60m,stackexchange,1.6901842095385016,-1.6762168181479413
++C,60m,gutenberg_pg_19,1.0661944871838998,-1.0202053200508585
++C,60m,pile_cc,1.0921387806961158,-1.070392446114364
++C,60m,ubuntu_irc,2.024923737063607,-1.9964950181908299
++C,60m,hackernews,1.038187454777455,-1.0035967619427821
++C,60m,pubmed_abstracts,1.4299231755260569,-1.376123026206195
++C,60m,uspto_backgrounds,1.4427589007478856,-1.4031590955265694
++C_posthoc,60m,arxiv,1.7090641949196275,-1.6920851865549653
++C_posthoc,60m,freelaw,1.3978729324127848,-1.359711625077392
++C_posthoc,60m,pubmed_central,1.7418063894054916,-1.7250341955152462
++C_posthoc,60m,wikipedia_en,1.405942425893412,-1.3519221694087684
++C_posthoc,60m,dm_mathematics,1.5404368282747594,-1.360238501688617
++C_posthoc,60m,github,2.5500811082304335,-2.5350978452763853
++C_posthoc,60m,stackexchange,1.6954574653314245,-1.6817171963373907
++C_posthoc,60m,gutenberg_pg_19,1.0578071388330241,-1.0139621413062874
++C_posthoc,60m,pile_cc,1.084472247019599,-1.0630857182730447
++C_posthoc,60m,ubuntu_irc,2.0195262354526524,-1.99118098638682
++C_posthoc,60m,hackernews,1.036389944018027,-1.0015664530788135
++C_posthoc,60m,pubmed_abstracts,1.4198754784453615,-1.364870464054106
++C_posthoc,60m,uspto_backgrounds,1.4315218772087,-1.3903655718295864
+ A,1B,arxiv,3.2086141722636907,-3.1923870832655927
+ A,1B,freelaw,3.3734879519263865,-3.3675114658229006
+ A,1B,pubmed_central,3.382914001657544,-3.3642454890829927
+@@ -103,19 +129,32 @@ B,1B,ubuntu_irc,3.8365810663829514,-3.7520906499134674
+ B,1B,hackernews,2.16308898844919,-2.1517384971424693
+ B,1B,pubmed_abstracts,2.838308654871657,-2.8322287677808475
+ B,1B,uspto_backgrounds,2.7332361772180924,-2.72586631110845
+-C,1B,arxiv,2.6950926563422586,-2.690306019068525
+-C,1B,freelaw,3.002586403403308,-2.99736105099615
+-C,1B,pubmed_central,2.888415735397606,-2.8863561098699644
+-C,1B,wikipedia_en,3.2753899024785205,-3.272603519067528
+-C,1B,dm_mathematics,2.401710045972371,-2.158042324837533
+-C,1B,github,3.732234840786001,-3.730021607076533
+-C,1B,stackexchange,3.0853953063149158,-3.0835372190273045
+-C,1B,gutenberg_pg_19,2.628769048112352,-2.620426327978239
+-C,1B,pile_cc,2.7476281380291168,-2.745827921871257
+-C,1B,ubuntu_irc,4.064814909605327,-4.042079922876772
+-C,1B,hackernews,2.2497166321963906,-2.242141691150551
+-C,1B,pubmed_abstracts,2.829420244743209,-2.8269507760287205
+-C,1B,uspto_backgrounds,2.7903785903795115,-2.787223361081753
++C,1B,arxiv,2.6849925722947092,-2.680145135358234
++C,1B,freelaw,3.002473664551756,-2.9976724056118615
++C,1B,pubmed_central,2.890213269881543,-2.8883758791194634
++C,1B,wikipedia_en,3.277559705657019,-3.274869990232834
++C,1B,dm_mathematics,2.3996733165063313,-2.1574524814883267
++C,1B,github,3.7297148774655042,-3.7280213072383237
++C,1B,stackexchange,3.0775645511562435,-3.0758146364447425
++C,1B,gutenberg_pg_19,2.624727900812582,-2.616470042169294
++C,1B,pile_cc,2.745465315619111,-2.743679427638811
++C,1B,ubuntu_irc,4.063598787150512,-4.040191714417123
++C,1B,hackernews,2.2436137654370074,-2.2360348936188013
++C,1B,pubmed_abstracts,2.8337838463106477,-2.83153673111484
++C,1B,uspto_backgrounds,2.7804279013378035,-2.777632638422949
++C_posthoc,1B,arxiv,2.6950926563422586,-2.690306019068525
++C_posthoc,1B,freelaw,3.002586403403308,-2.99736105099615
++C_posthoc,1B,pubmed_central,2.888415735397606,-2.8863561098699644
++C_posthoc,1B,wikipedia_en,3.2753899024785205,-3.272603519067528
++C_posthoc,1B,dm_mathematics,2.401710045972371,-2.158042324837533
++C_posthoc,1B,github,3.732234840786001,-3.730021607076533
++C_posthoc,1B,stackexchange,3.0853953063149158,-3.0835372190273045
++C_posthoc,1B,gutenberg_pg_19,2.628769048112352,-2.620426327978239
++C_posthoc,1B,pile_cc,2.7476281380291168,-2.745827921871257
++C_posthoc,1B,ubuntu_irc,4.064814909605327,-4.042079922876772
++C_posthoc,1B,hackernews,2.2497166321963906,-2.242141691150551
++C_posthoc,1B,pubmed_abstracts,2.829420244743209,-2.8269507760287205
++C_posthoc,1B,uspto_backgrounds,2.7903785903795115,-2.787223361081753
+ A,est_10b,arxiv,3.3999791251110856,-3.347374700643415
+ A,est_10b,freelaw,3.4563268214326173,-3.4171222130189305
+ A,est_10b,pubmed_central,3.471294545722684,-3.438918011530019
+@@ -142,19 +181,32 @@ B,est_10b,ubuntu_irc,4.489670906545064,-4.449075331734772
+ B,est_10b,hackernews,3.597875096679441,-3.580810913145805
+ B,est_10b,pubmed_abstracts,3.6221121710244755,-3.596648006416492
+ B,est_10b,uspto_backgrounds,3.413046102845652,-3.389762975140218
+-C,est_10b,arxiv,3.524669887094763,-3.4297263926329915
+-C,est_10b,freelaw,3.475138395437001,-3.4463599169796137
+-C,est_10b,pubmed_central,3.51419696177204,-3.4586479953688554
+-C,est_10b,wikipedia_en,3.8635326947736273,-3.8488157044928633
+-C,est_10b,dm_mathematics,2.9386105167739482,-2.7276278068284463
+-C,est_10b,github,3.660262331631871,-3.5760620659449027
+-C,est_10b,stackexchange,3.5747346318018156,-3.5193019693194962
+-C,est_10b,gutenberg_pg_19,3.603475183266637,-3.5899364165179644
+-C,est_10b,pile_cc,3.8051454077558997,-3.794151461002652
+-C,est_10b,ubuntu_irc,4.548245358386363,-4.478844699739846
+-C,est_10b,hackernews,3.6077487566131423,-3.5935339685544228
+-C,est_10b,pubmed_abstracts,3.621267129207062,-3.6033077264492195
+-C,est_10b,uspto_backgrounds,3.4268665445570328,-3.412851418254237
++C,est_10b,arxiv,3.5232914798294876,-3.426961178267546
++C,est_10b,freelaw,3.4788430750757096,-3.449798216420267
++C,est_10b,pubmed_central,3.5145702206843685,-3.458034307426017
++C,est_10b,wikipedia_en,3.8670863596470486,-3.852715689471718
++C,est_10b,dm_mathematics,2.9387924711851925,-2.7288487853549057
++C,est_10b,github,3.663412765569928,-3.5786479064697514
++C,est_10b,stackexchange,3.5760059441645646,-3.519877086757124
++C,est_10b,gutenberg_pg_19,3.6048190899514334,-3.5916281812612945
++C,est_10b,pile_cc,3.8079865858215487,-3.797237933338148
++C,est_10b,ubuntu_irc,4.547409757293016,-4.477421787702793
++C,est_10b,hackernews,3.609073183808424,-3.594771989304282
++C,est_10b,pubmed_abstracts,3.6253670788518755,-3.607532740609861
++C,est_10b,uspto_backgrounds,3.4300493947409416,-3.4161627413749573
++C_posthoc,est_10b,arxiv,3.524669887094763,-3.4297263926329915
++C_posthoc,est_10b,freelaw,3.475138395437001,-3.4463599169796137
++C_posthoc,est_10b,pubmed_central,3.51419696177204,-3.4586479953688554
++C_posthoc,est_10b,wikipedia_en,3.8635326947736273,-3.8488157044928633
++C_posthoc,est_10b,dm_mathematics,2.9386105167739482,-2.7276278068284463
++C_posthoc,est_10b,github,3.660262331631871,-3.5760620659449027
++C_posthoc,est_10b,stackexchange,3.5747346318018156,-3.5193019693194962
++C_posthoc,est_10b,gutenberg_pg_19,3.603475183266637,-3.5899364165179644
++C_posthoc,est_10b,pile_cc,3.8051454077558997,-3.794151461002652
++C_posthoc,est_10b,ubuntu_irc,4.548245358386363,-4.478844699739846
++C_posthoc,est_10b,hackernews,3.6077487566131423,-3.5935339685544228
++C_posthoc,est_10b,pubmed_abstracts,3.621267129207062,-3.6033077264492195
++C_posthoc,est_10b,uspto_backgrounds,3.4268665445570328,-3.412851418254237
+ A,est_70b,arxiv,3.7659112234361762,-3.7107969228656374
+ A,est_70b,freelaw,3.8279510068914715,-3.787215863812582
+ A,est_70b,pubmed_central,3.8409474821400784,-3.8067180115300197
+@@ -181,16 +233,29 @@ B,est_70b,ubuntu_irc,4.9722531912896875,-4.930127712687153
+ B,est_70b,hackernews,3.9845919882646683,-3.968106151241042
+ B,est_70b,pubmed_abstracts,4.0080206278923,-3.9829908635593494
+ B,est_70b,uspto_backgrounds,3.779279078517446,-3.7558058322830745
+-C,est_70b,arxiv,3.8944273250891914,-3.793148614855214
+-C,est_70b,freelaw,3.8478334473808427,-3.8164535677732645
+-C,est_70b,pubmed_central,3.8850256501740352,-3.8264479953688557
+-C,est_70b,wikipedia_en,4.276784210388659,-4.262377609254768
+-C,est_70b,dm_mathematics,3.246989172896214,-3.019413521114161
+-C,est_70b,github,4.046681590697742,-3.9582303199131563
+-C,est_70b,stackexchange,3.951826112351487,-3.8945686359861633
+-C,est_70b,gutenberg_pg_19,3.9868749651695077,-3.973549114930663
+-C,est_70b,pile_cc,4.213669347006497,-4.2035768578280495
+-C,est_70b,ubuntu_irc,5.032227140436928,-4.959897080692226
+-C,est_70b,hackernews,3.994414549509446,-3.980829206649661
+-C,est_70b,pubmed_abstracts,4.007355015186027,-3.9896505835920784
+-C,est_70b,uspto_backgrounds,3.7929811730990766,-3.7788942753970947
++C,est_70b,arxiv,3.892995749704348,-3.7903834004897674
++C,est_70b,freelaw,3.8515912548046867,-3.8198918672139177
++C,est_70b,pubmed_central,3.8853820709222235,-3.8258343074260184
++C,est_70b,wikipedia_en,4.280368486991853,-4.266277594233622
++C,est_70b,dm_mathematics,3.247182603963517,-3.02063449964062
++C,est_70b,github,4.049777397957814,-3.9608161604380068
++C,est_70b,stackexchange,3.953052404432821,-3.8951437534237896
++C,est_70b,gutenberg_pg_19,3.988249051222684,-3.975240879673993
++C,est_70b,pile_cc,4.216529214503375,-4.206663330163545
++C,est_70b,ubuntu_irc,5.031379092873205,-4.958474168655175
++C,est_70b,hackernews,3.9957412545170765,-3.98206722739952
++C,est_70b,pubmed_abstracts,4.011429054106505,-3.993875597752717
++C,est_70b,uspto_backgrounds,3.796163028842558,-3.782205598517815
++C_posthoc,est_70b,arxiv,3.8944273250891914,-3.793148614855214
++C_posthoc,est_70b,freelaw,3.8478334473808427,-3.8164535677732645
++C_posthoc,est_70b,pubmed_central,3.8850256501740352,-3.8264479953688557
++C_posthoc,est_70b,wikipedia_en,4.276784210388659,-4.262377609254768
++C_posthoc,est_70b,dm_mathematics,3.246989172896214,-3.019413521114161
++C_posthoc,est_70b,github,4.046681590697742,-3.9582303199131563
++C_posthoc,est_70b,stackexchange,3.951826112351487,-3.8945686359861633
++C_posthoc,est_70b,gutenberg_pg_19,3.9868749651695077,-3.973549114930663
++C_posthoc,est_70b,pile_cc,4.213669347006497,-4.2035768578280495
++C_posthoc,est_70b,ubuntu_irc,5.032227140436928,-4.959897080692226
++C_posthoc,est_70b,hackernews,3.994414549509446,-3.980829206649661
++C_posthoc,est_70b,pubmed_abstracts,4.007355015186027,-3.9896505835920784
++C_posthoc,est_70b,uspto_backgrounds,3.7929811730990766,-3.7788942753970947
+diff --git a/research/reports/r1_summary.json b/research/reports/r1_summary.json
+index 91df35d..4fbf586 100644
+--- a/research/reports/r1_summary.json
++++ b/research/reports/r1_summary.json
+@@ -1,5 +1,5 @@
+ {
+-  "q1_rows": 15,
++  "q1_rows": 20,
+   "q1_all_same_candidates": true,
+   "q1_sets": [
+     {
+diff --git a/research/src/checks.py b/research/src/checks.py
+index e0be59e..7c31efd 100644
+--- a/research/src/checks.py
++++ b/research/src/checks.py
+@@ -123,14 +123,38 @@ def check_3_boundary_and_trust_region() -> list[dict]:
+ 
+ 
+ def check_4_c_q1_predictor_and_scale() -> list[dict]:
+-    """C mixture predictor callable; cross-question normalisation scale frozen."""
++    """C mixture predictor callable (rebuilt); cross-question normalisation scale frozen."""
+     out = []
+     C = LineC()
+     st = C.q1_predictor_status()
+-    out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
+-                    True, st["executable"],
+-                    "pass" if st["executable"] else "blocked",
+-                    st["blocker"] or "", "critical"))
++    art = RESEARCH / "artifacts/c_q1_predictor"
++    model_p, proto_p, ver_p = art / "model.joblib", art / "protocol.json", art / "verification.json"
++    if model_p.exists() and ver_p.exists():
++        import json as _json
++        import numpy as np
++        ver = _json.loads(ver_p.read_text(encoding="utf-8"))
++        proto = _json.loads(proto_p.read_text(encoding="utf-8"))
++        block = ver.get("original_commit_result_vs_persisted_object", {})
++        cmp = block.get("overall", {})
++        eq = bool(block.get("equivalent"))
++        import joblib
++        model = joblib.load(model_p)                      # cross-version warning is expected
++        p0 = np.asarray(proto["p0_reference_mixture"], float)
++        pred = model.predict((p0 / p0.sum()).reshape(1, -1))
++        finite = bool(np.all(np.isfinite(pred)) and pred.shape == (1, 13))
++        status = "pass" if (finite and eq) else "fail"
++        out.append(_row("4.C-predictor", "C Q1 predictor executable + faithful to original",
++                        {"finite": True, "equivalent": True},
++                        {"finite": finite, "equivalent": eq,
++                         "max_abs_diff_vs_stored": cmp.get("max_abs_diff")},
++                        status,
++                        f"rebuild variant={proto.get('selected_variant', {}).get('name')}; "
++                        f"fit_env sklearn={ver.get('fit_environment', {}).get('sklearn')}", "critical"))
++    else:
++        out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
++                        True, st["executable"],
++                        "pass" if st["executable"] else "blocked",
++                        st["blocker"] or "", "critical"))
+     out.append(_row("4.C-descriptor", "C Q1 descriptor well-formed (17 in / 13 out / v / p0)",
+                     {"n_inputs": 17, "n_outputs": 13, "keys_ok": True},
+                     {"n_inputs": st["n_inputs"], "n_outputs": st["n_outputs"],
+diff --git a/research/src/r1_compare.py b/research/src/r1_compare.py
+index b66dbab..dd59ece 100644
+--- a/research/src/r1_compare.py
++++ b/research/src/r1_compare.py
+@@ -72,7 +72,7 @@ def load_a() -> dict:
+     return out
+ 
+ 
+-def load_c(variant: str = "best_entropy_proxyQ") -> dict:
++def load_c(variant: str = "forest_none") -> dict:
+     C = LineC()
+     df = pd.read_csv(C.root / "artifacts/baselines/Q1-C/mixture_predictions.csv")
+     df = df[(df["variant"] == variant) & (df["target"] != "__composite_equal_v__")]
+@@ -124,8 +124,12 @@ def load_b() -> dict:
+ 
+ 
+ # ------------------------------------------------------------------ layer A
+-def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+-    A, B, C = load_a(), load_b(), load_c()
++def layer_a_q1(c_posthoc: str = "best_entropy_proxyQ") -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
++    A, B, C = load_a(), load_b(), load_c("forest_none")
++    try:
++        Cp = load_c(c_posthoc)          # C's post-hoc/test-informed variant, labelled separately
++    except Exception:
++        Cp = {}
+     v = np.full(13, 1.0 / 13)
+     rows, perdom, ident = [], [], []
+     for key in SETS.values():
+@@ -158,10 +162,18 @@ def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+                       "note": "y_true 一致即同一候选集与同一真实 Loss"})
+         if ymax >= 1e-6:
+             continue
+-        for name, Y, Yh in (("A", yA, Yha[idxA]), ("B", yB, Yhb[idxB]), ("C", yC, Yhc[idxC])):
++        variants = [("A", yA, Yha[idxA], A[key]["provenance"]),
++                    ("B", yB, Yhb[idxB], B[key]["provenance"]),
++                    ("C", yC, Yhc[idxC], C[key]["provenance"])]
++        if key in Cp:
++            icp = {x: i for i, x in enumerate(Cp[key]["index"])}
++            if all(x in icp for x in common):
++                Ycp, Yhcp = reord(Cp[key])
++                idxcp = [icp[x] for x in common]
++                variants.append(("C_posthoc", Ycp[idxcp], Yhcp[idxcp], Cp[key]["provenance"]))
++        for name, Y, Yh, prov in variants:
+             m = _metrics(Y, Yh, v)
+-            m.update({"line": name, "set": key, "n": int(common.size),
+-                      "provenance": {"A": A, "B": B, "C": C}[name][key]["provenance"]})
++            m.update({"line": name, "set": key, "n": int(common.size), "provenance": prov})
+             rows.append(m)
+             for j, t in enumerate(doms):
+                 e = Y[:, j] - Yh[:, j]
+@@ -301,8 +313,8 @@ def run_r1(outdir: Path) -> dict:
+ def main():
+     import argparse
+     ap = argparse.ArgumentParser()
+-    ap.add_argument("--variant", default="best_entropy_proxyQ",
+-                    help="C Q1 stored variant to use in Layer A (default matches selected_model)")
++    ap.add_argument("--variant", default="forest_none",
++                    help="C Q1 stored variant to use in Layer A (default = CV-selected forest_none)")
+     ap.add_argument("--outdir", default=str(RESEARCH / "reports"))
+     args = ap.parse_args()
+     res = run_r1(Path(args.outdir))

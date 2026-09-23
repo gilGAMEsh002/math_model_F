@@ -1,0 +1,109 @@
+diff --git a/research/src/checks.py b/research/src/checks.py
+index e0be59e..207003e 100644
+--- a/research/src/checks.py
++++ b/research/src/checks.py
+@@ -123,14 +123,38 @@ def check_3_boundary_and_trust_region() -> list[dict]:
+ 
+ 
+ def check_4_c_q1_predictor_and_scale() -> list[dict]:
+-    """C mixture predictor callable; cross-question normalisation scale frozen."""
++    """C mixture predictor callable (rebuilt); cross-question normalisation scale frozen."""
+     out = []
+     C = LineC()
+     st = C.q1_predictor_status()
+-    out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
+-                    True, st["executable"],
+-                    "pass" if st["executable"] else "blocked",
+-                    st["blocker"] or "", "critical"))
++    art = RESEARCH / "artifacts/c_q1_predictor"
++    model_p, proto_p, ver_p = art / "model.joblib", art / "protocol.json", art / "verification.json"
++    if model_p.exists() and ver_p.exists():
++        import json as _json
++        import numpy as np
++        ver = _json.loads(ver_p.read_text(encoding="utf-8"))
++        proto = _json.loads(proto_p.read_text(encoding="utf-8"))
++        cmp = ver.get("original_commit_result_vs_persisted_object", {}).get("overall", {})
++        import joblib
++        model = joblib.load(model_p)                      # cross-version warning is expected
++        p0 = np.asarray(proto["p0_reference_mixture"], float)
++        xn = p0 / p0.sum()
++        pred = model.predict(xn.reshape(1, -1))
++        finite = bool(np.all(np.isfinite(pred)) and pred.shape == (1, 13))
++        eq = bool(cmp.get("equivalent"))
++        status = "pass" if (finite and eq) else "fail"
++        out.append(_row("4.C-predictor", "C Q1 predictor executable + faithful to original",
++                        {"finite": True, "equivalent": True},
++                        {"finite": finite, "equivalent": eq,
++                         "max_abs_diff_vs_stored": cmp.get("max_abs_diff")},
++                        status,
++                        f"rebuild variant={proto.get('selected_variant', {}).get('name')}; "
++                        f"fit_env sklearn={ver.get('fit_environment', {}).get('sklearn')}", "critical"))
++    else:
++        out.append(_row("4.C-predictor", "C Q1 mixture predictor executable for arbitrary p",
++                        True, st["executable"],
++                        "pass" if st["executable"] else "blocked",
++                        st["blocker"] or "", "critical"))
+     out.append(_row("4.C-descriptor", "C Q1 descriptor well-formed (17 in / 13 out / v / p0)",
+                     {"n_inputs": 17, "n_outputs": 13, "keys_ok": True},
+                     {"n_inputs": st["n_inputs"], "n_outputs": st["n_outputs"],
+diff --git a/research/src/r1_compare.py b/research/src/r1_compare.py
+index b66dbab..dd59ece 100644
+--- a/research/src/r1_compare.py
++++ b/research/src/r1_compare.py
+@@ -72,7 +72,7 @@ def load_a() -> dict:
+     return out
+ 
+ 
+-def load_c(variant: str = "best_entropy_proxyQ") -> dict:
++def load_c(variant: str = "forest_none") -> dict:
+     C = LineC()
+     df = pd.read_csv(C.root / "artifacts/baselines/Q1-C/mixture_predictions.csv")
+     df = df[(df["variant"] == variant) & (df["target"] != "__composite_equal_v__")]
+@@ -124,8 +124,12 @@ def load_b() -> dict:
+ 
+ 
+ # ------------------------------------------------------------------ layer A
+-def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+-    A, B, C = load_a(), load_b(), load_c()
++def layer_a_q1(c_posthoc: str = "best_entropy_proxyQ") -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
++    A, B, C = load_a(), load_b(), load_c("forest_none")
++    try:
++        Cp = load_c(c_posthoc)          # C's post-hoc/test-informed variant, labelled separately
++    except Exception:
++        Cp = {}
+     v = np.full(13, 1.0 / 13)
+     rows, perdom, ident = [], [], []
+     for key in SETS.values():
+@@ -158,10 +162,18 @@ def layer_a_q1() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+                       "note": "y_true 一致即同一候选集与同一真实 Loss"})
+         if ymax >= 1e-6:
+             continue
+-        for name, Y, Yh in (("A", yA, Yha[idxA]), ("B", yB, Yhb[idxB]), ("C", yC, Yhc[idxC])):
++        variants = [("A", yA, Yha[idxA], A[key]["provenance"]),
++                    ("B", yB, Yhb[idxB], B[key]["provenance"]),
++                    ("C", yC, Yhc[idxC], C[key]["provenance"])]
++        if key in Cp:
++            icp = {x: i for i, x in enumerate(Cp[key]["index"])}
++            if all(x in icp for x in common):
++                Ycp, Yhcp = reord(Cp[key])
++                idxcp = [icp[x] for x in common]
++                variants.append(("C_posthoc", Ycp[idxcp], Yhcp[idxcp], Cp[key]["provenance"]))
++        for name, Y, Yh, prov in variants:
+             m = _metrics(Y, Yh, v)
+-            m.update({"line": name, "set": key, "n": int(common.size),
+-                      "provenance": {"A": A, "B": B, "C": C}[name][key]["provenance"]})
++            m.update({"line": name, "set": key, "n": int(common.size), "provenance": prov})
+             rows.append(m)
+             for j, t in enumerate(doms):
+                 e = Y[:, j] - Yh[:, j]
+@@ -301,8 +313,8 @@ def run_r1(outdir: Path) -> dict:
+ def main():
+     import argparse
+     ap = argparse.ArgumentParser()
+-    ap.add_argument("--variant", default="best_entropy_proxyQ",
+-                    help="C Q1 stored variant to use in Layer A (default matches selected_model)")
++    ap.add_argument("--variant", default="forest_none",
++                    help="C Q1 stored variant to use in Layer A (default = CV-selected forest_none)")
+     ap.add_argument("--outdir", default=str(RESEARCH / "reports"))
+     args = ap.parse_args()
+     res = run_r1(Path(args.outdir))
