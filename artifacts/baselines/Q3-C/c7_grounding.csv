@@ -1,0 +1,6 @@
+﻿ell,attn_share_eta_l_over_6,n_architectures_in_C7,examples,single_architecture,note
+2048,0.06826666666666667,18,EleutherAI/pythia-70m; EleutherAI/pythia-160m; EleutherAI/pythia-410m,False,
+4096,0.13653333333333334,8,meta-llama/Llama-2-7b-hf; meta-llama/Llama-2-13b-hf; meta-llama/Llama-2-70b-hf,False,
+8192,0.2730666666666667,7,meta-llama/Meta-Llama-3-8B; meta-llama/Meta-Llama-3-70B; google/gemma-2-2b,False,
+32768,1.0922666666666667,11,mistralai/Mistral-7B-v0.1; mistralai/Mixtral-8x7B-v0.1; Qwen/Qwen2-0.5B,False,
+131072,4.369066666666667,1,meta-llama/Llama-3.1-8B,True,该长度在 C7 中仅 1 个架构支持，情景结论依赖单一架构
