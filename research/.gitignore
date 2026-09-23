@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+# 大型缓存/临时结果（元数据、指标、报告仍入库）
+runs/**/*.parquet
+runs/**/*.png
+cfg.local.yaml

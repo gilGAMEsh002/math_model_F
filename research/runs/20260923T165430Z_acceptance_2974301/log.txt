@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py", line 86, in cmd_experiment
+    checks = run_acceptance()
+  File "/home/sshuser/projects/数学建模26/F题-研究整合/research/src/checks.py", line 192, in run_acceptance
+    checks += check_3_boundary_and_trust_region()
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/sshuser/projects/数学建模26/F题-研究整合/research/src/checks.py", line 104, in check_3_boundary_and_trust_region
+    g_an = o["dL_dQ"]
+           ~^^^^^^^^^
+KeyError: 'dL_dQ'

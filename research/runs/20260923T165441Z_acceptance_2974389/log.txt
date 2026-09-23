@@ -1,0 +1,2 @@
+[00:54:43] acceptance summary: {'n': 14, 'pass': 12, 'fail': 0, 'blocked': 1, 'n_a': 1, 'critical_failures': []}
+[00:54:43] 存在 fail/blocked —— 已在报告中如实记录，未标记为全部通过

@@ -1,0 +1,5 @@
+[00:54:27] environment: {"python": "3.14.4", "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43", "executable": "/home/sshuser/projects/数学建模26/F题-研究整合/research/.venv/bin/python", "numpy": "2.5.1", "pandas": "3.0.3", "scipy": "1.18.1", "sklearn": "1.9.1", "pyarrow": "25.0.0", "yaml": "6.0.3", "matplotlib": "3.11.1"}
+[00:54:27] line A: worktree=/home/sshuser/projects/数学建模26/F题-upstream/line-a exists=True head=c8b97cf4 locked=c8b97cf4 match=True
+[00:54:27] line B: worktree=/home/sshuser/projects/数学建模26/F题-upstream/line-b exists=True head=e498b2c6 locked=e498b2c6 match=True
+[00:54:27] line C: worktree=/home/sshuser/projects/数学建模26/F题-upstream/line-c exists=True head=cf765761 locked=cf765761 match=True
+[00:54:27] check: lines_ok=True; hash_mismatches=[]

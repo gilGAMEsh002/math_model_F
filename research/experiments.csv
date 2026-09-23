@@ -1,0 +1,6 @@
+exp_id,name,line,question,kind,status,executed,run_id,planned_command,result_path,notes
+E0-A,acceptance_light_checks,ALL,ALL,interface_check,done_with_blockers,true,20260923T165441Z_acceptance_2974389,python -m src.entry experiment --name acceptance,reports/acceptance_20260923T165441Z_acceptance_2974389.md,14 项检查：12 pass / 0 fail / 1 blocked / 1 n/a；blocked=C Q1 森林预测器未持久化可执行对象
+R1,unified_three_line_comparison,A|B|C,Q1-Q3,fixed_upstream_comparison,planned,false,20260923T165516Z_plan_R1_2974663,python -m src.entry experiment --config configs/r1_three_line.yaml,runs/,本轮仅登记计划（config run:false）；实现 src/r1_compare.py 后方可执行
+R2a,storyline_candidate_a_effective_data,A|B|C,Q2-Q3,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2a_*.yaml,runs/,主线候选甲的最小辨别实验
+R2b,storyline_candidate_b_source_reconciliation,A|B|C,Q1-Q2,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2b_*.yaml,runs/,主线候选乙的最小辨别实验
+R3,new_method_ablation_and_storyline_lock,A|B|C,ALL,method_development,pending,false,,python -m src.entry experiment --config configs/r3_*.yaml,runs/,新方法/消融与主线选择记录；更新完整大纲

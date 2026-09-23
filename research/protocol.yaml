@@ -1,0 +1,53 @@
+# 研究阶段统一口径（research protocol）
+# 本文件冻结研究实验必须遵守的口径；任何偏离都要在 experiments.csv / decisions.md 中登记。
+# 依据：建模方案/baselines/00_公共约定与接口.md、01_问题分析与Baseline实施计划.md。
+
+version: research-protocol-v1
+frozen_utc: "2026-09-24"
+
+units:
+  N: "实际参数个数；CSV 的 N_params_B 需 ×1e9"
+  D: "实际 Token 数；CSV 的 D_tokens_B 需 ×1e9"
+  C: "FLOPs；C_FLOPs_1e21 需 ×1e21"
+  cost_model: "C = D * [(6 + eta*ell)*N + max(g(Q)-g(Q0),0)]，eta=2e-4"
+  loss_fit_coordinate:
+    A: "十亿坐标 n=N/1e9, d=D/1e9（A 全链一致）"
+    B: "十亿坐标；损失端必须换算，成本端用实际个数（Q3-B 已修）"
+    C: "十亿坐标（Q2-C 系数）；Q3-C 损失端换算、成本端实际个数（已修）"
+  anchor_physical_point: "N=1e9,D=1e11,Q=1,h=1 -> 经典项 2.385578"
+
+quality_coordinate:
+  A: "22 维等权 + 最弱组冲突消解；Q0≈0.5858"
+  B: "组内均值/组间几何均值 + 短板；使用同源重建集（A1=50412），与题面 A1(51230) 不同源"
+  C: "熵权（与等权对照）+ 冲突阈值；6 个已映射域，有效指标数 8.16/22"
+  warning: "三条线的 Q 不可直接比较或排名；跨线使用需先固定上游或做单调映射并登记假设"
+
+evaluation_target:
+  primary: "13 个验证域等权 Loss（A 的 v_k=1/13）"
+  secondary: "Spearman 排序、Top-k 选方后悔值"
+  caveat: "不同模型规模的绝对 Loss 不可比；报告排序/后悔值时须注明候选集"
+
+splits:
+  q1_fit: "A4/A5 (train_mixture_1m / train_pile_loss_1m, 512 组)"
+  q1_final_test: "A6/A7 (1M), A8/A9 (60M), A10/A11 (1B)"
+  q1_extrapolation_diagnostic_only: "A12/A13 (10B), A14/A15 (70B) —— 不允许作为真实泛化证据"
+  q2_main_fit: "B1 pythia_training_log_existing"
+  q2_cross_source: "B2 半合成 / B3 插值 / B4 跨族 / B5 文献"
+  q2_quality_sets: "B6 主 / B7 替代 / B8 大规模(与 B6 符号相反，不可池化)"
+  rule: "最终检验集一旦用于挑选方法，该方法即不再是盲测"
+
+source_labels:
+  - observed
+  - semi_synthetic
+  - interpolated
+  - estimated
+  - subset
+  - mixed
+  requirement: "所有表按来源标签分层；半合成/插值/估算不得写成真实实验"
+
+integrity_rules:
+  - "先区分实现错误与模型局限，再谈机制"
+  - "端到端比较与固定上游的算法消融分开报告"
+  - "不把配置中列出的情景当作已运行结果"
+  - "允许无增益/无结构转移/不可辨识的结论"
+  - "原始附件只读；不覆盖他人 baseline 产物"

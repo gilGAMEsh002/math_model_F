@@ -1,0 +1,5 @@
+run_id,status,command,elapsed_s,seed,upstream
+20260923T165425Z_check_2974227,success,/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py check,1.312,,"{""A"": ""c8b97cf4"", ""B"": ""e498b2c6"", ""C"": ""cf765761""}"
+20260923T165430Z_acceptance_2974301,failed,/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py experiment --name acceptance,1.391,,"{""A"": ""c8b97cf4"", ""B"": ""e498b2c6"", ""C"": ""cf765761""}"
+20260923T165441Z_acceptance_2974389,success,/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py experiment --name acceptance,1.413,,"{""A"": ""c8b97cf4"", ""B"": ""e498b2c6"", ""C"": ""cf765761""}"
+20260923T165516Z_plan_R1_2974663,success,/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py experiment --config configs/r1_three_line.yaml,1.066,,"{""A"": ""c8b97cf4"", ""B"": ""e498b2c6"", ""C"": ""cf765761""}"

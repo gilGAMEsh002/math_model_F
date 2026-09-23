@@ -1,0 +1,24 @@
+# R1（本阶段不执行）：修复后三线的统一口径比较
+id: R1
+name: unified_three_line_comparison
+status: declared
+run: false            # 本轮仅登记计划；置 true 前需先实现 src/r1_compare.py
+inputs:
+  lines: [A, B, C]
+  frozen_commits:
+    A: c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932
+    B: e498b2c6979a154c15a385a9a315827ef801a169
+    C: cf7657616dc04cd2547339ed1fdb6c4dc2d4b378
+protocol: protocol.yaml
+evaluation_target: "13 域等权 Loss；跨尺度只看排序与 Top-k 后悔值"
+caliber:
+  q1: "同一 A4/A5 训练集与 A6-A11 检验集；各自上游固定，端到端差异不得归因于单一算法"
+  q2: "B1 主拟合 + B6/B7 质量；B8 单独标注不可池化"
+  q3: "同一成本模型 eta=2e-4、同一预算/上下文情景；C 主表限可信区域内"
+outputs:
+  - reports/r1_three_line_comparison.md
+  - reports/r1_three_line_metrics.csv
+caveats:
+  - "三条线 Q 坐标不同；跨线 Q 数值不可直接排名"
+  - "10B/70B 为估算/外推，仅诊断"
+  - "已用于挑方法的检验集不再称盲测"

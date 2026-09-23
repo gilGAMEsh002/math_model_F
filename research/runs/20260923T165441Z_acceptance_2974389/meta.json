@@ -1,0 +1,231 @@
+{
+  "run_id": "20260923T165441Z_acceptance_2974389",
+  "created_utc": "2026-09-23T16:54:41Z",
+  "status": "success",
+  "command": "/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py experiment --name acceptance",
+  "cwd": "/home/sshuser/projects/数学建模26/F题-研究整合/research",
+  "seed": null,
+  "config": null,
+  "upstream": {
+    "A": {
+      "branch": "baseline-a",
+      "commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932"
+    },
+    "B": {
+      "branch": "baseline-b",
+      "commit": "e498b2c6979a154c15a385a9a315827ef801a169"
+    },
+    "C": {
+      "branch": "baseline-c",
+      "commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378"
+    }
+  },
+  "c_upstream_hashes": {
+    "C_q1_predictor": "a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5",
+    "C_q2_predictor": "729227647c542e953e9c569093457f22431f8a1678876e27450a927073a88fe1",
+    "C_q3_alloc": "4ad81893fd2b4a9db6cd9826664c2c7169d4e99bc38736ea538a4721409d53cf",
+    "C_unit_anchor": "116baad8eddf92c0142cd1f4f2e5a28909f8712b9fab07cf9b878ab5d614a17e",
+    "C_kappa_ablation": "768129d4d62d1e0d7239dad94a978f0db5036a7d0651aede290b16791094db6d",
+    "A_mixture_predictor": "024af1801deb305afc6a944cf6382acb7b565e8cbd7a3d3b86898022ceb6a6ff",
+    "A_loss_predictor": "721b69c2f36640a2282e28007473d4c7685759903610c9e0d3770dfdb4ed1b72",
+    "B_q2_params": "f87ec4ce3cd3c83c7786cc7a48ce04a912af05742c4624d8e266e4820b3dd081",
+    "B_q3_alloc": "c6311566f76dd446a5d288a5257851d397c2a9d02bb347624ac62818e4289bed"
+  },
+  "research_revision": {
+    "branch": "research/storyline",
+    "commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932",
+    "dirty": true,
+    "dirty_files": [
+      "?? research/"
+    ],
+    "diff_sha256": ""
+  },
+  "environment": {
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "executable": "/home/sshuser/projects/数学建模26/F题-研究整合/research/.venv/bin/python",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "pyarrow": "25.0.0",
+    "yaml": "6.0.3",
+    "matplotlib": "3.11.1"
+  },
+  "elapsed_s": 1.413,
+  "metrics": {
+    "summary": {
+      "n": 14,
+      "pass": 12,
+      "fail": 0,
+      "blocked": 1,
+      "n_a": 1,
+      "critical_failures": []
+    },
+    "checks": [
+      {
+        "id": "1.C",
+        "name": "C Q2-C vs Q3-C at physical anchor",
+        "expected": {
+          "q2": 2.385578,
+          "q3": 2.385578
+        },
+        "actual": {
+          "q2": 2.385578185266307,
+          "q3": 2.385578185266307
+        },
+        "status": "pass",
+        "severity": "critical",
+        "notes": "Q2-C 预测器（十亿坐标）与 Q3-C 模型（实际个数，内部换算）"
+      },
+      {
+        "id": "1.B",
+        "name": "B Q2 params vs Q3-B loss at physical anchor",
+        "expected": 2.385578,
+        "actual": 2.385578178410373,
+        "status": "pass",
+        "severity": "critical",
+        "notes": "Q3-B loss() 修复后应与十亿坐标经典项一致"
+      },
+      {
+        "id": "1.A",
+        "name": "A Q2/Q3 loss at physical anchor (Q=1)",
+        "expected": 2.385578,
+        "actual": 2.3855781852651727,
+        "status": "pass",
+        "severity": "critical",
+        "notes": "A 全链同一 loss_predictor.json"
+      },
+      {
+        "id": "2.C",
+        "name": "C cost recomputed from actual N,D; residual",
+        "expected": "<=1e-9",
+        "actual": 3.1086244689504383e-15,
+        "status": "pass",
+        "severity": "critical",
+        "notes": "用实际个数回算 6ND+ηNDℓ+D·c(Q) 与预算 C 的残差"
+      },
+      {
+        "id": "2.A",
+        "name": "A cost_check presence + loss predictor units",
+        "expected": "exists",
+        "actual": true,
+        "status": "pass",
+        "severity": "info",
+        "notes": "A Q3 成本份额与约束残差见 artifacts/baselines/Q3-A/"
+      },
+      {
+        "id": "2.B",
+        "name": "B cost constraint max relative error",
+        "expected": "<=1e-9",
+        "actual": 2.22045e-16,
+        "status": "pass",
+        "severity": "critical",
+        "notes": "B Q3 影子成本回算"
+      },
+      {
+        "id": "3.C-deriv",
+        "name": "C right derivative at Q=Q0 vs forward FD",
+        "expected": {
+          "g_analytic": -0.09447806248413058,
+          "g_fd": -0.09447798216504791
+        },
+        "actual": "rel<=1e-3",
+        "status": "pass",
+        "severity": "critical",
+        "notes": "可行域 Q>=Q0 的右导数（旧实现会置零）"
+      },
+      {
+        "id": "3.C-trust",
+        "name": "C main optimal table all in_trust_l1",
+        "expected": true,
+        "actual": true,
+        "status": "pass",
+        "severity": "critical",
+        "notes": "rows=720; 区域外候选单列 optimal_allocations_outside_l1.csv"
+      },
+      {
+        "id": "3.B",
+        "name": "B trust-region constraint",
+        "expected": "n/a",
+        "actual": "n/a",
+        "status": "n/a",
+        "severity": "info",
+        "notes": "B 第三问不含 p 可信域约束（固定配比）"
+      },
+      {
+        "id": "4.C-predictor",
+        "name": "C Q1 mixture predictor executable for arbitrary p",
+        "expected": true,
+        "actual": false,
+        "status": "blocked",
+        "severity": "critical",
+        "notes": "仅描述符；未持久化森林系数/模型对象，无法对任意合法 p 调用"
+      },
+      {
+        "id": "4.C-descriptor",
+        "name": "C Q1 descriptor well-formed (17 in / 13 out / v / p0)",
+        "expected": {
+          "n_inputs": 17,
+          "n_outputs": 13,
+          "keys_ok": true
+        },
+        "actual": {
+          "n_inputs": 17,
+          "n_outputs": 13,
+          "keys_ok": true
+        },
+        "status": "pass",
+        "severity": "info",
+        "notes": "描述符协议检查"
+      },
+      {
+        "id": "4.C-scale",
+        "name": "Cross-question quality scale frozen (Q2-C calibration)",
+        "expected": "exists",
+        "actual": {
+          "q2": true,
+          "q3": false
+        },
+        "status": "pass",
+        "severity": "info",
+        "notes": "Q3-C 的 h(p) 尺度取自 Q2-C 冻结的 scale_s，避免逐候选重标定"
+      },
+      {
+        "id": "5.planned",
+        "name": "experiments.csv: executed=true has run_id; no done-without-run",
+        "expected": {
+          "bad_executed": [],
+          "done_without_executed": []
+        },
+        "actual": {
+          "bad_executed": [],
+          "done_without_executed": []
+        },
+        "status": "pass",
+        "severity": "critical",
+        "notes": "共 5 条登记（含 R1/R2/R3，均为 pending）"
+      },
+      {
+        "id": "6.fix",
+        "name": "fix evidence present (A tests / B test / C anchor+kappa)",
+        "expected": {
+          "A_tests": true,
+          "B_unit_test": true,
+          "C_unit_anchor": true,
+          "C_kappa_ablation": true
+        },
+        "actual": {
+          "A_tests": true,
+          "B_unit_test": true,
+          "C_unit_anchor": true,
+          "C_kappa_ablation": true
+        },
+        "status": "pass",
+        "severity": "info",
+        "notes": "代码已修≠全量重跑；三项状态在 decisions.md 分开登记"
+      }
+    ]
+  },
+  "failures": []
+}

@@ -1,0 +1,9 @@
+# 实际验证过的研究环境依赖（research/.venv，2026-09-24）
+# 由 `python -c "import ..."` 实测；venv 使用 --system-site-packages 复用系统包
+numpy==2.5.1
+pandas==3.0.3
+scipy==1.18.1
+scikit-learn==1.9.1
+pyarrow==25.0.0
+PyYAML==6.0.3
+matplotlib==3.11.1

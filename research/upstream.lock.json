@@ -1,0 +1,93 @@
+{
+  "generated_utc": "2026-09-23T16:52:38Z",
+  "repo_root": "/home/sshuser/projects/数学建模26/F题",
+  "research_worktree": "/home/sshuser/projects/数学建模26/F题-研究整合",
+  "upstream_root": "/home/sshuser/projects/数学建模26/F题-upstream",
+  "lines": {
+    "A": {
+      "branch": "baseline-a",
+      "commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932",
+      "worktree": "/home/sshuser/projects/数学建模26/F题-upstream/line-a",
+      "role": "Q1-A/Q2-A/Q3-A; Q4-A deferred"
+    },
+    "B": {
+      "branch": "baseline-b",
+      "commit": "e498b2c6979a154c15a385a9a315827ef801a169",
+      "worktree": "/home/sshuser/projects/数学建模26/F题-upstream/line-b",
+      "role": "Q1-B..Q4-B"
+    },
+    "C": {
+      "branch": "baseline-c",
+      "commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378",
+      "worktree": "/home/sshuser/projects/数学建模26/F题-upstream/line-c",
+      "role": "Q1-C + Q2-C + Q3-C + self-contained preprocessing"
+    }
+  },
+  "c_components": {
+    "Q1-C": {
+      "branch": "baseline-q2-c",
+      "commit": "6f101de192768f449b27ca4d8bf84c0fcb0a6ebc",
+      "path": "src/baselines/Q1-C",
+      "also_on": "origin/baseline-q1-c e35bf06f"
+    },
+    "Q2-C": {
+      "branch": "baseline-q2-c",
+      "commit": "6f101de192768f449b27ca4d8bf84c0fcb0a6ebc",
+      "path": "src/baselines/Q2-C"
+    },
+    "Q3-C": {
+      "branch": "baseline-q3-c",
+      "commit": "7e7e590834348edd869e1b0b91c6573d3711a89a",
+      "path": "src/baselines/Q3-C",
+      "fix_commit": "7e7e590"
+    },
+    "preprocessing": {
+      "branch": "baseline-q1-c-fix",
+      "commit": "efc08cb755c52cf53dfb538df46362dd938d417e",
+      "path": "src/preprocess",
+      "import_mode": "path-copy into baseline-c, not ancestry"
+    },
+    "assembled": {
+      "branch": "baseline-c",
+      "commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378",
+      "note": "= baseline-q2-c + merge(fixed Q3-C) + preprocessing path-copied from baseline-q1-c-fix"
+    }
+  },
+  "component_in_baseline_c_by_ancestry": {
+    "q2-c": true,
+    "q3-c(fixed)": true,
+    "q1-c-fix": false,
+    "q1-c": true
+  },
+  "canonical_data": {
+    "real_attachments": "/home/sshuser/projects/数学建模26/F题/real_attachments",
+    "note": "原始附件实体只在原工作区；研究 worktree / line-b 中的 *.jsonl.xz 是 LFS 指针"
+  },
+  "missing_entities": [
+    {
+      "path": "/home/sshuser/projects/数学建模26/F题-upstream/line-b/data/quality_rebuild/A*.jsonl.xz",
+      "state": "LFS pointer(134B)",
+      "need": "git lfs pull 才能复核 B 质量重建"
+    },
+    {
+      "path": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/*.jsonl.xz",
+      "state": "LFS pointer(134B)",
+      "need": "A 原始数据实体用 {ROOT}/real_attachments"
+    }
+  ],
+  "key_input_sha256": {
+    "C_q1_predictor": "a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5",
+    "C_q2_predictor": "729227647c542e953e9c569093457f22431f8a1678876e27450a927073a88fe1",
+    "C_q3_alloc": "4ad81893fd2b4a9db6cd9826664c2c7169d4e99bc38736ea538a4721409d53cf",
+    "C_unit_anchor": "116baad8eddf92c0142cd1f4f2e5a28909f8712b9fab07cf9b878ab5d614a17e",
+    "C_kappa_ablation": "768129d4d62d1e0d7239dad94a978f0db5036a7d0651aede290b16791094db6d",
+    "A_mixture_predictor": "024af1801deb305afc6a944cf6382acb7b565e8cbd7a3d3b86898022ceb6a6ff",
+    "A_loss_predictor": "721b69c2f36640a2282e28007473d4c7685759903610c9e0d3770dfdb4ed1b72",
+    "B_q2_params": "f87ec4ce3cd3c83c7786cc7a48ce04a912af05742c4624d8e266e4820b3dd081",
+    "B_q3_alloc": "c6311566f76dd446a5d288a5257851d397c2a9d02bb347624ac62818e4289bed"
+  },
+  "notes": [
+    "提交号由 git rev-parse 实测；修复状态不依据分支名/旧报告",
+    "preprocessing 通过路径复制进入 baseline-c，故非 ancestry"
+  ]
+}
