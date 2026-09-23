@@ -38,13 +38,13 @@
   },
   "merged_unique_records": 261086,
   "merged_per_domain": {
+    "arxiv": 17523,
+    "book": 171,
+    "c4": 10000,
+    "commoncrawl": 9640,
     "github": 203752,
     "stackexchange": 10000,
-    "arxiv": 17523,
-    "commoncrawl": 9640,
-    "wikipedia": 10000,
-    "c4": 10000,
-    "book": 171
+    "wikipedia": 10000
   },
   "field_symdiff_A1_A2": {
     "A2_minus_A1": [],

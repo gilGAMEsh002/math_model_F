@@ -81,7 +81,7 @@ def _audit_quality():
         "per_file": per_file,
         "overlaps": overlaps,
         "merged_unique_records": len(merged),
-        "merged_per_domain": dict(per_domain_merged),
+        "merged_per_domain": dict(sorted(per_domain_merged.items())),
         "field_symdiff_A1_A2": field_diff,
         "quality_metrics_expected": len(QUALITY_METRICS),
         "help_fields_expected": HELP_FIELDS,
