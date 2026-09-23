@@ -1,0 +1,1089 @@
+{
+  "baseline_id": "Q2-C",
+  "question": "Q2",
+  "generated_utc": "2026-09-23T12:01:12Z",
+  "config_hash": "28498c305babc5da",
+  "seed": 20260923,
+  "model_family": {
+    "M0": "L = E + A*N^(-alpha) + B*D^(-beta)",
+    "M1": "L = E + A*N^(-alpha) + B*(D*Q^kappa*h)^(-beta)",
+    "M2": "L = E + A*(N*Q^rho)^(-alpha) + B*(D*Q^kappa*h)^(-beta)"
+  },
+  "stages": {
+    "stage1_classical_B1": {
+      "free": [
+        "E",
+        "A",
+        "alpha",
+        "B",
+        "beta"
+      ],
+      "params": {
+        "E": 1.689797562918097,
+        "A": 0.35398032067156865,
+        "alpha": 0.33997658189164076,
+        "B": 1.2403055835454702,
+        "beta": 0.2798781285456506,
+        "kappa": 0.0,
+        "rho": 0.0,
+        "delta": 0.0
+      },
+      "sse": 2.5238258731563485e-05,
+      "rmse": 0.00014649608992588982,
+      "n": 1176,
+      "n_clusters": 1,
+      "boundary_hits": {},
+      "aic": -20754.65980014373
+    },
+    "stage2_M1_staged": {
+      "free": [
+        "kappa",
+        "delta"
+      ],
+      "params": {
+        "E": 1.689797562918097,
+        "A": 0.35398032067156865,
+        "alpha": 0.33997658189164076,
+        "B": 1.2403055835454702,
+        "beta": 0.2798781285456506,
+        "kappa": 0.8047071577351047,
+        "rho": 0.0,
+        "delta": 0.08340491548016044
+      },
+      "sse": 3.4197787643836213,
+      "rmse": 0.0471849389784027,
+      "n": 1536,
+      "n_clusters": 1,
+      "boundary_hits": {},
+      "aic": -9376.906578179429
+    },
+    "stage2_M2_staged": {
+      "free": [
+        "kappa",
+        "rho",
+        "delta"
+      ],
+      "params": {
+        "E": 1.689797562918097,
+        "A": 0.35398032067156865,
+        "alpha": 0.33997658189164076,
+        "B": 1.2403055835454702,
+        "beta": 0.2798781285456506,
+        "kappa": 0.38210158532238303,
+        "rho": 0.5386698298528939,
+        "delta": 0.05943212983394822
+      },
+      "sse": 1.640438603613106,
+      "rmse": 0.03268017568129975,
+      "n": 1536,
+      "n_clusters": 1,
+      "boundary_hits": {},
+      "aic": -10503.270937190457
+    }
+  },
+  "nested_baseline_SSE_on_B1uB6": 16.989137101993446,
+  "ablation_M0_plus_delta": {
+    "free": [
+      "delta"
+    ],
+    "params": {
+      "E": 1.689797562918097,
+      "A": 0.35398032067156865,
+      "alpha": 0.33997658189164076,
+      "B": 1.2403055835454702,
+      "beta": 0.2798781285456506,
+      "kappa": 0.0,
+      "rho": 0.0,
+      "delta": 0.16823675994394702
+    },
+    "sse": 6.799838438030585,
+    "rmse": 0.06653554050099462,
+    "n": 1536
+  },
+  "nested_ftest_M0_to_M0delta": {
+    "F": 2292.6466706433025,
+    "p": 0.0,
+    "df1": 1,
+    "df2": 1530
+  },
+  "nested_ftest_M0delta_to_M1": {
+    "F": 1511.2413980784822,
+    "p": 0.0,
+    "df1": 1,
+    "df2": 1529
+  },
+  "nested_ftest_M1_to_M2": {
+    "F": 1657.380995344205,
+    "p": 0.0,
+    "df1": 1,
+    "df2": 1528
+  },
+  "sse_decomposition": {
+    "M0_no_offset": 16.989137101993446,
+    "plus_delta": 6.799838438030585,
+    "plus_kappa": 3.4197787643836213,
+    "plus_rho": 1.640438603613106
+  },
+  "effective_floor_E_plus_delta": 1.7492296927520452,
+  "provenance_audit": {
+    "note": "B11/B12 为辅助索引，**不含 Loss 列，不能进入任何拟合**；仅用于口径与覆盖面的溯源核验。",
+    "b1_internal_consistency": [
+      {
+        "check": "D_tokens_B ?= steps * batch_tokens_M / 1000",
+        "n": 1176,
+        "rel_err_median": 0.0013580322265624792,
+        "rel_err_max": 0.001791044776119537,
+        "abs_dev_max": null,
+        "verdict": "一致（偏差为 batch 规模的舍入）"
+      },
+      {
+        "check": "C_FLOPs_1e21 ?= 6*N*D (N,D 以十亿计)",
+        "n": 1176,
+        "rel_err_median": 2.618664167520882e-05,
+        "rel_err_max": 0.43284232,
+        "abs_dev_max": 4.994688000004022e-05,
+        "verdict": "一致（最大绝对偏差 5.0e-05，源于 C 列 4 位小数舍入；故 C 不作为独立回归量）"
+      }
+    ],
+    "b12_checkpoint_coverage": [
+      {
+        "N_params_B": 0.070542,
+        "matched_label": "70m",
+        "match_log_dist": 0.00771303506430002,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 0.162405,
+        "matched_label": "160m",
+        "match_log_dist": 0.014919400197144403,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 0.409009,
+        "matched_label": "410m",
+        "match_log_dist": 0.0024199990076802227,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 1.040867,
+        "matched_label": "1b",
+        "match_log_dist": 0.04005401970307076,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 1.416184,
+        "matched_label": "1.4b",
+        "match_log_dist": 0.011493693711214305,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 2.782831,
+        "matched_label": "2.8b",
+        "match_log_dist": 0.006150662316722126,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 6.86104,
+        "matched_label": "6.9b",
+        "match_log_dist": 0.005662377857526605,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      },
+      {
+        "N_params_B": 11.965825,
+        "matched_label": "12b",
+        "match_log_dist": 0.002851979697285382,
+        "n_in_index": 154,
+        "n_in_b1": 147,
+        "b1_not_in_index": 0,
+        "index_not_in_b1": 7,
+        "verdict": "B1 检查点全部命中索引"
+      }
+    ],
+    "b12_sizes_absent_from_B1": [
+      "14m"
+    ],
+    "b11_param_audit_summary": {
+      "EleutherAI": {
+        "n": 9,
+        "bytes_per_param_min": 3.9738777795833333,
+        "bytes_per_param_max": 4.743985014285714
+      },
+      "allenai": {
+        "n": 2,
+        "bytes_per_param_min": 7.872118008857143,
+        "bytes_per_param_max": 9.414146093
+      },
+      "cerebras": {
+        "n": 7,
+        "bytes_per_param_min": 3.967807744153846,
+        "bytes_per_param_max": 4.3800743873873875
+      }
+    },
+    "convergence_audit": [
+      {
+        "key": "b4_cross_family",
+        "file": "scaling_baseline.csv",
+        "n": 57,
+        "n_converged": 57,
+        "n_not_converged": 0,
+        "verdict": "全部收敛，无行需剔除"
+      },
+      {
+        "key": "b10_large_baseline",
+        "file": "supplementary_large_baseline.csv",
+        "n": 128,
+        "n_converged": 128,
+        "n_not_converged": 0,
+        "verdict": "全部收敛，无行需剔除"
+      }
+    ]
+  },
+  "joint_weight_sensitivity": [
+    {
+      "w_B6": 0.1,
+      "sse_weighted": 0.16348833480255268,
+      "rmse_B1": 0.0006997261773526181,
+      "rmse_B6": 0.06727071046979266,
+      "sse_B1": 0.000575789266568469,
+      "sse_B6": 1.629125455359842,
+      "n_clusters": 1,
+      "E": 1.6859197907225258,
+      "A": 0.35969197819602794,
+      "alpha": 0.33587015652262414,
+      "B": 1.2384806602926557,
+      "beta": 0.2803515567887225,
+      "kappa": 0.379634919929576,
+      "rho": 0.5428388671186397,
+      "delta": 0.05918822285375456
+    },
+    {
+      "w_B6": 0.3,
+      "sse_weighted": 0.4873983410279677,
+      "rmse_B1": 0.001880314579805902,
+      "rmse_B6": 0.06689132255044772,
+      "sse_B1": 0.004157845512780039,
+      "sse_B6": 1.6108016517172925,
+      "n_clusters": 1,
+      "E": 1.678683354774815,
+      "A": 0.3699439439746307,
+      "alpha": 0.3287740372683274,
+      "B": 1.235528979310248,
+      "beta": 0.2811093994384272,
+      "kappa": 0.37531433948811566,
+      "rho": 0.5499554374490053,
+      "delta": 0.05876921022409885
+    },
+    {
+      "w_B6": 0.5,
+      "sse_weighted": 0.808084899554294,
+      "rmse_B1": 0.00288162355730535,
+      "rmse_B6": 0.0665966167169882,
+      "sse_B1": 0.009765215087396157,
+      "sse_B6": 1.5966393689337952,
+      "n_clusters": 1,
+      "E": 1.6720993358093077,
+      "A": 0.3788928016043573,
+      "alpha": 0.32285740915070865,
+      "B": 1.2332603331892835,
+      "beta": 0.28168130062827385,
+      "kappa": 0.37168162275640343,
+      "rho": 0.5557640029256606,
+      "delta": 0.058423592351734326
+    }
+  ],
+  "quality_source_sensitivity": [
+    {
+      "source": "b6_quality_main",
+      "n": 360,
+      "n_excluded": 0,
+      "kappa": 0.3821013825324767,
+      "rho": 0.5386700710002973,
+      "delta": 0.05943211363517824,
+      "sse": 1.6404386036128071,
+      "n_clusters": 1,
+      "boundary_hits": "{}"
+    },
+    {
+      "source": "b7_quality_expanded",
+      "n": 450,
+      "n_excluded": 0,
+      "kappa": 0.3665202301768252,
+      "rho": 0.5426561986664322,
+      "delta": 0.06536663980241314,
+      "sse": 1.889593330271625,
+      "n_clusters": 1,
+      "boundary_hits": "{}"
+    },
+    {
+      "source": "b8_quality_large",
+      "n": 984,
+      "n_excluded": 720,
+      "kappa": 1.0019168300881435e-19,
+      "rho": 2.3628993224006023e-19,
+      "delta": -0.97253026464493,
+      "sse": 445.3364835980398,
+      "n_clusters": 1,
+      "boundary_hits": "{'kappa': 'lower', 'rho': 'lower'}"
+    }
+  ],
+  "quality_channel_reconciliation": {
+    "informative_sets": [
+      "b6_quality_main",
+      "b7_quality_expanded"
+    ],
+    "uninformative_sets": [
+      "b8_quality_large"
+    ],
+    "per_subset_informative": {
+      "b6_quality_main/all": true,
+      "b7_quality_expanded/all": true,
+      "b8_quality_large/calibrated": false,
+      "b8_quality_large/extrapolated": false
+    },
+    "real_data_support": "无。B1（唯一真实观测）以 RMSE 1.5e-4 被经典律解释，残差量级等于数据自身的四位小数舍入；且 B1 无 Q 列，Q 按基准约定恒取 1.0，不含任何质量变化，因此对 κ、ρ 零信息。",
+    "conclusion": "质量双通道在 B6/B7 内部可辨识（κ、ρ 为内点解、无边界命中、嵌套 F 检验极显著），但 (a) B1 这一真实观测上根本没有可用残差，(b) B8 的 calibrated 与 extrapolated 两段上 κ=ρ=0 且经典 M0 与七参 M2 给出完全相同的 RMSE，即质量通道零信息，与 B6/B7 直接矛盾。故不得把 B6/B7 的拟合当作真实新定律：主模型按 Q2-C.md 第 4 条退回 Q2-B（ρ=0）；κ、ρ 仅作为情景参数，并在预测器中显式标注该边界。"
+  },
+  "sample_overlap": [
+    {
+      "file": "pythia_training_log_existing.csv",
+      "n_rows": 1176,
+      "n_matched_with_B1": 1176,
+      "overlap_frac": 1.0,
+      "labels": "Pythia（B1 自身）",
+      "note": "基准表"
+    },
+    {
+      "file": "cerebras_training_log.csv",
+      "n_rows": 1029,
+      "n_matched_with_B1": 0,
+      "overlap_frac": 0.0,
+      "labels": "",
+      "note": "无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+    },
+    {
+      "file": "scaling_baseline.csv",
+      "n_rows": 57,
+      "n_matched_with_B1": 0,
+      "overlap_frac": 0.0,
+      "labels": "BLOOM;Cerebras-GPT;Falcon;GPT2;Gemma;LLaMA;Mistral;OPT;Phi;Pythia;Qwen2;Yi",
+      "note": "无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+    },
+    {
+      "file": "published_scaling_data.csv",
+      "n_rows": 44,
+      "n_matched_with_B1": 0,
+      "overlap_frac": 0.0,
+      "labels": "BLOOM;Chinchilla;GPT-2;GPT-3;Gopher;LLaMA;LLaMA-2;OPT;PaLM",
+      "note": "无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+    },
+    {
+      "file": "supplementary_large_baseline.csv",
+      "n_rows": 128,
+      "n_matched_with_B1": 0,
+      "overlap_frac": 0.0,
+      "labels": "",
+      "note": "无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+    }
+  ],
+  "trajectory_check": [
+    {
+      "trajectory": "pythia_0.070542B_trajectory.csv",
+      "N": 0.070542,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0020437498145623053,
+      "mae_test": 0.0016268603316880377,
+      "bias_test": 7.233570646748255e-05,
+      "rmse_first_half": 0.0050052427654283405,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_0.162405B_trajectory.csv",
+      "N": 0.162405,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0018771366028817117,
+      "mae_test": 0.001507989309352288,
+      "bias_test": -0.00030762121347559023,
+      "rmse_first_half": 0.005224875832854746,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_0.409009B_trajectory.csv",
+      "N": 0.409009,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0019004307360682004,
+      "mae_test": 0.0015088594446812157,
+      "bias_test": 0.00013966766627116379,
+      "rmse_first_half": 0.005097002788452118,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_1.040867B_trajectory.csv",
+      "N": 1.040867,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0019009261379935394,
+      "mae_test": 0.0015459197583289495,
+      "bias_test": 5.486051202912634e-05,
+      "rmse_first_half": 0.004654897392295041,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_1.416184B_trajectory.csv",
+      "N": 1.416184,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0019457031650242228,
+      "mae_test": 0.0015710105476359662,
+      "bias_test": 1.943943827347461e-05,
+      "rmse_first_half": 0.00525196331493019,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_11.965825B_trajectory.csv",
+      "N": 11.965825,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0021669480505725957,
+      "mae_test": 0.0017400890854100766,
+      "bias_test": -0.00040896304448403596,
+      "rmse_first_half": 0.005054594396387884,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_2.782831B_trajectory.csv",
+      "N": 2.782831,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0019983164642303503,
+      "mae_test": 0.0015662294793510672,
+      "bias_test": -2.0377775936927024e-05,
+      "rmse_first_half": 0.004938816111591552,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    },
+    {
+      "trajectory": "pythia_6.86104B_trajectory.csv",
+      "N": 6.86104,
+      "n_first_half": 250,
+      "n_test": 250,
+      "rmse_test": 0.0021074260984800587,
+      "mae_test": 0.0016988902221911086,
+      "bias_test": 5.2968728975484325e-05,
+      "rmse_first_half": 0.004926485601902956,
+      "n_interpolated_test": 250,
+      "interpolated_frac": 1.0
+    }
+  ],
+  "unit_audit": [
+    {
+      "file": "supplementary_large_models.csv",
+      "column": "N_params_B",
+      "n": 132,
+      "min": 100.0,
+      "median": 285.0,
+      "max": 10000.0,
+      "unit": "十亿(B) —— 与公共口径一致",
+      "note": "总参数口径；元数据未区分总参数与激活参数，若为 MoE 需另行审计"
+    },
+    {
+      "file": "supplementary_large_models.csv",
+      "column": "D_tokens_B",
+      "n": 132,
+      "min": 0.0,
+      "median": 1549.5,
+      "max": 36000.0,
+      "unit": "十亿(B) —— 与公共口径一致",
+      "note": "训练 token 口径"
+    },
+    {
+      "file": "supplementary_large_baseline.csv",
+      "column": "N",
+      "n": 128,
+      "min": 100.0,
+      "median": 285.0,
+      "max": 10000.0,
+      "unit": "十亿(B) —— 与公共口径一致",
+      "note": "总参数口径；元数据未区分总参数与激活参数，若为 MoE 需另行审计"
+    },
+    {
+      "file": "supplementary_large_baseline.csv",
+      "column": "D",
+      "n": 128,
+      "min": 0.1,
+      "median": 1634.0,
+      "max": 36000.0,
+      "unit": "十亿(B) —— 与公共口径一致",
+      "note": "训练 token 口径"
+    }
+  ],
+  "identifiability": {
+    "M2_staged": {
+      "dual_channel_identifiable": true,
+      "kappa_estimate": 0.38210158532238303,
+      "rho_estimate": 0.5386698298528939,
+      "kappa_ci95": [
+        0.3449781783063981,
+        0.418466529203898
+      ],
+      "rho_ci95": [
+        0.5168057736212208,
+        0.5602015121031725
+      ],
+      "kappa_ci95_width": 0.07348835089749989,
+      "rho_ci95_width": 0.04339573848195166,
+      "kappa_profile_status": "ok",
+      "rho_profile_status": "ok",
+      "kappa_rho_corr": -0.6559571728208483,
+      "n_equivalent_solutions": 1,
+      "reasons_not_identified": []
+    },
+    "M2_joint": {
+      "dual_channel_identifiable": true,
+      "kappa_estimate": 0.37531433948811566,
+      "rho_estimate": 0.5499554374490053,
+      "kappa_ci95": [
+        0.33621385811688165,
+        0.4135434102120359
+      ],
+      "rho_ci95": [
+        0.5257415164715498,
+        0.5740842618099773
+      ],
+      "kappa_ci95_width": 0.07732955209515424,
+      "rho_ci95_width": 0.04834274533842753,
+      "kappa_profile_status": "ok",
+      "rho_profile_status": "ok",
+      "kappa_rho_corr": -0.6788926989782973,
+      "n_equivalent_solutions": 1,
+      "reasons_not_identified": []
+    }
+  },
+  "bootstrap_M0_B1": [
+    {
+      "param": "E",
+      "n_boot": 400,
+      "point": 1.689797562918097,
+      "mean": 1.689810618799019,
+      "sd": 9.03553010520997e-05,
+      "lo95": 1.6896272444934988,
+      "hi95": 1.6900164668388276
+    },
+    {
+      "param": "A",
+      "n_boot": 400,
+      "point": 0.35398032067156865,
+      "mean": 0.35396269191404406,
+      "sd": 9.001204024800979e-05,
+      "lo95": 0.35375472913532746,
+      "hi95": 0.35413787579540656
+    },
+    {
+      "param": "alpha",
+      "n_boot": 400,
+      "point": 0.33997658189164076,
+      "mean": 0.3399915160037098,
+      "sd": 8.877039245978458e-05,
+      "lo95": 0.33979536032947827,
+      "hi95": 0.3401425518132029
+    },
+    {
+      "param": "B",
+      "n_boot": 400,
+      "point": 1.2403055835454702,
+      "mean": 1.240306711956608,
+      "sd": 6.7496835622095e-05,
+      "lo95": 1.240164023518997,
+      "hi95": 1.2404319337936647
+    },
+    {
+      "param": "beta",
+      "n_boot": 400,
+      "point": 0.2798781285456506,
+      "mean": 0.27987751058987265,
+      "sd": 2.7248889381560763e-05,
+      "lo95": 0.2798257752536491,
+      "hi95": 0.2799327723570549
+    }
+  ],
+  "bootstrap_M2_quality": [
+    {
+      "param": "E",
+      "n_boot": 400,
+      "point": 1.689797562918097,
+      "mean": 1.6519142559725786,
+      "sd": 0.02939055257492515,
+      "lo95": 1.5718229201275797,
+      "hi95": 1.6881187629029595
+    },
+    {
+      "param": "A",
+      "n_boot": 400,
+      "point": 0.35398032067156865,
+      "mean": 0.40154006505187406,
+      "sd": 0.03001856683221639,
+      "lo95": 0.3626204621834882,
+      "hi95": 0.4799179091470636
+    },
+    {
+      "param": "alpha",
+      "n_boot": 400,
+      "point": 0.33997658189164076,
+      "mean": 0.3096262563184196,
+      "sd": 0.01596464788918179,
+      "lo95": 0.2716801932624579,
+      "hi95": 0.33450094199481645
+    },
+    {
+      "param": "B",
+      "n_boot": 400,
+      "point": 1.2403055835454702,
+      "mean": 1.230899551820937,
+      "sd": 0.007436681350634727,
+      "lo95": 1.21586264240404,
+      "hi95": 1.2451358799161956
+    },
+    {
+      "param": "beta",
+      "n_boot": 400,
+      "point": 0.2798781285456506,
+      "mean": 0.2822903613649483,
+      "sd": 0.0021004811552669546,
+      "lo95": 0.27824012756663913,
+      "hi95": 0.2864267194025118
+    },
+    {
+      "param": "kappa",
+      "n_boot": 400,
+      "point": 0.38210158532238303,
+      "mean": 0.3438425510392436,
+      "sd": 0.04033385628067872,
+      "lo95": 0.25755077629407275,
+      "hi95": 0.4107968096187216
+    },
+    {
+      "param": "rho",
+      "n_boot": 400,
+      "point": 0.5386698298528939,
+      "mean": 0.5855803361175461,
+      "sd": 0.04413210382928367,
+      "lo95": 0.5098409963862142,
+      "hi95": 0.6797724274519893
+    }
+  ],
+  "holdout_by_size_RMSE_median": 0.00013507633552094846,
+  "holdout_D_direction": {
+    "threshold_D": 178.258,
+    "n_train": 712,
+    "n_test": 464,
+    "rmse": 0.00011724072765646967,
+    "mae": 8.91370141869042e-05,
+    "bias": -2.7908334350755755e-05
+  },
+  "trajectory_RMSE_median": 0.0019720098146272865,
+  "cross_source_M2": [
+    {
+      "source": "B1",
+      "kind": "real",
+      "note": "真实观测（Pythia 训练日志）",
+      "file": "pythia_training_log_existing.csv",
+      "offset_group": 0.0,
+      "n": 1176,
+      "rmse": 0.00014649608992588982,
+      "rmse_debiased": 0.0001464960899258898,
+      "mae": 0.00010523191300946361,
+      "bias": 3.4804358941361285e-14,
+      "r2": 0.9999998165821044,
+      "N_min": 0.070542,
+      "N_max": 11.965825,
+      "D_min": 0.134,
+      "D_max": 299.893,
+      "L_min": 2.0933,
+      "L_max": 4.7388,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B10",
+      "kind": "estimated",
+      "note": "估算 Loss（N=100–10000B，外推情景）",
+      "file": "supplementary_large_baseline.csv",
+      "offset_group": 0.0,
+      "n": 128,
+      "rmse": 0.001093827814081065,
+      "rmse_debiased": 0.0009052089924709841,
+      "mae": 0.0006140488309630873,
+      "bias": 0.0006140488309630873,
+      "r2": 0.9999924211627055,
+      "N_min": 100.0,
+      "N_max": 10000.0,
+      "D_min": 0.1,
+      "D_max": 36000.0,
+      "L_min": 1.7838,
+      "L_max": 4.0812,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B2",
+      "kind": "semi_synthetic",
+      "note": "半合成（Cerebras；D 最大 2050B 远超 B1 的 300B）",
+      "file": "cerebras_training_log.csv",
+      "offset_group": 0.0,
+      "n": 1029,
+      "rmse": 1.2430848665787693,
+      "rmse_debiased": 0.3956448913955311,
+      "mae": 1.178441812492146,
+      "bias": -1.178441812492146,
+      "r2": -5.072798817284103,
+      "N_min": 0.111,
+      "N_max": 13.0,
+      "D_min": 14.0,
+      "D_max": 2050.0,
+      "L_min": 2.8354,
+      "L_max": 6.4979,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B4",
+      "kind": "mixed",
+      "note": "跨族（12 个模型族，含与 B1 重叠的 Pythia）",
+      "file": "scaling_baseline.csv",
+      "offset_group": 0.0,
+      "n": 57,
+      "rmse": 0.29266667754531045,
+      "rmse_debiased": 0.1918567503001641,
+      "mae": 0.22726329326707828,
+      "bias": -0.22100853266259018,
+      "r2": 0.6045048852527305,
+      "N_min": 0.07,
+      "N_max": 72.0,
+      "D_min": 6.0,
+      "D_max": 33739.0,
+      "L_min": 1.71,
+      "L_max": 4.3629,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Chowdhery et al. 2022",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 3,
+      "rmse": 0.3303847675643517,
+      "rmse_debiased": 0.12063857563942806,
+      "mae": 0.30757182690591267,
+      "bias": 0.30757182690591267,
+      "r2": -2.5453965951140316,
+      "N_min": 8.0,
+      "N_max": 540.0,
+      "D_min": 780.0,
+      "D_max": 780.0,
+      "L_min": 1.473,
+      "L_max": 1.901,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Hoffmann et al. 2022",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 16,
+      "rmse": 0.16332393161881636,
+      "rmse_debiased": 0.1572021972543701,
+      "mae": 0.14220031766874708,
+      "bias": -0.04429645378386303,
+      "r2": 0.7930610160433564,
+      "N_min": 0.2,
+      "N_max": 280.0,
+      "D_min": 5.0,
+      "D_max": 1400.0,
+      "L_min": 1.71,
+      "L_max": 3.015,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Kaplan et al. 2020",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 9,
+      "rmse": 0.14365094947875354,
+      "rmse_debiased": 0.07455674994864508,
+      "mae": 0.12278797303988126,
+      "bias": -0.12278797303988126,
+      "r2": 0.7422367660917522,
+      "N_min": 0.125,
+      "N_max": 175.0,
+      "D_min": 10.0,
+      "D_max": 300.0,
+      "L_min": 2.011,
+      "L_max": 2.906,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Scao et al. 2022",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 4,
+      "rmse": 0.20736732050016993,
+      "rmse_debiased": 0.1620707894995779,
+      "mae": 0.20063594188090095,
+      "bias": -0.12936098640008775,
+      "r2": 0.4927947993884786,
+      "N_min": 0.56,
+      "N_max": 176.0,
+      "D_min": 366.0,
+      "D_max": 366.0,
+      "L_min": 1.846,
+      "L_max": 2.628,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Touvron et al. 2023",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 7,
+      "rmse": 0.21592549776865308,
+      "rmse_debiased": 0.05855515780798357,
+      "mae": 0.2078343428808693,
+      "bias": 0.2078343428808693,
+      "r2": -3.6063351804077524,
+      "N_min": 7.0,
+      "N_max": 70.0,
+      "D_min": 1000.0,
+      "D_max": 2000.0,
+      "L_min": 1.617,
+      "L_max": 1.943,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B5_Zhang et al. 2022",
+      "kind": "literature",
+      "note": "文献值（6 个来源，评测口径各异）",
+      "file": "published_scaling_data.csv",
+      "offset_group": 0.0,
+      "n": 5,
+      "rmse": 0.23646491080043663,
+      "rmse_debiased": 0.14040268144226467,
+      "mae": 0.19027017917603484,
+      "bias": -0.19027017917603484,
+      "r2": -0.024016707124912884,
+      "N_min": 1.3,
+      "N_max": 175.0,
+      "D_min": 180.0,
+      "D_max": 180.0,
+      "L_min": 2.042,
+      "L_max": 2.723,
+      "Q_min": 1.0,
+      "Q_max": 1.0,
+      "Q_is_convention": true
+    },
+    {
+      "source": "B6",
+      "kind": "semi_synthetic_quality",
+      "note": "半合成质量主集（δ 组）",
+      "file": "supplementary_NQ_experiment.csv",
+      "offset_group": 1.0,
+      "n": 360,
+      "rmse": 0.06750336134335118,
+      "rmse_debiased": 0.06750336134335119,
+      "mae": 0.05465197871653978,
+      "bias": 1.475582619055634e-12,
+      "r2": 0.9617288772055412,
+      "N_min": 0.07,
+      "N_max": 11.97,
+      "D_min": 10.0,
+      "D_max": 600.0,
+      "L_min": 2.0161,
+      "L_max": 3.7216,
+      "Q_min": 0.1,
+      "Q_max": 1.0,
+      "Q_is_convention": false
+    },
+    {
+      "source": "B7",
+      "kind": "semi_synthetic_quality",
+      "note": "半合成质量扩展集（δ 组）",
+      "file": "supplementary_NQ_experiment_expanded.csv",
+      "offset_group": 1.0,
+      "n": 450,
+      "rmse": 0.06500841481990385,
+      "rmse_debiased": 0.06481409538451921,
+      "mae": 0.052571785083403676,
+      "bias": -0.0050226523753034895,
+      "r2": 0.9635792894545454,
+      "N_min": 0.07,
+      "N_max": 11.97,
+      "D_min": 10.0,
+      "D_max": 600.0,
+      "L_min": 2.0161,
+      "L_max": 3.7216,
+      "Q_min": 0.1,
+      "Q_max": 1.0,
+      "Q_is_convention": false
+    },
+    {
+      "source": "B8_calibrated",
+      "kind": "semi_synthetic_quality",
+      "note": "半合成质量大模型集（calibrated 与 extrapolated 分开，δ 组）",
+      "file": "supplementary_NQ_experiment_large.csv",
+      "offset_group": 1.0,
+      "n": 984,
+      "rmse": 1.397560982481515,
+      "rmse_debiased": 0.7959532183766677,
+      "mae": 1.1488571816699964,
+      "bias": 1.1487537481595094,
+      "r2": -2.8746774554831025,
+      "N_min": 0.07,
+      "N_max": 12.0,
+      "D_min": 5.0,
+      "D_max": 2000.0,
+      "L_min": 0.5,
+      "L_max": 3.3659,
+      "Q_min": 0.05,
+      "Q_max": 1.0,
+      "Q_is_convention": false
+    },
+    {
+      "source": "B8_extrapolated",
+      "kind": "semi_synthetic_quality",
+      "note": "半合成质量大模型集（calibrated 与 extrapolated 分开，δ 组）",
+      "file": "supplementary_NQ_experiment_large.csv",
+      "offset_group": 1.0,
+      "n": 720,
+      "rmse": 1.3101581289444968,
+      "rmse_debiased": 0.6923766466686608,
+      "mae": 1.1123179645735597,
+      "bias": 1.1122629644050928,
+      "r2": -3.2343500233195535,
+      "N_min": 20.0,
+      "N_max": 700.0,
+      "D_min": 5.0,
+      "D_max": 2000.0,
+      "L_min": 0.5,
+      "L_max": 2.6033,
+      "Q_min": 0.05,
+      "Q_max": 1.0,
+      "Q_is_convention": false
+    }
+  ],
+  "calibration": {
+    "primary_mapping": "same_scale",
+    "common_support": {
+      "lo": 0.3527948026574569,
+      "hi": 0.4871620101591301,
+      "empty": false
+    },
+    "assumption_note": "同尺度（same_scale）为未验证假设：附件 A 的质量坐标与 B6-B8 的 Q_score 来自不同提取流程，仅在某区间重叠；报告公共支撑区间，并以 minmax01 / reference_shift 作为替代单调映射做敏感性。"
+  },
+  "transfer": {
+    "primary_effect_functional": "quality_linear",
+    "omega_grid": [
+      0.0,
+      0.5,
+      1.0,
+      2.0,
+      5.0
+    ],
+    "note": "ω 未经联合实验标定，仅给含零效应在内的小组预设情景"
+  },
+  "deliverables": [
+    "correlation_M2_joint.csv",
+    "correlation_M2_staged.csv",
+    "derivative_check.csv",
+    "domain_substitution.csv",
+    "elasticities.csv",
+    "joint_weight_sensitivity.csv",
+    "loss_predictor.json",
+    "mixture_transfer_scenarios.csv",
+    "mixture_transfer_scenarios.json",
+    "predict_q2c_loss.py",
+    "profile_M2_joint_kappa.csv",
+    "profile_M2_joint_rho.csv",
+    "profile_M2_staged_kappa.csv",
+    "profile_M2_staged_rho.csv",
+    "provenance_b11_param_audit.csv",
+    "provenance_b12_coverage.csv",
+    "provenance_b1_internal.csv",
+    "provenance_convergence.csv",
+    "quality_parameter_equivalence.csv",
+    "quality_scale_calibration.json",
+    "quality_set_reconciliation.csv",
+    "quality_source_sensitivity.csv",
+    "run_log.txt",
+    "run_metadata.json",
+    "sample_overlap.csv",
+    "scaling_parameters.json",
+    "scaling_validation.csv",
+    "solutions_M2_joint.csv",
+    "solutions_M2_staged.csv",
+    "unit_audit.csv",
+    "validation_bootstrap_M0.csv",
+    "validation_bootstrap_M2.csv",
+    "validation_cross_source_M0.csv",
+    "validation_cross_source_M2.csv",
+    "validation_extrapolation.csv",
+    "validation_holdout_by_size.csv",
+    "validation_trajectory.csv"
+  ]
+}

@@ -1,0 +1,6 @@
+﻿file,n_rows,n_matched_with_B1,overlap_frac,labels,note
+pythia_training_log_existing.csv,1176,1176,1.0,Pythia（B1 自身）,基准表
+cerebras_training_log.csv,1029,0,0.0,,"无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+scaling_baseline.csv,57,0,0.0,BLOOM;Cerebras-GPT;Falcon;GPT2;Gemma;LLaMA;Mistral;OPT;Phi;Pythia;Qwen2;Yi,"无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+published_scaling_data.csv,44,0,0.0,BLOOM;Chinchilla;GPT-2;GPT-3;Gopher;LLaMA;LLaMA-2;OPT;PaLM,"无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"
+supplementary_large_baseline.csv,128,0,0.0,,"无 (N,D) 点与 B1 重复（同族也可能因 D 网格不同而不重合）"

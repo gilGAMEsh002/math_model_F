@@ -1,0 +1,5 @@
+﻿file,column,n,min,median,max,unit,note
+supplementary_large_models.csv,N_params_B,132,100.0,285.0,10000.0,十亿(B) —— 与公共口径一致,总参数口径；元数据未区分总参数与激活参数，若为 MoE 需另行审计
+supplementary_large_models.csv,D_tokens_B,132,0.0,1549.5,36000.0,十亿(B) —— 与公共口径一致,训练 token 口径
+supplementary_large_baseline.csv,N,128,100.0,285.0,10000.0,十亿(B) —— 与公共口径一致,总参数口径；元数据未区分总参数与激活参数，若为 MoE 需另行审计
+supplementary_large_baseline.csv,D,128,0.1,1634.0,36000.0,十亿(B) —— 与公共口径一致,训练 token 口径
