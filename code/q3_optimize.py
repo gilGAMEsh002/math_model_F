@@ -42,16 +42,38 @@ COST_FUNCS = {
                      gp=lambda Q, g=2e9, l=10.0: g * l / (1 + l * Q)),
 }
 # 第二问估计的标度律参数（B1 经典 + B6 质量指数）
+# 注意：Q2-B 的 A、B 是以「十亿参数 / 十亿 Token」为坐标拟合得到的系数
+# （N_params_B、D_tokens_B），因此损失端必须先把实际个数换算为十亿单位，
+# 而成本端（6ND、ηNDℓ）继续使用实际个数。两者混用会把 Loss 压到不可约项附近。
 TH = dict(E=1.68979756, A=0.35398032, alpha=0.33997658,
           B=1.24030558, beta=0.27987813, kappa=1.0524)
 Q0_DEFAULT = 0.5
 N_MIN, N_MAX = 1e7, 1e12            # 1e7 ~ 1e12 参数（10M ~ 1T）
 DATA_SUPPORT_N = (7.0542e7, 1.1965825e10)   # 数据支持范围（B1/B6）
+UNIT = 1e9                          # 十亿单位；Q2 系数坐标与成本实际个数之间的换算
 
 
 def loss(N, D, Q, th=TH):
-    return th["E"] + th["A"] * N ** (-th["alpha"]) + \
-           th["B"] * (D * Q ** th["kappa"]) ** (-th["beta"])
+    """损失端使用十亿坐标 n=N/1e9、d=D/1e9；N、D 为实际个数。"""
+    n = np.asarray(N, float) / UNIT
+    d = np.asarray(D, float) / UNIT
+    return th["E"] + th["A"] * n ** (-th["alpha"]) + \
+           th["B"] * (d * Q ** th["kappa"]) ** (-th["beta"])
+
+
+def unit_anchor_check(th=TH):
+    """物理单位锚点：N=1e9、D=1e11、Q=1、h=1 时经典项应约为 2.385578。
+
+    退化测试：Q=1 时质量指数 κ 不改变结果。用于防止损失端/成本端单位再次错配。
+    """
+    L = float(loss(1e9, 1e11, 1.0, th))
+    L_correct = float(th["E"] + th["A"] * 1.0 ** (-th["alpha"])
+                      + th["B"] * 100.0 ** (-th["beta"]))
+    assert abs(L - L_correct) < 1e-9, (L, L_correct)
+    assert abs(L - 2.385578) < 1e-5, f"unit anchor failed: {L}"
+    # Q=1 退化：κ 不影响
+    assert abs(float(loss(1e9, 1e11, 1.0, {**th, "kappa": 0.3})) - L) < 1e-12
+    return L
 
 
 def D_from_budget(N, Q, C, ell, cf, Q0):
@@ -70,17 +92,19 @@ def L_of_NQ(N, Q, C, ell, cf, Q0, th=TH):
 
 
 def analytic_Nstar(C, ell, cf, Q0, th=TH, Q=None):
-    """Q3-A 解析参照：固定 Q（且无质量开销，即 Q=Q0）时最优 N。
+    """Q3-A 解析参照：固定 Q（且无质量开销，即 Q=Q0）时最优 N（返回实际参数个数）。
 
-    由 dL/dN = 0：-αA·N^(-α-1) + βB·(Q^κ C/a)^(-β)·N^(β-1) = 0
-        ⇒ N* = [ α·A·(Q^κ·C/a)^β / (β·B) ]^(1/(α+β)),  a = 6+ηℓ
+    用十亿坐标 n=N/1e9、d=D/1e9，预算写为 d = C_B/(a n)，C_B = C/1e18：
+        由 dL/dn = 0：-αA·n^(-α-1) + βB·(Q^κ C_B/a)^(-β)·n^(β-1) = 0
+        ⇒ n* = [ α·A·(Q^κ·C_B/a)^β / (β·B) ]^(1/(α+β)),  a = 6+ηℓ
     前提：预算紧约束、D 无额外上限、Q 固定不产生开销。
     """
     Q = Q0 if Q is None else Q
     a = 6 + ETA * ell
-    num = th["alpha"] * th["A"] * (Q ** th["kappa"] * C / a) ** th["beta"]
+    C_B = C / (UNIT * UNIT)          # C/1e18，与十亿坐标配套
+    num = th["alpha"] * th["A"] * (Q ** th["kappa"] * C_B / a) ** th["beta"]
     den = th["beta"] * th["B"]
-    return (num / den) ** (1 / (th["alpha"] + th["beta"]))
+    return (num / den) ** (1 / (th["alpha"] + th["beta"])) * UNIT
 
 
 def _min_over_N(Q, C, ell, cf, Q0, th):
@@ -171,6 +195,8 @@ def main():
     print(f"参数: E={TH['E']:.4f} A={TH['A']:.4f} α={TH['alpha']:.4f} "
           f"B={TH['B']:.4f} β={TH['beta']:.4f} κ={TH['kappa']:.4f}  Q0={Q0_DEFAULT}")
     print(f"η={ETA:g}, ℓ_crit=6/η={L_CRIT:.0f}")
+    L_anchor = unit_anchor_check()
+    print(f"[单位锚点] loss(N=1e9,D=1e11,Q=1,h=1)={L_anchor:.6f}（应为 2.385578）")
     print("=" * 100)
 
     # ---------- 1. 解析参照核验（固定 Q=Q0，无质量开销 ⇒ 解析式严格成立） ----------
@@ -324,6 +350,11 @@ def main():
 
     save_json(dict(
         model="L=E+A·N^(-α)+B·[D·Q^κ]^(-β),  D=C/{(6+ηℓ)N+[g(Q)-g(Q0)]_+}",
+        units=dict(loss=dict(N="N/1e9", D="D/1e9", note="Q2 系数为十亿坐标；损失端换算"),
+                   cost=dict(N="实际个数", D="实际个数", note="6ND 与 ηNDℓ 用实际个数"),
+                   UNIT=UNIT),
+        unit_anchor_check=dict(point="N=1e9,D=1e11,Q=1,h=1", loss=L_anchor,
+                               expected=2.385578),
         parameters=TH, eta=ETA, ell_crit=L_CRIT,
         budgets=BUDGETS, contexts=CONTEXTS, cost_functions={k: {kk: vv for kk, vv in v.items()
                                                                 if kk in ("kind", "gamma", "lam")}
