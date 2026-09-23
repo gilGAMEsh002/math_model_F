@@ -1,0 +1,51 @@
+{
+  "version": "q1a-v1",
+  "reference_set": "A1",
+  "notes": [
+    "22 个质量指标的冻结处理字典（Baseline A）。字段语义来自《数据说明_干净版.pdf》与 SlimPajama-Meta-rater 数据卡，具体方向为可复核的建模约定，不是已核验的真值。",
+    "所有标量指标统一映射到 [0,1]，数值越大表示该维度质量越高；缺失值用参考集上该维度归一化后的均值（期望效用）填补并记录缺失率。",
+    "归一化参数只在参考集 A1 上估计，再冻结应用到 A2/A3（扩展集），不对每个域分别做分位数变换。"
+  ],
+  "transforms": {
+    "increasing": "clip((x - p05) / (p95 - p05), 0, 1)",
+    "decreasing": "1 - increasing",
+    "suitable_interval": "trapezoid: 0 at p05, 1 on [p25,p75], 0 at p95; 1 at p50",
+    "ordinal_level": "argmax(list) / 5",
+    "softmax_index": "softmax(list)[positive_index]",
+    "element0": "list[0]",
+    "zmean": "mean over subdims of (x - ref_mean)/ref_std, then percentile-normalized on reference"
+  },
+  "metrics": [
+    {"name": "fineweb_edu", "kind": "element0", "direction": "increasing", "group": "educational", "note": "教育价值评分，参考尺度归一化；越高越好。"},
+    {"name": "fluency_en", "kind": "softmax_index", "positive_index": 1, "direction": "increasing", "group": "fluency", "note": "二分类 logits；经 A1 各域均值核验 index1=流畅（arxiv 0.973 最高，github 0.547 最低）。"},
+    {"name": "modernbert_cleanliness", "kind": "ordinal_level", "direction": "increasing", "group": "naturalness", "note": "6 分类 logits；baseline 取 argmax/5（等级越高越干净）。softmax 期望作为敏感性对照。"},
+    {"name": "modernbert_readability", "kind": "ordinal_level", "direction": "increasing", "group": "naturalness", "note": "6 分类 logits；argmax/5。"},
+    {"name": "modernbert_reasoning", "kind": "ordinal_level", "direction": "increasing", "group": "naturalness", "note": "6 分类 logits；argmax/5。"},
+    {"name": "modernbert_professionalism", "kind": "ordinal_level", "direction": "increasing", "group": "naturalness", "note": "6 分类 logits；argmax/5。"},
+    {"name": "dsir_books", "kind": "scalar", "direction": "increasing", "group": "relevance", "note": "DSIR 目标域相似度分值，越大越接近目标域。"},
+    {"name": "dsir_wiki", "kind": "scalar", "direction": "increasing", "group": "relevance", "note": "同上。"},
+    {"name": "dsir_math", "kind": "scalar", "direction": "increasing", "group": "relevance", "note": "同上。"},
+    {"name": "qurater", "kind": "zmean", "subdims": 4, "direction": "increasing", "group": "alignment", "note": "4 个子维度各自标准化后平均；不作为分类 logits 做 softmax。子维度方向未逐项核验，标为未验证假设。"},
+    {"name": "ad_en", "kind": "softmax_index", "positive_index": 1, "direction": "increasing", "group": "alignment", "note": "官方顺序 [has_ad, no_ad]，取 index1=无广告概率。"},
+    {"name": "rps_doc_word_count", "kind": "scalar", "direction": "suitable_interval", "group": "length_format", "note": "词数：适宜区间效用，不机械规定单调方向；区间取自参考集分位数。"},
+    {"name": "rps_doc_num_sentences", "kind": "scalar", "direction": "suitable_interval", "group": "length_format", "note": "句数：适宜区间。"},
+    {"name": "rps_doc_unigram_entropy", "kind": "scalar", "direction": "increasing", "group": "repetition", "note": "单字熵越高信息越丰富。"},
+    {"name": "rps_doc_frac_unique_words", "kind": "scalar", "direction": "increasing", "group": "repetition", "note": "唯一词比例，越高重复越少。"},
+    {"name": "rps_doc_frac_no_alph_words", "kind": "scalar", "direction": "decreasing", "group": "naturalness", "note": "非字母词比例，越高噪声越多；负向。"},
+    {"name": "rps_doc_frac_chars_top_2gram", "kind": "scalar", "direction": "decreasing", "group": "repetition", "note": "top-2gram 字符占比，重复度；负向。"},
+    {"name": "rps_doc_frac_chars_top_3gram", "kind": "scalar", "direction": "decreasing", "group": "repetition", "note": "top-3gram 字符占比，重复度；负向。"},
+    {"name": "rps_lines_uppercase_letter_fraction", "kind": "scalar", "direction": "suitable_interval", "group": "length_format", "note": "大写字母比例：适宜区间（极端大写差）。"},
+    {"name": "rps_lines_ending_with_terminal_punctution_mark", "kind": "scalar", "direction": "increasing", "group": "length_format", "note": "以终止标点结尾的行比例，越高句子越完整。"},
+    {"name": "rps_lines_numerical_chars_fraction", "kind": "scalar", "direction": "suitable_interval", "group": "length_format", "note": "数字字符比例：适宜区间。"},
+    {"name": "rps_doc_mean_word_length", "kind": "scalar", "direction": "suitable_interval", "group": "length_format", "note": "平均词长：适宜区间。"}
+  ],
+  "groups": [
+    "educational",
+    "fluency",
+    "naturalness",
+    "relevance",
+    "alignment",
+    "repetition",
+    "length_format"
+  ]
+}

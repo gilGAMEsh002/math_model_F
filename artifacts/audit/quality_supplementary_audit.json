@@ -1,0 +1,77 @@
+{
+  "B6": {
+    "rows": 360,
+    "columns": [
+      "experiment_id",
+      "N_params_B",
+      "D_tokens_B",
+      "Q_score",
+      "val_loss"
+    ],
+    "Q_range": [
+      0.1,
+      1.0
+    ],
+    "N_range_B": [
+      0.07,
+      11.97
+    ],
+    "D_range_B": [
+      10.0,
+      600.0
+    ],
+    "duplicate_N_D": 315
+  },
+  "B7": {
+    "rows": 450,
+    "columns": [
+      "experiment_id",
+      "N_params_B",
+      "D_tokens_B",
+      "Q_score",
+      "val_loss"
+    ],
+    "Q_range": [
+      0.1,
+      1.0
+    ],
+    "N_range_B": [
+      0.07,
+      11.97
+    ],
+    "D_range_B": [
+      10.0,
+      600.0
+    ],
+    "duplicate_N_D": 405
+  },
+  "B8": {
+    "rows": 1704,
+    "columns": [
+      "experiment_id",
+      "N_params_B",
+      "D_tokens_B",
+      "Q_score",
+      "val_loss",
+      "data_type"
+    ],
+    "Q_range": [
+      0.05,
+      1.0
+    ],
+    "N_range_B": [
+      0.07,
+      700.0
+    ],
+    "D_range_B": [
+      5.0,
+      2000.0
+    ],
+    "duplicate_N_D": 1554
+  },
+  "_overlap": {
+    "B6_and_B7": 45,
+    "B6_and_B8": 32,
+    "B7_and_B8": 32
+  }
+}

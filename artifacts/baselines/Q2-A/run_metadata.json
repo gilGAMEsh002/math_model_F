@@ -1,0 +1,21 @@
+{
+  "baseline_id": "Baseline-A",
+  "created_utc": "2026-09-23T06:31:40Z",
+  "random_seed": 20240923,
+  "python": "3.14.4",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+  "numpy": "2.5.1",
+  "scipy": "1.18.1",
+  "config_path": "/home/sshuser/projects/数学建模26/F题/configs/baselines/Q2-A.yaml",
+  "config_hash": "057bd6256e29ab4b2abb14c585fb2d35f695051a4e8a0ea49740e3e7b79efe2b",
+  "input_hashes": {
+    "B1": "529a59644b0f57bf3a76037838b614bfedc35e58bb26b93052e34ffc63e454c2",
+    "B2": "178f878cad2cb31e4ec104c670553de23818197876d824a113fdb911125951a6",
+    "B4": "2272983ded93de35e05f9acbf95ebceedf43f283345e4be72b54fee94080391e",
+    "B5": "dd858c5e48610e28589340d5db023d6abfb31df597506789ccdfc6a546731bbd",
+    "B6": "c7450ce0d67d8692535fef4709e60e2da60b2c184738bf96df160a4be0a33a7f",
+    "B7": "880fd265ca3e1d9bc93b4559af7ed7c18f89040634266c50bae03d88486e0f3a",
+    "B8": "bda0d449f75c73bbd04141e5cffbf4bea7002073e34b7fa95a638570fa095ffe"
+  },
+  "output_dir": "artifacts/baselines/Q2-A"
+}

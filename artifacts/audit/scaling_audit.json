@@ -1,0 +1,143 @@
+{
+  "B1": {
+    "rows": 1176,
+    "columns": [
+      "run_id",
+      "N_params_B",
+      "D_tokens_B",
+      "C_FLOPs_1e21",
+      "steps",
+      "batch_tokens_M",
+      "lr",
+      "wd",
+      "precision",
+      "gpu_days",
+      "step_time_ms",
+      "train_loss",
+      "val_loss",
+      "ppl",
+      "grad_norm_avg"
+    ],
+    "N_range_B": [
+      0.070542,
+      11.965825
+    ],
+    "D_range_B": [
+      0.134,
+      299.893
+    ]
+  },
+  "B2": {
+    "rows": 1029,
+    "columns": [
+      "run_id",
+      "N_params_B",
+      "D_tokens_B",
+      "C_FLOPs_1e21",
+      "steps",
+      "batch_tokens_M",
+      "lr",
+      "wd",
+      "precision",
+      "gpu_days",
+      "step_time_ms",
+      "train_loss",
+      "val_loss",
+      "ppl",
+      "grad_norm_avg"
+    ],
+    "N_range_B": [
+      0.111,
+      13.0
+    ],
+    "D_range_B": [
+      14.0,
+      2050.0
+    ]
+  },
+  "B4": {
+    "rows": 57,
+    "columns": [
+      "family",
+      "N_params_B",
+      "D_tokens_B",
+      "val_loss",
+      "is_converged"
+    ],
+    "N_range_B": [
+      0.07,
+      72.0
+    ],
+    "D_range_B": [
+      6.0,
+      33739.0
+    ]
+  },
+  "B5": {
+    "rows": 44,
+    "columns": [
+      "family",
+      "N_params_B",
+      "D_tokens_B",
+      "val_loss",
+      "source",
+      "is_converged"
+    ],
+    "N_range_B": [
+      0.125,
+      540.0
+    ],
+    "D_range_B": [
+      5.0,
+      2000.0
+    ]
+  },
+  "B9": {
+    "rows": 132,
+    "columns": [
+      "model_name",
+      "N_params_B",
+      "D_tokens_B",
+      "FLOPs",
+      "publication_date",
+      "organization",
+      "accessibility",
+      "country"
+    ],
+    "N_range_B": [
+      100.0,
+      10000.0
+    ],
+    "D_range_B": [
+      0.0,
+      36000.0
+    ]
+  },
+  "B10": {
+    "rows": 128,
+    "columns": [
+      "family",
+      "N_params_B",
+      "D_tokens_B",
+      "val_loss",
+      "is_converged"
+    ],
+    "N_range_B": [
+      100.0,
+      10000.0
+    ],
+    "D_range_B": [
+      0.1,
+      36000.0
+    ]
+  },
+  "B1_C_over_6ND": {
+    "min": 0.765851479035352,
+    "median": 0.9999995935179582,
+    "max": 1.7631780989018788
+  },
+  "_overlap_B1": {
+    "B4": 0,
+    "B5": 0
+  }
+}

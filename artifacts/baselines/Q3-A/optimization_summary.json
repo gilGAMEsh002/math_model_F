@@ -1,0 +1,26 @@
+{
+  "budgets": [
+    1e+19,
+    1e+22,
+    1e+24
+  ],
+  "context_lengths": [
+    2048,
+    4096,
+    8192,
+    32768,
+    131072
+  ],
+  "eta": 0.0002,
+  "Q0": 0.5858317732018313,
+  "gamma": 0.3632753588524318,
+  "theta_units": {
+    "N": "billions",
+    "D": "billions"
+  },
+  "n_scenarios": 15,
+  "max_rel_diff_L_numeric_vs_analytic": 2.151757976766678e-16,
+  "n_extrapolated": 7,
+  "n_boundary": 0,
+  "cost_forms_inactive": true
+}

@@ -1,0 +1,65 @@
+{
+  "per_file": {
+    "A1": {
+      "path": "A_data_value/slimpajama_quality_signal_sample.jsonl.xz",
+      "n": 51230,
+      "domains": {
+        "arxiv": 1419,
+        "book": 171,
+        "c4": 10000,
+        "commoncrawl": 9640,
+        "github": 10000,
+        "stackexchange": 10000,
+        "wikipedia": 10000
+      },
+      "n_fields": 27
+    },
+    "A2": {
+      "path": "A_data_value/slimpajama_quality_extended/arxiv_part-6777d8857c6e-000486.jsonl.xz",
+      "n": 17523,
+      "domains": {
+        "arxiv": 17523
+      },
+      "n_fields": 24
+    },
+    "A3": {
+      "path": "A_data_value/slimpajama_quality_extended/github_part-6777d8857c6e-000275.jsonl.xz",
+      "n": 203752,
+      "domains": {
+        "github": 203752
+      },
+      "n_fields": 24
+    }
+  },
+  "overlaps": {
+    "A1_and_A2": 1419,
+    "A1_and_A3": 10000,
+    "A2_and_A3": 0
+  },
+  "merged_unique_records": 261086,
+  "merged_per_domain": {
+    "github": 203752,
+    "stackexchange": 10000,
+    "arxiv": 17523,
+    "commoncrawl": 9640,
+    "wikipedia": 10000,
+    "c4": 10000,
+    "book": 171
+  },
+  "field_symdiff_A1_A2": {
+    "A2_minus_A1": [],
+    "A1_minus_A2": [
+      "_source_domain",
+      "_source_path",
+      "content"
+    ]
+  },
+  "quality_metrics_expected": 22,
+  "help_fields_expected": [
+    "id",
+    "content",
+    "sub_path",
+    "_source_domain",
+    "_source_path"
+  ]
+}

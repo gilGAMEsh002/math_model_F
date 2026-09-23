@@ -1,0 +1,24 @@
+# Baseline A / Q3-A: 固定质量与配比的一维资源搜索
+baseline_id: Baseline-A
+question: Q3-A
+seed: 20240923
+paths:
+  shared_splits: configs/shared/splits.json
+  q2_out: artifacts/baselines/Q2-A
+  q1_out: artifacts/baselines/Q1-A
+  out: artifacts/baselines/Q3-A
+optimization:
+  budgets_flops: [1.0e+19, 1.0e+22, 1.0e+24]
+  budget_grid_n: 21           # log C 连续网格点数
+  budget_grid_range: [1.0e+18, 1.0e+25]
+  context_lengths: [2048, 4096, 8192, 32768, 131072]
+  eta: 2.0e-4
+  n_search_range_B: [1.0e-4, 1.0e+5]
+  n_grid: 4000
+  data_support:                # B1 实测范围（用于外推标记）
+    N_B: [0.070542, 11.965825]
+    D_B: [0.134, 299.893]
+  cost_forms:                  # 题给 g(Q)，Q=Q0 时 [g(Q)-g(Q0)]_+=0，本问不作为主动成本
+    exponential: {type: exponential, gamma: 1.0e+7, lambda: 6.0}
+    power: {type: power, gamma: 5.0e+9, lambda: 4.0}
+    log: {type: log, gamma: 2.0e+9, lambda: 10.0}

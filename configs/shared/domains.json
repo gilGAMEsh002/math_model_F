@@ -1,0 +1,37 @@
+{
+  "version": "domain-v1",
+  "quality_domains": ["arxiv", "book", "c4", "commoncrawl", "github", "stackexchange", "wikipedia"],
+  "mixture_domains": [
+    "arxiv", "freelaw", "nih_exporter", "pubmed_central", "wikipedia_en", "dm_mathematics",
+    "github", "philpapers", "stackexchange", "enron_emails", "gutenberg_pg_19", "pile_cc",
+    "ubuntu_irc", "europarl", "hackernews", "pubmed_abstracts", "uspto_backgrounds"
+  ],
+  "loss_targets": [
+    "arxiv", "freelaw", "pubmed_central", "wikipedia_en", "dm_mathematics", "github",
+    "stackexchange", "gutenberg_pg_19", "pile_cc", "ubuntu_irc", "hackernews",
+    "pubmed_abstracts", "uspto_backgrounds"
+  ],
+  "mixture_domains_without_direct_loss": ["nih_exporter", "enron_emails", "europarl", "philpapers"],
+  "reference_domain": "pile_cc",
+  "reference_domain_reason": "A4 训练配比均值最大的域（约 0.1195），作为截距对照域，避免 17 列配比和为 1 造成的完全共线。",
+  "mapping": {
+    "arxiv": {"quality_domain": "arxiv", "mapping_type": "direct"},
+    "github": {"quality_domain": "github", "mapping_type": "direct"},
+    "stackexchange": {"quality_domain": "stackexchange", "mapping_type": "direct"},
+    "wikipedia_en": {"quality_domain": "wikipedia", "mapping_type": "near_direct"},
+    "gutenberg_pg_19": {"quality_domain": "book", "mapping_type": "near_direct"},
+    "pile_cc": {"quality_domain": "commoncrawl", "mapping_type": "near_direct"},
+    "dm_mathematics": {"quality_domain": null, "mapping_type": "inferred"},
+    "freelaw": {"quality_domain": null, "mapping_type": "inferred"},
+    "nih_exporter": {"quality_domain": null, "mapping_type": "inferred"},
+    "pubmed_central": {"quality_domain": null, "mapping_type": "inferred"},
+    "philpapers": {"quality_domain": null, "mapping_type": "inferred"},
+    "enron_emails": {"quality_domain": null, "mapping_type": "inferred"},
+    "ubuntu_irc": {"quality_domain": null, "mapping_type": "inferred"},
+    "europarl": {"quality_domain": null, "mapping_type": "inferred"},
+    "hackernews": {"quality_domain": null, "mapping_type": "inferred"},
+    "pubmed_abstracts": {"quality_domain": null, "mapping_type": "inferred"},
+    "uspto_backgrounds": {"quality_domain": null, "mapping_type": "inferred"}
+  },
+  "proxy_rule_inferred": "inferred 域无直接质量域，baseline 用全部质量域的样本量加权均值作为代理 Q，并单独报告 direct/near_direct 子集的对照；代理值不视为实测。"
+}

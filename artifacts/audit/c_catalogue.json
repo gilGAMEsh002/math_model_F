@@ -1,0 +1,132 @@
+{
+  "C1": {
+    "rows": 4576,
+    "columns": [
+      "Model",
+      "#Params (B)",
+      "Submission Date",
+      "Hub License",
+      "Type",
+      "Average ⬆️",
+      "IFEval",
+      "BBH",
+      "MATH Lvl 5",
+      "GPQA",
+      "MUSR",
+      "MMLU-PRO"
+    ]
+  },
+  "C3": {
+    "rows": 4599,
+    "columns": [
+      "Model",
+      "Year",
+      "Params_B",
+      "Average",
+      "IFEval",
+      "BBH",
+      "MATH_Lvl5",
+      "GPQA",
+      "MUSR",
+      "MMLU_PRO",
+      "Source"
+    ]
+  },
+  "C4": {
+    "rows": 3523,
+    "columns": [
+      "Model",
+      "Domain",
+      "Task",
+      "Organization",
+      "Authors",
+      "Publication date",
+      "Reference",
+      "Link",
+      "Citations",
+      "Notability criteria",
+      "Notability criteria notes",
+      "Parameters",
+      "Parameters notes",
+      "Training compute (FLOP)",
+      "Training compute notes",
+      "Training dataset size (total)",
+      "Dataset size notes",
+      "Training time (hours)",
+      "Training time notes",
+      "Training hardware",
+      "Approach",
+      "Confidence",
+      "Abstract",
+      "Epochs",
+      "WikiText and Penn Treebank data",
+      "Model accessibility",
+      "Country (of organization)",
+      "Base model",
+      "Finetune compute (FLOP)",
+      "Finetune compute notes",
+      "Hardware quantity",
+      "Hardware utilization (MFU)",
+      "Last modified",
+      "Training cloud compute vendor",
+      "Training data center",
+      "Archived links",
+      "Batch size",
+      "Batch size notes",
+      "Organization categorization",
+      "Foundation model",
+      "Training compute lower bound",
+      "Training compute upper bound",
+      "Training chip-hours",
+      "Training code accessibility",
+      "Accessibility notes",
+      "Possibly over 1e23 FLOP",
+      "Training compute cost (2023 USD)",
+      "Utilization notes",
+      "Numerical format",
+      "Frontier model",
+      "Training power draw (W)",
+      "Training compute estimation method",
+      "Hugging Face developer id",
+      "Post-training compute (FLOP)",
+      "Post-training compute notes",
+      "Hardware utilization (HFU)",
+      "Open model weights?"
+    ]
+  },
+  "C6": {
+    "rows": 75,
+    "columns": [
+      "Model",
+      "N_params_B",
+      "D_tokens_B",
+      "Val_Loss",
+      "LB_Average",
+      "LB_IFEval",
+      "LB_BBH",
+      "LB_MATH",
+      "LB_GPQA",
+      "LB_MUSR",
+      "LB_MMLU_PRO",
+      "Loss_Source",
+      "Loss_Comparability"
+    ]
+  },
+  "C7": {
+    "rows": 45,
+    "columns": [
+      "model_name",
+      "n_layers",
+      "n_heads",
+      "d_model",
+      "vocab_size",
+      "max_position_embeddings",
+      "training_data_TB"
+    ]
+  },
+  "C8_catalogue": {
+    "model_dirs": 1863,
+    "json_files": 1958,
+    "note": "Q4 deferred: only catalogued, not parsed."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "mapping_used": "identity",
+  "assumption": "Q1-A 的域级 Q（[0,1] 等权归一化）与 B6/B7/B8 的 Q_score 视为同刻度",
+  "verified": false,
+  "note": "无真实联合 Q–Loss 观测可检验该假设；替代单调映射（线性重标定到质量集 Q 范围）未改变 γ 的符号与量级，列为敏感性方向。",
+  "quality_set_Q_range": {
+    "B6_intercept_False": [
+      0.1,
+      1.0
+    ],
+    "B6_intercept_True": [
+      0.1,
+      1.0
+    ],
+    "B7_intercept_False": [
+      0.1,
+      1.0
+    ],
+    "B7_intercept_True": [
+      0.1,
+      1.0
+    ],
+    "B8_intercept_False": [
+      0.05,
+      1.0
+    ],
+    "B8_intercept_True": [
+      0.05,
+      1.0
+    ]
+  },
+  "q1_reference_Q": {
+    "Q0": 0.5858317732018313
+  },
+  "q1_predictor_hash": "024af1801deb305afc6a944cf6382acb7b565e8cbd7a3d3b86898022ceb6a6ff"
+}

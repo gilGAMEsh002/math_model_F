@@ -1,0 +1,33 @@
+{
+  "version": "splits-v1",
+  "quality": {
+    "A1": {"path": "A_data_value/slimpajama_quality_signal_sample.jsonl.xz", "role": "reference_and_main", "nature": "observed"},
+    "A2": {"path": "A_data_value/slimpajama_quality_extended/arxiv_*.jsonl.xz", "role": "extended_check", "nature": "observed", "domain": "arxiv"},
+    "A3": {"path": "A_data_value/slimpajama_quality_extended/github_*.jsonl.xz", "role": "extended_check", "nature": "observed", "domain": "github"}
+  },
+  "mixture": {
+    "train": {"mixture": "A_data_value/regmix_tables/train_mixture_1m.csv", "loss": "A_data_value/regmix_tables/train_pile_loss_1m.csv", "n": 512, "nature": "observed", "use": "fit_and_cv"},
+    "test_1m": {"mixture": "A_data_value/regmix_tables/test_mixture_1m.csv", "loss": "A_data_value/regmix_tables/test_pile_loss_1m.csv", "n": 256, "nature": "observed", "use": "final_test_same_scale"},
+    "test_60m": {"mixture": "A_data_value/regmix_tables/test_mixture_60m.csv", "loss": "A_data_value/regmix_tables/test_pile_loss_60m.csv", "n": 256, "nature": "observed", "use": "final_test_cross_scale"},
+    "test_1B": {"mixture": "A_data_value/regmix_tables/test_mixture_1B.csv", "loss": "A_data_value/regmix_tables/test_pile_loss_1B.csv", "n": 64, "nature": "observed", "use": "final_test_cross_scale"},
+    "est_10b": {"mixture": "A_data_value/regmix_tables/est_mixture_10b.csv", "loss": "A_data_value/regmix_tables/est_pile_loss_10b.csv", "n": 63, "nature": "extrapolated", "use": "consistency_only"},
+    "est_70b": {"mixture": "A_data_value/regmix_tables/est_mixture_70b.csv", "loss": "A_data_value/regmix_tables/est_pile_loss_70b.csv", "n": 63, "nature": "extrapolated", "use": "consistency_only"}
+  },
+  "scaling": {
+    "B1": {"path": "B_scaling_laws/pythia_training_log_existing.csv", "role": "main_fit", "nature": "observed"},
+    "B2": {"path": "B_scaling_laws/cerebras_training_log.csv", "role": "out_of_family_check", "nature": "semi_synthetic"},
+    "B3": {"path": "B_scaling_laws/training_trajectories/", "role": "interpolated_trajectory_check", "nature": "interpolated"},
+    "B4": {"path": "B_scaling_laws/scaling_baseline.csv", "role": "cross_family_check", "nature": "observed"},
+    "B5": {"path": "B_scaling_laws/published_scaling_data.csv", "role": "literature_check", "nature": "observed"},
+    "B6": {"path": "B_scaling_laws/supplementary_NQ_experiment.csv", "role": "quality_main", "nature": "semi_synthetic"},
+    "B7": {"path": "B_scaling_laws/supplementary_NQ_experiment_expanded.csv", "role": "quality_alt", "nature": "semi_synthetic"},
+    "B8": {"path": "B_scaling_laws/supplementary_NQ_experiment_large.csv", "role": "quality_large", "nature": "semi_synthetic"}
+  },
+  "architecture": {"C7": {"path": "C_efficiency_evolution/model_architecture_metadata.csv"}},
+  "unit_conventions": {
+    "N_params_B": "billion parameters; multiply by 1e9 to get actual parameter count",
+    "D_tokens_B": "billion tokens; multiply by 1e9 to get actual token count",
+    "C_FLOPs_1e21": "1e21 FLOPs",
+    "cost_model": "C = D * [(6 + eta*ell) * N + max(g(Q)-g(Q0),0)], eta=2e-4"
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "reference_domain": "pile_cc",
+  "proxy_rule_inferred": "inferred 域无直接质量域，baseline 用全部质量域的样本量加权均值作为代理 Q，并单独报告 direct/near_direct 子集的对照；代理值不视为实测。",
+  "proxy_Q": 0.5597491758864412,
+  "lambda_selected": 0.1,
+  "rows": [
+    {
+      "mixture_domain": "arxiv",
+      "quality_domain": "arxiv",
+      "mapping_type": "direct",
+      "Q_resolved": 0.5857832352290838,
+      "n_quality": 17523,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "freelaw",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "nih_exporter",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "pubmed_central",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "wikipedia_en",
+      "quality_domain": "wikipedia",
+      "mapping_type": "near_direct",
+      "Q_resolved": 0.6183936162586194,
+      "n_quality": 10000,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "dm_mathematics",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "github",
+      "quality_domain": "github",
+      "mapping_type": "direct",
+      "Q_resolved": 0.5395338044974901,
+      "n_quality": 203752,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "philpapers",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "stackexchange",
+      "quality_domain": "stackexchange",
+      "mapping_type": "direct",
+      "Q_resolved": 0.6723844038906993,
+      "n_quality": 10000,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "enron_emails",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "gutenberg_pg_19",
+      "quality_domain": "book",
+      "mapping_type": "near_direct",
+      "Q_resolved": 0.46943257524336507,
+      "n_quality": 171,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "pile_cc",
+      "quality_domain": "commoncrawl",
+      "mapping_type": "near_direct",
+      "Q_resolved": 0.6770226753502974,
+      "n_quality": 9640,
+      "is_proxy": false
+    },
+    {
+      "mixture_domain": "ubuntu_irc",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "europarl",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "hackernews",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "pubmed_abstracts",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    },
+    {
+      "mixture_domain": "uspto_backgrounds",
+      "quality_domain": "",
+      "mapping_type": "inferred",
+      "Q_resolved": 0.5597491758864412,
+      "n_quality": 0,
+      "is_proxy": true
+    }
+  ]
+}

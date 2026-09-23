@@ -1,0 +1,26 @@
+{
+  "inventory_files": 2012,
+  "total_bytes": 551191693,
+  "quality": {
+    "overlaps": {
+      "A1_and_A2": 1419,
+      "A1_and_A3": 10000,
+      "A2_and_A3": 0
+    },
+    "merged_unique_records": 261086,
+    "merged_per_domain": {
+      "github": 203752,
+      "stackexchange": 10000,
+      "arxiv": 17523,
+      "commoncrawl": 9640,
+      "wikipedia": 10000,
+      "c4": 10000,
+      "book": 171
+    }
+  },
+  "notes": [
+    "A1-A3 全量读取；合并按 (quality_domain, id) 去重。",
+    "配比表与 Loss 表仅按同一数据组的 index 一对一连接。",
+    "C 附件仅编目（Q4 在 Baseline A 中暂缓）。"
+  ]
+}
