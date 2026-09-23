@@ -1,0 +1,18 @@
+mixture_domain,quality_domain,mapping_type,q,note
+arxiv,arxiv,direct,0.589366,配方域名与质量信号域名一致
+github,github,direct,0.478754,配方域名与质量信号域名一致
+stackexchange,stackexchange,direct,0.551749,配方域名与质量信号域名一致
+wikipedia_en,wikipedia,near_direct,0.475167,名称略有差异，语义对应
+gutenberg_pg_19,book,near_direct,0.311712,书籍类文本，可参考 book 域质量信号
+pile_cc,commoncrawl,near_direct,0.482401,网页抓取类文本，可参考 commoncrawl 域质量信号
+dm_mathematics,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：长篇技术/公式文本，与 arxiv 体裁最接近
+freelaw,wikipedia,inferred_proxy,0.475167,无同名质量域；按体裁代理到 wikipedia：正式书面语，参考 wikipedia 的规范性
+nih_exporter,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：科研项目文本，与 arxiv 体裁接近
+pubmed_central,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：学术论文全文，与 arxiv 体裁接近
+philpapers,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：学术论文，与 arxiv 体裁接近
+enron_emails,commoncrawl,inferred_proxy,0.482401,无同名质量域；按体裁代理到 commoncrawl：非正式日常文本，参考 commoncrawl
+ubuntu_irc,stackexchange,inferred_proxy,0.551749,无同名质量域；按体裁代理到 stackexchange：技术问答/聊天，参考 stackexchange
+europarl,wikipedia,inferred_proxy,0.475167,无同名质量域；按体裁代理到 wikipedia：议会记录，正式书面语，参考 wikipedia
+hackernews,stackexchange,inferred_proxy,0.551749,无同名质量域；按体裁代理到 stackexchange：技术社区讨论，参考 stackexchange
+pubmed_abstracts,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：学术摘要，与 arxiv 体裁接近
+uspto_backgrounds,arxiv,inferred_proxy,0.589366,无同名质量域；按体裁代理到 arxiv：专利背景技术描述，与 arxiv 体裁接近

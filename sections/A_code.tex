@@ -1,0 +1,222 @@
+\section{程序说明与核心代码}
+
+\subsection{运行环境与复现方式}
+
+全部计算在普通个人电脑上完成，无须 GPU。环境与依赖：
+
+\begin{itemize}[leftmargin=2em,itemsep=2pt]
+\item Python 3.12.14（uv 管理的虚拟环境 \texttt{.venv}）
+\item numpy 2.x、pandas 2.x、scipy 1.x、scikit-learn 1.x、statsmodels、pyarrow
+\item matplotlib、seaborn（绘图，中文字体 SimSun，输出 DPI $\ge$ 330）
+\item 编译：XeLaTeX（MiKTeX 25.12）
+\end{itemize}
+
+代码按问题独立分文件，可单独运行，中间结果以 CSV/JSON/Parquet 落盘于 \texttt{results/}：
+
+\begin{table}[htbp]
+\centering
+\caption{代码文件与产出对应关系}
+\label{tab:code}
+\small
+\begin{tabular}{l|l|l}
+\toprule
+\textbf{文件} & \textbf{对应问题} & \textbf{主要产出} \\
+\midrule
+\texttt{code/common.py} & 公共 & 路径、来源分级、全局绘图样式 \\
+\texttt{code/p0\_audit.py} & P0 数据审计 & \texttt{audit\_files.csv} \\
+\texttt{code/fetch\_quality.py} & 数据重建 & A1/A2/A3 同源重建 \\
+\texttt{code/q1\_quality.py} & 问题一（质量） & \texttt{q1\_domain\_quality.csv} 等 \\
+\texttt{code/q1\_mixture.py} & 问题一（配比） & \texttt{q1\_mixture\_eval.csv} 等 \\
+\texttt{code/q1\_integrate.py} & 问题一（跨体系） & \texttt{q1\_domain\_mapping.csv} 等 \\
+\texttt{code/q2\_scaling.py} & 问题二 & \texttt{q2\_scaling\_parameters.json} 等 \\
+\texttt{code/q3\_optimize.py} & 问题三 & \texttt{q3\_optimal\_allocations.csv} 等 \\
+\texttt{code/q4\_frontier.py} & 问题四 & \texttt{q4\_frontier\_forecasts.csv} 等 \\
+\texttt{code/figures.py} & 全部配图 & \texttt{figures/*.png}、\texttt{*.pdf} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+固定随机种子 20260101；bootstrap 重采样次数在正文各节注明。
+
+\subsection{核心代码}
+
+以下给出四个关键环节的代码：质量合成与冲突消解、二次混料回归、广义标度律的两阶段估计、以及预算约束下的最优配置搜索。
+
+\begin{Python}{质量合成与冲突消解（q1\_quality.py 节选）}
+# 本程序及代码是在人工智能工具辅助下完成的。
+# 工具名称：Claude；开发机构：Anthropic；通过 MathModel 桌面端调用。
+# 核心建模逻辑由参赛队设计，AI 仅辅助代码实现与调试。
+GROUPS = {
+    "教育价值": ["fineweb_edu","dsir_books","dsir_wiki","dsir_math","qurater","reason"],
+    "可读性":   ["read","clean","fluency_en","ue"],
+    "专业性":   ["prof","mwl","fuw"],
+    "低噪声":   ["ad","fna","t2","t3","up","term","num","wc","ns"],
+}
+NEGATIVE = ["ad","t2","t3","up","fna","num"]      # 原始越大越差，需补转换
+BANDED   = ["wc","ns"]                            # 适宜区间型，倒 U 型效用
+EPS, LAM = 1e-3, 0.3
+
+def fit_norm(df, cols):
+    """在开发参考集上冻结归一化参数：1%/99% 分位截尾 min-max。"""
+    par = {}
+    for c in cols:
+        x = df[c].to_numpy(float); x = x[np.isfinite(x)]
+        lo, hi = np.percentile(x, 1), np.percentile(x, 99)
+        par[c] = (float(lo), float(hi) if hi > lo else float(lo + 1))
+    return par
+
+def apply_norm(df, par):
+    """方向统一：负向补转换 x->1-x；词数/句数用倒 U 型效用。"""
+    out = pd.DataFrame(index=df.index)
+    for c, (lo, hi) in par.items():
+        out[c] = np.clip((df[c].to_numpy(float) - lo) / (hi - lo), 0, 1)
+    for c in NEGATIVE:
+        if c in out: out[c] = 1.0 - out[c]
+    for c in BANDED:
+        if c in out:
+            out[c] = np.clip(1.0 - np.abs(out[c] - 0.35) / 0.65, 0, 1)
+    return out
+
+def composite(z, lam=LAM, eps=EPS):
+    """组内算术平均 -> 组间几何平均（短板） -> 凸组合消解冲突。"""
+    gs = pd.DataFrame({g: z[[c for c in cols if c in z.columns]].mean(axis=1)
+                       for g, cols in GROUPS.items()}).clip(lower=0)
+    q_base = np.clip(np.exp(np.log(gs + eps).mean(axis=1)) - eps, 0, 1)
+    gmin = gs.min(axis=1)
+    c_i  = gs.max(axis=1) - gmin                 # 冲突强度 c = max_g z - min_g z
+    Q    = (1 - lam) * q_base + lam * gmin       # 消解规则
+    return Q.to_numpy(float), q_base.to_numpy(float), gs, c_i.to_numpy(float)
+\end{Python}
+
+\begin{Python}{二次混料岭回归（q1\_mixture.py 节选）}
+from itertools import combinations
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import KFold
+
+def design(P, quad=True):
+    """Scheffé 规范形设计矩阵：17 个一次项 + 136 个交互项，无截距、无平方项。"""
+    cols = [P]
+    if quad:
+        inter = np.column_stack([P[:, i] * P[:, j]
+                                 for i, j in combinations(range(P.shape[1]), 2)])
+        cols.append(inter * P.shape[1])          # 尺度对齐，使岭惩罚公平
+    return np.hstack(cols)
+
+def cv_alpha(X, Y, alphas, k=5):
+    """5 折 CV 选择岭惩罚强度：各域标准化 RMSE 均值最小。"""
+    kf, scale = KFold(n_splits=k, shuffle=True, random_state=20260101), Y.std(axis=0)
+    score = np.zeros(len(alphas))
+    for tr, va in kf.split(X):
+        for ai, a in enumerate(alphas):
+            pred = Ridge(alpha=a, fit_intercept=False).fit(X[tr], Y[tr]).predict(X[va])
+            score[ai] += np.mean(np.abs(pred - Y[va]) / scale)
+    return alphas[int(np.argmin(score))], score / k
+
+def regret(y, yhat, v):
+    """Top-k 后悔值：预测最优配方的真实 Loss - 候选集真实最小 Loss。"""
+    ty, py = y @ v, yhat @ v
+    return {f"regret_top{k}": float(np.mean(ty[np.argsort(py)[:k]] - ty.min()))
+            for k in (1, 5, 10)}
+\end{Python}
+
+\begin{Python}{广义标度律的两阶段估计（q2\_scaling.py 节选）}
+from scipy.optimize import least_squares
+
+def pred_general(th, N, D, Q, H):
+    """L = E + A*N^(-alpha) + B*[D*Q^kappa*h(p)]^(-beta)"""
+    E, A, al, Bc, be, ka = th
+    return E + A * N ** (-al) + Bc * (D * Q ** ka * H) ** (-be)
+
+def fit_general(N, D, Q, H, L, fix=None, n_start=60, seed=20260101):
+    """多起点有界 NLS。fix 为自然尺度的固定参数（非 NaN 位置不估计），
+    内部按对数尺度参数化以保证正性，返回自然尺度参数。"""
+    r = np.random.default_rng(seed)
+    lo = np.log([1e-3, 1e-4, 0.01, 1e-4, 0.01, 0.02])
+    hi = np.log([10.0, 1e3, 2.0, 1e3, 2.0, 8.0])
+    fix  = np.full(6, np.nan) if fix is None else np.asarray(fix, float)
+    free = np.isnan(fix)
+    lo_f, hi_f = lo[free], hi[free]
+    fx_log = np.where(free, 0.0, np.log(np.where(free, 1.0, fix)))
+    def res(tf, N, D, Q, H, L):
+        t = fx_log.copy(); t[free] = tf
+        return pred_general(np.exp(t), N, D, Q, H) - L
+    best = None
+    for _ in range(n_start):
+        s = least_squares(res, r.uniform(lo_f, hi_f), args=(N, D, Q, H, L),
+                          bounds=(lo_f, hi_f), max_nfev=8000)
+        if best is None or s.cost < best.cost: best = s
+    th = fix.copy(); th[free] = np.exp(best.x)
+    return th, best
+
+# 分阶段估计 kappa：固定 B1 标定的经典参数，仅释放 kappa
+th_c  = fit_classic(N1, D1, L1)[0]
+fix_k = np.array([*th_c, np.nan])                # 注意：自然尺度，函数内部取对数
+th_k  = fit_general(Nq, Dq, Qq, np.ones_like(Qq), Lq, fix=fix_k, n_start=40)[0]
+kappa = th_k[5]                                  # -> 1.0524, 95% CI [0.982, 1.151]
+\end{Python}
+
+\begin{Python}{预算约束下的最优配置搜索（q3\_optimize.py 节选）}
+from scipy.optimize import minimize_scalar
+
+def D_from_budget(N, Q, C, ell, cf, Q0):
+    """消去 D：D = C / {(6+eta*ell)*N + [g(Q)-g(Q0)]_+}"""
+    return C / ((6 + ETA * ell) * N + max(cf["g"](Q) - cf["g"](Q0), 0.0))
+
+def _min_over_N(Q, C, ell, cf, Q0):
+    """固定 Q 时对 log N 做有界黄金分割极小化。
+    损失面对 N 极平坦（beta 小），一维有界搜索比二维 Nelder-Mead 稳健得多。"""
+    def f(ln):
+        v, _ = L_of_NQ(np.exp(ln), Q, C, ell, cf, Q0)
+        return v if np.isfinite(v) else 1e6
+    r = minimize_scalar(f, bounds=(np.log(N_MIN), np.log(N_MAX)),
+                        method="bounded", options=dict(xatol=1e-12))
+    return float(np.exp(r.x)), float(r.fun)
+
+def solve_2d(C, ell, cf, Q0, q_grid=200, band_pts=4000):
+    """外层 Q 网格 + 内层一维精确极小化 + 邻域加密。"""
+    best = (np.inf, None, None)
+    for Q in np.linspace(Q0, 1.0, q_grid):
+        N, Lv = _min_over_N(Q, C, ell, cf, Q0)
+        if Lv < best[0]: best = (Lv, N, Q)
+    span = (1.0 - Q0) / (q_grid - 1) * 8
+    for Q in np.linspace(max(Q0, best[2] - span), min(1.0, best[2] + span), 120):
+        N, Lv = _min_over_N(Q, C, ell, cf, Q0)
+        if Lv < best[0]: best = (Lv, N, Q)
+    # 辨识带：Delta L < 1e-4 的 N 区间，用于提示 N* 的不确定性
+    lns = np.linspace(np.log(N_MIN), np.log(N_MAX), band_pts)
+    Lv  = np.array([L_of_NQ(np.exp(l), best[2], C, ell, cf, Q0)[0] for l in lns])
+    ok  = Lv <= best[0] + 1e-4
+    band = (float(np.exp(lns[ok].min())), float(np.exp(lns[ok].max())))
+    return dict(N=best[1], Q=best[2], L=best[0], N_band_1e4=band,
+                N_band_ratio=band[1] / band[0])
+
+# 解析参照（固定 Q=Q0、无质量开销时严格成立）
+def analytic_Nstar(C, ell, th):
+    a = 6 + ETA * ell
+    num = th["alpha"] * th["A"] * (th["Q0"] ** th["kappa"] * C / a) ** th["beta"]
+    return (num / (th["beta"] * th["B"])) ** (1 / (th["alpha"] + th["beta"]))
+\end{Python}
+
+\begin{Python}{数据来源诊断：判断损失列是否为公式生成（q2\_scaling.py 节选）}
+def diagnose_sources():
+    """对每份标度律数据独立拟合五参数幂律，据拟合优度与残差结构判定性质。
+    判据：R^2 > 0.9995 且相对残差接近舍入量级 -> 判为公式生成。"""
+    rows = []
+    for tag, fn, level in [("B1 Pythia 训练日志", "pythia_training_log_existing.csv", "真实"),
+                           ("B4 跨族收敛点", "scaling_baseline.csv", "真实"),
+                           ("B6 NQ 半合成", "supplementary_NQ_experiment.csv", "半合成")]:
+        d  = pd.read_csv(B / fn).dropna(subset=["N_params_B", "D_tokens_B", "val_loss"])
+        n, dd, l = (d["N_params_B"].to_numpy(float), d["D_tokens_B"].to_numpy(float),
+                    d["val_loss"].to_numpy(float))
+        th, _ = fit_classic(n, dd, l, n_start=25)
+        r  = l - pred_classic(th, n, dd)
+        r2 = 1 - np.sum(r ** 2) / np.sum((l - l.mean()) ** 2)
+        rows.append(dict(dataset=tag, level=level, n=len(l),
+                         rmse=float(np.sqrt(np.mean(r ** 2))), r2=float(r2),
+                         rel_rmse=float(np.sqrt(np.mean(r ** 2)) / l.mean()),
+                         verdict=("公式生成（残差≈舍入量级，判为合成）"
+                                  if r2 > 0.9995 else "含真实散布")))
+    return pd.DataFrame(rows)
+# B1 结果：R^2 = 1.000000，rel_rmse = 5.9e-5，且残差与 lr/wd/precision
+# 的相关系数均 < 0.09 -> 判定为公式生成，其拟合不作为泛化证据。
+\end{Python}

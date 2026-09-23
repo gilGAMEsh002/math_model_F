@@ -1,0 +1,76 @@
+level,model,L,S_true,S_pred
+High (,EleutherAI/pythia-160m,2.5978,5.73039,4.66485
+High (,EleutherAI/pythia-410m,2.4209,5.22707,5.63802
+High (,EleutherAI/pythia-1b,2.2904,5.07027,5.74959
+High (,EleutherAI/pythia-1.4b,2.2558,6.00853,5.62688
+High (,EleutherAI/pythia-2.8b,2.1911,5.55495,5.7823
+High (,EleutherAI/pythia-6.9b,2.125,5.96655,5.7346
+High (,EleutherAI/pythia-12b,2.0933,6.05984,5.70985
+Medium,meta-llama/Meta-Llama-3-8B,1.76,13.6269,28.2223
+Medium,meta-llama/Llama-2-7b-hf,1.75,8.80636,28.6377
+Medium,meta-llama/Llama-3.1-8B,1.76,14.4209,28.191
+Medium,Qwen/Qwen2-0.5B,2.84,7.22412,6.91972
+Medium,Qwen/Qwen2-1.5B,2.63,10.4455,11.0095
+Medium,Qwen/Qwen2-7B,2.2,23.9252,19.1539
+Medium,Qwen/Qwen2.5-0.5B,2.81,6.55007,7.62204
+Medium,Qwen/Qwen2.5-1.5B,2.58,13.8527,11.8414
+Medium,Qwen/Qwen2.5-7B,2.15,26.0192,20.0995
+Medium,Qwen/Qwen2.5-14B,2.02,31.9511,22.5218
+Medium,google/gemma-2-2b,2.39,10.3596,15.7196
+Medium,google/gemma-2-9b,2.1,21.2053,21.1451
+Medium,google/gemma-2-27b,1.95,23.9262,24.0257
+Medium,google/gemma-7b,2.24,15.4428,18.511
+Medium,microsoft/phi-2,2.39,15.5343,15.5837
+Medium,microsoft/phi-1_5,2.32,7.17097,17.1291
+Medium,microsoft/Phi-3-mini-4k-instruct,2.15,27.5622,20.0764
+Medium,meta-llama/Meta-Llama-3-70B,1.71,26.7054,28.7177
+Medium,meta-llama/Llama-2-13b-hf,1.7,11.0652,29.6755
+Medium,meta-llama/Llama-2-70b-hf,1.65,18.3726,30.4251
+Medium,mistralai/Mistral-7B-v0.1,2.1,14.5754,21.2454
+Medium,mistralai/Mistral-7B-Instruct-v0.2,2.1,18.5079,21.1859
+Medium,mistralai/Mixtral-8x7B-v0.1,1.9,19.6651,25.1125
+Medium,Qwen/Qwen2.5-32B,1.95,38.008,23.7336
+Medium,Qwen/Qwen2.5-72B,1.85,38.4411,25.5808
+Medium,Qwen/Qwen2-57B-A14B,1.9,25.0339,24.9817
+Medium,01-ai/Yi-6B,2.1,13.6116,21.2599
+Medium,01-ai/Yi-34B,1.9,22.3731,25.0465
+Medium,tiiuae/falcon-7b,2.25,5.17344,18.494
+Medium,tiiuae/falcon-40b,2.05,11.4013,22.2779
+Medium,google/gemma-1.1-2b-it,2.5,8.05337,13.6801
+Medium,google/gemma-1.1-7b-it,2.2,17.6936,19.2516
+Medium,facebook/opt-1.3b,2.75,5.27669,8.96245
+Medium,deepseek-ai/deepseek-llm-7b-base,2.15,8.2271,20.3658
+Medium,microsoft/Phi-3-small-8k-instruct,2.05,32.342,21.9401
+Medium,microsoft/Phi-3-medium-4k-instruct,1.95,33.0977,23.8354
+Medium,01-ai/Yi-1.5-34B,1.95,25.6465,23.99
+Medium,01-ai/Yi-1.5-34B-32K,1.95,26.7279,23.9676
+Medium,01-ai/Yi-1.5-34B-Chat,1.95,33.358,23.83
+Medium,01-ai/Yi-1.5-34B-Chat-16K,1.95,29.4036,23.9121
+Medium,01-ai/Yi-34B-200K,1.9,20.0135,25.1041
+Medium,01-ai/Yi-34B-Chat,1.9,24.2267,25.0014
+Medium,01-ai/Yi-6B-200K,2.1,11.9961,21.2844
+Medium,01-ai/Yi-6B-Chat,2.1,14.1177,21.2523
+Medium,EleutherAI/gpt-neox-20b,1.9,6.11652,25.4428
+Medium,Qwen/Qwen2-0.5B-Instruct,2.84,6.58678,6.98856
+Medium,Qwen/Qwen2-1.5B-Instruct,2.63,14.1419,10.792
+Medium,Qwen/Qwen2-57B-A14B-Instruct,1.9,33.0159,24.7871
+Medium,Qwen/Qwen2-7B-Instruct,2.2,27.9367,19.0911
+Medium,Qwen/Qwen2.5-0.5B-Instruct,2.81,10.1075,7.26767
+Medium,Qwen/Qwen2.5-1.5B-Instruct,2.58,18.4305,11.6119
+Medium,Qwen/Qwen2.5-14B-Instruct,2.02,41.3095,22.3613
+Medium,Qwen/Qwen2.5-14B-Instruct-1M,2.02,41.559,22.357
+Medium,Qwen/Qwen2.5-32B-Instruct,1.95,46.5971,23.5554
+Medium,Qwen/Qwen2.5-72B-Instruct,1.85,47.9805,25.3051
+Medium,Qwen/Qwen2.5-7B-Instruct,2.15,35.2001,19.962
+Medium,Qwen/Qwen2.5-7B-Instruct-1M,2.15,32.7639,19.9985
+Medium,bigscience/bloom-7b1,2.35,3.79551,16.6382
+Medium,google/gemma-2-27b-it,1.95,36.1743,23.7716
+Medium,google/gemma-2-2b-it,2.39,17.0469,15.544
+Medium,google/gemma-2-2b-jpn-it,2.39,17.1154,15.5422
+Medium,google/gemma-2-9b-it,2.1,32.0728,20.9808
+Medium,google/gemma-7b-it,2.24,13.0671,18.551
+Medium,meta-llama/Meta-Llama-3-70B-Instruct,1.71,36.3722,28.2669
+Medium,meta-llama/Meta-Llama-3-8B-Instruct,1.76,23.9087,27.817
+Medium,microsoft/phi-1,2.32,5.57432,17.1624
+Medium,tiiuae/falcon-40b-instruct,2.05,10.4845,22.2927
+Medium,tiiuae/falcon-7b-instruct,2.25,5.11657,18.495

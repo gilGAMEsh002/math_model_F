@@ -1,0 +1,61 @@
+[14:42:53] 输出目录 C:\Users\Administrator\MathModel Projects\Workspace\data\quality_rebuild
+[14:43:07] 分片大小: commoncrawl=1257MB, c4=1679MB, book=985MB, arxiv=1078MB, github=1319MB, wikipedia=1908MB, stackexchange=1696MB
+[14:49:24]   域 book: 读取 1362 条, 抽样 1362 条, 6.3 分钟
+[14:50:10]   域 c4: 读取 238519 条, 抽样 13700 条, 7.1 分钟
+[14:51:11]   域 arxiv: 读取 4367 条, 抽样 2360 条, 1.8 分钟
+[14:51:48]   域 github: 读取 32061 条, 抽样 2660 条, 1.6 分钟
+[14:52:02]   域 commoncrawl: 读取 142317 条, 抽样 26700 条, 8.9 分钟
+[14:52:25]   域 wikipedia: 读取 29074 条, 抽样 1940 条, 1.2 分钟
+[14:52:31]   域 stackexchange: 读取 33062 条, 抽样 1690 条, 0.7 分钟
+[14:59:04] [done] A1: 50412 行 -> A1_sample.jsonl.xz 298.8 MB
+[14:59:08] [get ] A2_arxiv: 1078 MB, 并行 8 路
+[15:07:10] [done] A2_arxiv: 17438 行 -> A2_arxiv.jsonl.xz 3.6 MB 耗时 8.1 分钟
+[15:07:12] [get ] A3_github: 1319 MB, 并行 8 路
+[15:10:01]   A3_github: 50000 行  2.8 分钟
+[15:12:17]Traceback (most recent call last):
+  [15:18:54]     !! 分块失败 943718400-956301311
+[15:19:54]     !! 分块失败 1006632960-1019215871
+[15:19:55]     !! 分块失败 1019215872-1031798783
+[15:19:55]     !! 分块失败 956301312-968884223
+[15:19:56]     !! 分块失败 994050048-1006632959
+[15:19:56]     !! 分块失败 981467136-994050047
+[15:19:57]     !! 分块失败 905969664-918552575
+[15:20:16]     !! 分块失败 1031798784-1044381695
+[15:20:45]   A3_github: 150000 行  13.6 分钟
+[15:24:57] [done] A3_github: 187572 行 -> A3_github.jsonl.xz 34.3 MB 耗时 17.8 分钟
+[15:24:57] 全部完成
+istrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\MathModel Projects\Workspace\code\fetch_quality.py", line 161, in rebuild_a1
+    if n % 50000 == 0:
+                 ^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\concurrent\futures\_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\MathModel Projects\Workspace\code\fetch_quality.py", line 133, in reservoir
+    if on_progress and n_done[0] % 20 == 0:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\MathModel Projects\Workspace\code\fetch_quality.py", line 87, in stream_lines
+    try:
+         
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\http\client.py", line 494, in read
+    s = self.fp.read(amt)
+        ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\ssl.py", line 1251, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\ssl.py", line 1103, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out

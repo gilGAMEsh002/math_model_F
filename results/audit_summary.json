@@ -1,0 +1,15 @@
+{
+  "data_root": "C:\\Users\\Administrator\\Desktop\\math_model_F-main\\real_attachments",
+  "n_files": 39,
+  "n_missing_entity": 4,
+  "total_bytes": 240502810,
+  "by_level": {
+    "真实观测": 25,
+    "半合成（真实标度律校准 + 噪声）": 4,
+    "模型估算": 3,
+    "混合来源": 3,
+    "子集（非独立实验）": 2,
+    "参考/说明": 1,
+    "插值生成": 1
+  }
+}

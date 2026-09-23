@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "managedBy": "mathmodel",
+  "template": {
+    "id": "huawei",
+    "name": {
+      "zh-CN": "华为杯",
+      "en": "Huawei Cup"
+    },
+    "entryFile": "main.tex",
+    "source": "builtin",
+    "sourcePath": null
+  },
+  "contestFields": [],
+  "teamProfile": null
+}

@@ -1,0 +1,120 @@
+====================================================================================================
+第四问 · 技术演进分析与前沿预测
+====================================================================================================
+C1: 4576 行, 提交日期 2024-06-08 ~ 2025-03-13
+    类型: pretrained=3858, chat/finetuned=718; 有许可证=2823
+
+[C8 vs C1 BBH 对照] 匹配 1899 个模型
+  宏平均   平均偏差=+21.282 MAE=21.282 相关=0.9979
+  题量加权 平均偏差=+21.063 MAE=21.063 相关=0.9978
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_c8_vs_c1.csv  (1899, 6)
+
+[C4 匹配] 覆盖率 17.7% (810/4576)
+  置信度分层: {'none': 3766, 'medium': 660, 'high': 107, 'low': 43}
+  未匹配示例: ['0-hero/Matter-0.2-7B-DPO', '01-ai/Yi-1.5-6B', '01-ai/Yi-1.5-6B-Chat', '01-ai/Yi-6B-200K']
+  匹配样例:
+    01-ai/Yi-1.5-34B-32K                       -> Yi-1.5-34B                     C1=34.39B C4=34.00B
+    01-ai/Yi-1.5-34B-Chat                      -> Yi-1.5-34B                     C1=34.39B C4=34.00B
+    01-ai/Yi-1.5-34B-Chat-16K                  -> Yi-1.5-34B                     C1=34.39B C4=34.00B
+    01-ai/Yi-1.5-9B-32K                        -> Yi-1.5-9B                      C1=8.83B C4=8.83B
+    01-ai/Yi-1.5-9B-Chat                       -> Yi-1.5-9B                      C1=8.83B C4=8.83B
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_model_metadata_matches.csv  (4576, 26)
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_bridge_parameters.csv  (4, 10)
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_bridge_validation.csv  (75, 5)
+
+[Loss–Benchmark 桥接]
+dataset  level  n         a          b       r2  loss_min  loss_max    S_min     S_max
+     C6 High (  7  7.671652  -0.881664 0.157979    2.0933    2.5978 5.070268  6.059841
+     C6 Medium 68 61.433677 -19.184607 0.252499    1.6500    2.8400 3.795510 47.980460
+     C5 High (  7  7.671652  -0.881664 0.157979    2.0933    2.5978 5.070268  6.059841
+     C5 Medium 36 48.929270 -14.528726 0.239790    1.6500    2.8400 5.173445 38.441144
+  留一模型验证: MAE=7.342, RMSE=9.591
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_capability_models.csv  (5, 13)
+
+[能力模型比较]
+                             model    n       r2   adj_r2     rmse          aic
+               M1: logN + t + type 4561 0.464674 0.464321 7.899373 18861.198092
+               M2: logC + t + type  627 0.484964 0.482484 7.717052  2570.464258
+        M3: logN + logC + t + type  627 0.527098 0.524056 7.394665  2518.951507
+M4: logC + t + type + open (高置信匹配)  595 0.496500 0.493086 7.680151  2435.980655
+       M5: logC + t + type (高置信匹配)  595 0.489997 0.487408 7.729588  2441.616137
+   b_logN       b_t   b_chat   b_logC    b_open
+14.334115 12.845530 1.732222      NaN       NaN
+      NaN  8.851873 1.905415 9.409713       NaN
+ 8.178475 12.823708 1.859890 5.906274       NaN
+      NaN  9.017386 1.798605 9.522869 12.384582
+      NaN  8.836089 1.756001 9.640595       NaN
+
+[主模型 M1] S = 13.70 + 14.334·logN + 12.846·t + 1.732·chat
+  → 非规模技术进步 r = 12.846 分/年（控制参数量与类型后）
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_quarterly_summary.csv  (4, 9)
+
+[季度汇总] 前沿规模 = 能力前 10% 模型的平均 log10(N)
+     q    n  n_top    S_mean     S_p90  logN_mean  logN_front
+2024Q2  443     45 17.296828 25.920104   0.944166    1.546103
+2024Q3  839     84 20.761783 32.129878   0.950813    1.647510
+2024Q4 1377    138 22.622980 37.077041   0.791730    1.372982
+2025Q1 1902    192 22.783356 39.665306   0.757037    1.234595
+
+[固定组成子集] ≥7B 预训练模型 n=2779
+     q    n         S     logN
+2024Q2  259 18.114219 1.083608
+2024Q3  486 21.283535 1.063275
+2024Q4  786 26.511471 1.044576
+2025Q1 1248 27.644694 1.019727
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_contribution_decomposition.csv  (6, 8)
+
+[贡献分解]
+  q_to          tag       dS  dS_scale  dS_nonscale  dS_resid  share_scale  share_nonscale
+2024Q3      0.9分位前沿 6.209774  1.453573     3.235561  1.520640     0.234078        0.521043
+2024Q4      0.9分位前沿 4.947163 -3.935107     3.235561  5.646708    -0.795427        0.654024
+2025Q1      0.9分位前沿 2.588265 -1.983665     3.165223  1.406707    -0.766407        1.222913
+2024Q3 固定组成(≥7B预训练) 3.169316 -0.291448     3.235561  0.225203    -0.091959        1.020902
+2024Q4 固定组成(≥7B预训练) 5.227936 -0.268036     3.235561  2.260411    -0.051270        0.618898
+2025Q1 固定组成(≥7B预训练) 1.133223 -0.356191     3.165223 -1.675809    -0.314316        2.793115
+  0.9分位前沿: ΔS=13.745 | 规模=-4.465 (-32.5%) | 非规模=9.636 (70.1%) | 未解释=8.574 (62.4%)
+  固定组成(≥7B预训练): ΔS=9.530 | 规模=-0.916 (-9.6%) | 非规模=9.636 (101.1%) | 未解释=0.810 (8.5%)
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_decomposition_order_check.csv  (3, 4)
+  （线性对数模型下两种更新顺序的贡献完全相同，order_gap=0，见 q4_decomposition_order_check.csv）
+
+[算力增长率] C4 Language 域历史 n=558, 跨度 2019-01-09 ~ 2025-03-13
+  0.9 分位回归 = 0.480 dex/年 (95%CI [0.404, 0.557])  = ×3.02/年 | 全样本 OLS = 0.776 dex/年
+[开源筛选 严格（C4 权重开放=Yes）] n=802  0.9 分位前沿 S=36.26  （全样本 37.19）
+[开源筛选 宽松（有许可证）] n=2810  0.9 分位前沿 S=37.70  （全样本 37.19）
+[前沿 0.9 分位] 随时间斜率 = 18.47 分/年
+[前沿基准口径] 全样本 0.9 分位=37.19; 开源(宽松) 0.9 分位=37.70
+
+[前沿基准] S0(0.9分位)=37.70, logN0=1.23, 算力最优路径份额 wN=0.452, wD=0.548
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_frontier_forecasts.csv  (6, 7)
+
+[前沿预测]
+   scenario  months  g_dex_per_yr  dS_scale  dS_nonscale    S_pred        S0
+     增长延续 g      12      0.628031  4.064723    12.845530 54.605266 37.695014
+     增长延续 g      24      0.628031  8.129446    25.691059 71.515519 37.695014
+  增长放缓 0.5g      12      0.314015  2.032361    12.845530 52.572905 37.695014
+  增长放缓 0.5g      24      0.314015  4.064723    25.691059 67.450796 37.695014
+算力近乎不变 0.1g      12      0.062803  0.406472    12.845530 50.947016 37.695014
+算力近乎不变 0.1g      24      0.062803  0.812945    25.691059 64.199018 37.695014
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_frontier_forecasts.csv  (6, 11)
+
+[观测上限] 样本内综合得分最大 = 52.08（99.9 分位 48.04）
+[前沿预测 + bootstrap 95% 区间]
+   scenario  months        S0    S_pred   S_ci_lo   S_ci_hi  exceeds_observed
+     增长延续 g      12 37.695014 54.605266 52.801457 55.642969              True
+     增长延续 g      24 37.695014 71.515519 68.607762 73.690676              True
+  增长放缓 0.5g      12 37.695014 52.572905 50.812142 53.561137              True
+  增长放缓 0.5g      24 37.695014 67.450796 64.650948 69.569733              True
+算力近乎不变 0.1g      12 37.695014 50.947016 49.245717 51.913632             False
+算力近乎不变 0.1g      24 37.695014 64.199018 61.418880 66.209454              True
+  注：线性时间趋势外推会越过样本内观测上限；实际榜单存在饱和，该结果应读作「按现有趋势的上界估计」，不是可信点预测。
+[csv ] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_backtest.csv  (4, 7)
+
+[时间滚动回测]（训练用过去、评估用未来 90 天）
+    cutoff  n_train  n_test     rmse      mae  mean_pred  mean_true
+2024-10-01     1282    1316 8.204421 6.508422  22.275822  22.515845
+2024-11-01     1714    1765 7.805257 6.085225  22.307460  22.458018
+2024-12-01     2088    2131 8.285050 6.412490  23.986690  23.128770
+2025-01-01     2659    1902 9.086985 6.938083  25.761293  22.783356
+[json] C:\Users\Administrator\MathModel Projects\Workspace\results\q4_meta.json
+
+完成：q4_*.csv / q4_meta.json

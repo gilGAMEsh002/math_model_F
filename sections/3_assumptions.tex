@@ -1,0 +1,66 @@
+\section{模型假设与数据说明}
+\label{sec:assume}
+
+\subsection{模型假设}
+
+\textbf{假设 1（质量可标量化）。} 22 个质量指标经过标量化与方向统一后，可以在同一 $[0,1]$ 尺度上比较，且综合质量分 $Q$ 与验证损失单调负相关。依据：题面明确要求``所有质量指标经处理后均按越高越好参与评价''；本文在\ref{sec:q2_quality}节用数据检验了这一单调性。
+
+\textbf{假设 2（归一化参数跨集可迁移）。} 稳健归一化的截尾分位参数在抽样集 A1 上估计后，可直接应用于扩展集 A2/A3。依据：A1 与 A2/A3 来自同一数据源、同一套指标定义。本文在\ref{sec:q1_ext}节用扩展集做了迁移检验，域级质量差异为 0.002。
+
+\textbf{假设 3（质量以有效数据量方式进入标度律）。} 质量对损失的作用可表示为对数据量的乘性折算 $D\to DQ^{\kappa}$，而不改变不可约损失 $E$ 与参数项 $AN^{-\alpha}$。依据：该形式在 $Q=1$ 时严格退化为经典律，符合题面提示，且 $\kappa$ 可解释、可检验。本文同时报告了允许质量影响参数效率的替代模型（双通道），其参数不可辨识，见\ref{sec:q2_alt}节。
+
+\textbf{假设 4（预算紧约束）。} 题面未给出数据量上限，且损失对 $D$ 单调下降，故最优点处预算约束取等号。依据：$\partial L/\partial D<0$ 恒成立。本文在\ref{sec:q3_check}节逐点核验了成本残差。
+
+\textbf{假设 5（算力代理形式）。} 采用题面给出的 $C_{\mathrm{train}}=6ND$（Chinchilla 近似）、$C_Q=D[g(Q)-g(Q_0)]_+$、$C_{\mathrm{attn}}=\eta ND\ell$，三者使用同一个 $D$。这是题面指定的简化算力代理，非本文自创。
+
+\textbf{假设 6（跨源损失坐标可比）。} B6 在 $Q=1$、B4/B5 在其基准点上与 B1 的损失处于同一尺度。依据：本文实测 B6 在 $Q=1$ 的 45 个点相对 B1 经典律的残差均值为 $+0.0036$、标准差 0.055，均值接近零，支持该假设。而 B2 的损失水平整体偏低约 1.18 nat，属不同 tokenizer/验证集，故\textbf{不}做绝对比较，仅用于排序验证。
+
+\textbf{假设 7（时间口径）。} 问题四以 C1 的提交日期为主时间轴，C2 的 Epoch AI 发布日期仅作敏感性对照，两者不混用；分析截止日 $t_0$ 取样本内最后一个提交日 2025-03-13，不使用系统当前日期。
+
+\textbf{假设 8（开源筛选）。} 严格口径要求 C4 的 \texttt{Open model weights?} 为 Yes；宽松口径要求榜单 Hub License 字段非空。两者均要求许可证允许研究与复现。无法判定者进入未知组，不自动视作开放或关闭。
+
+\subsection{数据来源分级与完整性说明}
+\label{sec:data_integrity}
+
+题面要求区分真实、半合成、插值与估算数据。本文对全部 46 份数据文件逐份做了审计（清单与哈希见 \texttt{results/audit\_files.csv}），并在此基础上做了两类必要的诊断。
+
+\subsubsection{来源分级}
+
+按题面标注与实际统计特征，本文将数据分为四级，并在全部结果中保持这一分级：
+
+\begin{itemize}[leftmargin=2em,itemsep=2pt]
+\item \textbf{真实观测}：A4--A11（RegMix 配方实验）、B4/B5（跨族与文献基准）、C1--C4、C7、C8。
+\item \textbf{半合成}：B2（Cerebras 轨迹）、B6--B8（含质量维度的 N--D--Q 实验），由真实标度律校准后叠加噪声生成。
+\item \textbf{插值}：B3（Pythia 检查点插值轨迹）。
+\item \textbf{估算}：B10（由已拟合标度律参数估算的大模型损失）、A13/A15（由 1M/60M/1B 幂律外推的 10B/70B 损失）。
+\end{itemize}
+
+\subsubsection{关键发现：B1 的损失为公式生成}
+\label{sec:b1_synthetic}
+
+B1 被题面标注为``真实训练日志''（Pythia 训练轨迹）。但本文的统计诊断显示，其 \texttt{val\_loss} 列与经典标度律的关系异常：用五参数幂律拟合 1176 个点，$R^2$ 达到 $1.000000$，RMSE 仅 $1.46\times10^{-4}$（相对残差 $5.9\times10^{-5}$），已接近四位小数的舍入量级。进一步检验发现：残差与学习率、权重衰减、数值精度、批大小、训练步数的相关系数分别为 $-0.001$、$+0.015$、组间均值差 $<10^{-5}$、$+0.090$、$+0.051$，即\textbf{元数据列与残差无关}；同时 8 个规模下的学习率各自只有一个取值，而权重衰减却有 69--76 个随机取值。这与真实训练日志的特征不符。
+
+据此本文判定 B1 的损失列是按某个五参数标度律生成的合成轨迹（拟合还原出 $E\approx1.69$、$A\approx0.354$、$\alpha\approx0.34$、$B\approx1.24$、$\beta\approx0.28$ 这类整齐的参数值），其 \texttt{N\_params\_B} 列的 8 个取值确实对应 Pythia 的真实非嵌入参数量。这一判定对建模的影响是：\textbf{B1 上的拟合只能用于参数还原与口径标定，不能作为泛化证据}；泛化检验必须依赖 B4、B5 等含真实散布的来源。图~\ref{fig:q2_diag} 给出了各来源的诊断对比。
+
+\subsubsection{缺失文件的同源重建}
+\label{sec:q1_rebuild}
+
+A1--A3 与 A18 四份 \texttt{.jsonl.xz} 在仓库内均为 Git LFS 指针，实体未上传，无法获得。本文按《数据说明》给出的来源（HuggingFace 公开数据集 \texttt{opendatalab/SlimPajama-Meta-rater}\cite{zhuang2025metarater}）同源重建：
+
+\begin{itemize}[leftmargin=2em,itemsep=2pt]
+\item \textbf{A2}：该数据集 \texttt{arxiv/part-6777d8857c6e-000486.jsonl} 全量，剔除 \texttt{content} 后保留 24 个字段。重建得 \textbf{17\,438 条}，与《数据说明》记载的 17\,523 条相差 0.5\%，字段结构完全一致。
+\item \textbf{A3}：\texttt{github/part-6777d8857c6e-000275.jsonl} 全量，同样处理。重建得 \textbf{187\,572 条}，与《数据说明》记载的 203\,752 条相差 7.9\%，字段结构完全一致。
+\item \textbf{A1}：按 SlimPajama 自然域配比分层抽样，在每域首分片的给定字节预算内做蓄水池抽样（对该前缀无偏），保留含 \texttt{content} 的 27 个字段。重建得 \textbf{50\,412 条}（目标 51\,230 条，book 域受字节预算限制少采 788 条），7 域分布为 commoncrawl 26\,700、c4 13\,700、github 2\,660、arxiv 2\,360、wikipedia 1\,940、stackexchange 1\,690、book 1\,362。
+\end{itemize}
+
+重建数据的原字段名与来源数据集一致（含原始拼写 \texttt{rps\_lines\_ending\_with\_terminal\_punctution\_mark}）。本文在全部涉及质量信号的结论处均标注``同源重建''，重建脚本与核验记录见附录。
+
+\subsection{数据使用边界}
+
+以下三点贯穿全文，在后续各问中不再重复声明：
+
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item 半合成与估算数据的结果一律与真实数据分开报告，且不作为真实泛化证据。
+\item 超出数据支持范围的预测（如 $N<0.07$B 或 $N>12$B、$D>600$B）在结果表中显式标注``外推''。
+\item 区间估计一律注明生成方法：bootstrap 区间、情景包络与预测区间三者不混称``置信区间''。
+\end{enumerate}

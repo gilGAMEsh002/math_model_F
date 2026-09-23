@@ -1,0 +1,40 @@
+id,path,exists,bytes,rows,cols,missing_rate,source_level,problem,sha256,note
+A1,A_data_value/slimpajama_quality_signal_sample.jsonl.xz,True,134,,,,真实观测,问题一,,Git LFS 指针（实体未拉取）
+A2,A_data_value/slimpajama_quality_extended/arxiv_part-6777d8857c6e-000486.jsonl.xz,True,132,,,,真实观测,问题一,,Git LFS 指针（实体未拉取）
+A3,A_data_value/slimpajama_quality_extended/github_part-6777d8857c6e-000275.jsonl.xz,True,133,,,,真实观测,问题一,,Git LFS 指针（实体未拉取）
+A4,A_data_value/regmix_tables/train_mixture_1m.csv,True,46412,512,18,0,真实观测,问题一,04a32ef4ab594376,
+A5,A_data_value/regmix_tables/train_pile_loss_1m.csv,True,121898,512,14,0,真实观测,问题一,49a959aa07ce5c20,
+A6,A_data_value/regmix_tables/test_mixture_1m.csv,True,23537,256,18,0,真实观测,问题一,197267b7d6f15367,
+A7,A_data_value/regmix_tables/test_pile_loss_1m.csv,True,61175,256,14,0,真实观测,问题一,e027b1674f60140a,
+A8,A_data_value/regmix_tables/test_mixture_60m.csv,True,23537,256,18,0,真实观测,问题一,197267b7d6f15367,
+A9,A_data_value/regmix_tables/test_pile_loss_60m.csv,True,61827,256,14,0,真实观测,问题一,8fe69d59ab7dd4fa,
+A10,A_data_value/regmix_tables/test_mixture_1B.csv,True,6393,64,18,0,真实观测,问题一,dd38052949c0a5f8,
+A11,A_data_value/regmix_tables/test_pile_loss_1B.csv,True,10639,64,14,0,真实观测,问题一,b2451e2b7fa15400,
+A12,A_data_value/regmix_tables/est_mixture_10b.csv,True,6113,63,18,0,子集（非独立实验）,问题一,880c7ca1ebef4704,
+A13,A_data_value/regmix_tables/est_pile_loss_10b.csv,True,6467,63,14,0,模型估算,问题一,226457581f3f59e1,
+A14,A_data_value/regmix_tables/est_mixture_70b.csv,True,6113,63,18,0,子集（非独立实验）,问题一,880c7ca1ebef4704,
+A15,A_data_value/regmix_tables/est_pile_loss_70b.csv,True,6467,63,14,0,模型估算,问题一,d0883b2d1a44da93,
+A16,A_data_value/domain_mapping_guide.csv,True,1296,17,4,0,参考/说明,问题一,4a4479f41b9f4611,
+A17,A_data_value/regmix_domain_summary.csv,True,1265,17,5,0,真实观测,问题一,7696e26dc0ee8092,
+A18,A_data_value/regmix_domain_sample.jsonl.xz,True,134,,,,真实观测,问题一,,Git LFS 指针（实体未拉取）
+B1,B_scaling_laws/pythia_training_log_existing.csv,True,111459,1176,15,0,真实观测,问题二,529a59644b0f57bf,
+B2,B_scaling_laws/cerebras_training_log.csv,True,89643,1029,15,0.2,半合成（真实标度律校准 + 噪声）,问题二,178f878cad2cb31e,
+B4,B_scaling_laws/scaling_baseline.csv,True,1421,57,5,0,真实观测,问题二,2272983ded93de35,
+B5,B_scaling_laws/published_scaling_data.csv,True,1967,44,6,0,真实观测,问题二,dd858c5e48610e28,
+B6,B_scaling_laws/supplementary_NQ_experiment.csv,True,13670,360,5,0,半合成（真实标度律校准 + 噪声）,问题二,c7450ce0d67d8692,
+B7,B_scaling_laws/supplementary_NQ_experiment_expanded.csv,True,17154,450,5,0,半合成（真实标度律校准 + 噪声）,问题二,880fd265ca3e1d9b,
+B8,B_scaling_laws/supplementary_NQ_experiment_large.csv,True,81268,1704,6,0,半合成（真实标度律校准 + 噪声）,问题二,bda0d449f75c73bb,
+B9,B_scaling_laws/supplementary_large_models.csv,True,13400,132,8,0.0142,真实观测,问题二,ee794c1c586ed33c,
+B10,B_scaling_laws/supplementary_large_baseline.csv,True,4744,128,5,0,模型估算,问题二,a240e210c5b37444,
+B11,B_scaling_laws/open_model_family_metadata.csv,True,1975,18,8,0.125,真实观测,问题二,641682f0ea6c46f2,
+B12,B_scaling_laws/pythia_checkpoint_index.csv,True,117698,1386,5,0,真实观测,问题二,0f7f63535cbc1bbe,
+C1,C_efficiency_evolution/leaderboard_cleaned.csv,True,1011558,4576,12,0.0322,真实观测,问题四,199891128629f24f,
+C2,C_efficiency_evolution/leaderboard_enhanced.csv,True,1036749,4576,15,0.20634,真实观测,问题四,d8ae5b1e00f36bf1,
+C3,C_efficiency_evolution/leaderboard_extended_timeseries.csv,True,826723,4599,11,0,混合来源,问题四,ab2b5715b2945ebd,
+C4,C_efficiency_evolution/epoch_all_ai_models.csv,True,6671403,3523,57,0.61271,真实观测,问题四,0b98a01bcb8d9695,
+C5,C_efficiency_evolution/loss_benchmark_bridge.csv,True,11807,43,13,0.0644,混合来源,问题四,284dee7f8878bfe8,
+C6,C_efficiency_evolution/loss_benchmark_bridge_expanded.csv,True,19124,75,13,0.06974,混合来源,问题四,e175462233c2b856,
+C7,C_efficiency_evolution/model_architecture_metadata.csv,True,2357,45,7,0,真实观测,问题三/四,ee24622cb3a6334f,
+C9,C_efficiency_evolution/data/train-00000-of-00001.parquet,True,1109997,4576,36,0,真实观测,问题四,f13a7061e63133bc,
+B3,B_scaling_laws/training_trajectories/*.csv (8 个),True,112320,4000,4,,插值生成,问题二,,Pythia 插值轨迹
+C8,C_efficiency_evolution/detailed_results/,True,228862701,1958,,,真实观测,问题四,,1863 个模型子目录 / 1958 个 JSON

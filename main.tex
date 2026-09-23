@@ -1,0 +1,92 @@
+% 使用 XeLaTeX 编译。封面必须保留，学校、队号及姓名仅出现在封面。
+\documentclass[bwprint]{gmcmthesis}
+
+% === 额外宏包（cls 未内置的）===
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage[section]{placeins}
+\usepackage{needspace}
+% \usepackage{subfig}  % 本文使用多面板整图，未用到 \subfloat，故不加载
+\usepackage{float}
+\usepackage{algorithm2e}
+
+% === TikZ ===
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+\usepackage{longtable}
+
+% === 引用上标格式 ===
+\setcitestyle{super,square,comma}
+
+% === 竞赛信息 ===
+\title{算力约束下提升大语言模型能力的资源配置建模}
+\baominghao{[参赛队号]}
+\schoolname{[学校名称]}
+\membera{[成员A]}
+\memberb{[成员B]}
+\memberc{[成员C]}
+
+\begin{document}
+
+\maketitle
+
+% === 摘要 ===
+\begin{abstract}
+
+大语言模型的训练是参数规模 $N$、数据规模 $D$、数据质量 $Q$ 与领域配比 $p$ 在算力预算 $C$ 下的联合配置问题。本文以真实公开数据为主、明确标注的半合成数据为辅，沿``质量评价 $\to$ 广义标度律 $\to$ 资源优化 $\to$ 能力预测''的主线建立了一套口径统一、可复算的模型体系。
+
+\textbf{问题一}建立``组内平均、组间几何平均''的分层质量评价模型：将 22 个方向不一的质量指标统一为``越高越好''并在冻结参考集上做稳健归一化，按教育价值、可读性、专业性、低噪声四组聚合，组间取几何平均以体现短板效应；以组间极差 $c=\max_g z_g-\min_g z_g$ 定义质量冲突，用凸组合 $Q=(1-\lambda)Q_{\mathrm{base}}+\lambda\min_g z_g$ 消解。在 50\,412 条抽样与 205\,010 条扩展记录（arXiv 17\,438 条、GitHub 187\,572 条）上，域级质量自 arxiv 的 0.589 递减至 book 的 0.312，冲突率自 StackExchange 的 0.24\% 升至 book 的 83.3\%；冻结归一化参数后两个扩展集的域级质量与抽样集同域分别仅差 $-0.0020$ 与 $+0.0015$，支持评分规则的跨集迁移。配比建模采用 17 个一次项与 136 个两两交互项的二次混料岭回归，交叉验证 RMSE 由线性模型的 0.283 降至 0.257，1M 检验集 Spearman 排序相关由 0.624 提升至 0.701，Top-5 后悔值由 0.333 降至 0.268。分析同时表明，质量分 $Q(p)$ 与线性配比项完全共线（$R^2=1$），单独使用几乎无预测能力，故不宜作为配比回归的独立解释变量。
+
+\textbf{问题二}建立含质量的有效数据量标度律 $L=E+AN^{-\alpha}+B\left[DQ^{\kappa}h(p)\right]^{-\beta}$，当 $Q=1$ 且 $p=p_0$ 时退化为经典形式。来源诊断发现，标注为真实训练日志的 B1 其损失完全落在经典律曲面上（相对残差 $2.5\times10^{-4}$，元数据列与残差无关），判为公式生成，故其拟合只用于参数还原而非泛化证据；真正的泛化检验依赖 B4、B5 两个独立来源（$R^2$ 分别为 0.96 与 0.88）。质量指数估计为 $\kappa=1.052$，bootstrap 95\% 区间 $[0.982,1.151]$，包含 $\kappa=1$ 这一``质量等量折算为数据量''的简洁解释；含质量模型在 360 点上的 RMSE 为 0.117，优于常数基准 0.345。据此给出质量提升 0.1 的等效规模条件：在 $N=1$B、$D=100$B 处约相当于参数量增加 9.5\%$\sim$20.7\%。
+
+\textbf{问题三}在预算约束 $D\left\{(6+\eta\ell)N+[g(Q)-g(Q_0)]_+\right\}\le C$ 下消去 $D$，对 $(\log N,Q)$ 做粗网格加局部细化搜索，并用解析参照与一阶条件双重校验（约束残差 $2.2\times10^{-16}$，$|\partial L/\partial\ln N|\sim10^{-10}$）。结果呈清晰的三段式结构：低预算（$C=10^{19}$）下质量投入为零、$Q^\ast$ 停在下界 $Q_0$；中等预算（$C=10^{22}$）下出现内点解 $Q^\ast=0.79\sim0.83$，质量份额达 17\%$\sim$22\%；高预算（$C=10^{24}$）下 $Q^\ast$ 触及上界 1。质量投入的启动点位于 $\log_{10}C\approx19.6\sim21.1$，随质量成本函数与上下文长度而变。上下文长度由 2048 增至 131072 时，注意力份额自 5\% 升至 67\%，可分配给参数与数据的预算被显著挤压。需指出，最优规模在该损失面下辨识很弱（$\Delta L<10^{-4}$ 的 $N$ 带宽达 2.3$\sim$91 倍），不应把 $N^\ast$ 读作精确点估计。
+
+\textbf{问题四}用 C1/C3 榜单时序、C4 算力元数据与 C8 逐任务结果，建立 $S=a+b_N\log_{10}N+rt+c\cdot\text{chat}$ 的能力模型，并以顺序平均法分解规模与非规模贡献。在固定组成子集（$\ge$7B 预训练模型）上，季度能力提升 9.53 分中规模项为 $-0.92$ 分（$-9.6\%$），非规模技术进步为 $+9.64$ 分（$101.1\%$），未解释部分仅 8.5\%——即这一窗口内能力增长几乎全部来自数据工程、对齐与架构等非规模因素，前沿模型参数量并未增大。Loss--Benchmark 桥接按可比性分层拟合，$R^2$ 仅 0.16$\sim$0.25，留一 MAE 达 7.34 分，故预测以趋势为主并显著标注该不确定性。以 2025-03-13 为起点、按算力前沿年增 0.63 dex 外推，开源模型能力前沿 12 个月后达 54.1 分（95\% 区间 $[52.8,55.6]$）、24 个月后达 71.0 分（$[68.6,73.7]$）；若算力增长降至 0.1 倍，则分别为 50.4 与 63.7 分。由于线性趋势外推会越过样本内观测上限（52.1 分）且榜单必然饱和，该结果应读作``按现有趋势的上界估计''。时间滚动回测的 RMSE 为 7.8$\sim$9.1 分。
+
+本文的主要特点是：对每一份数据都给出可核验的来源分级与适用边界，把``模型拟合得好''与``数据本身是生成的''区分开；对不可辨识的量（配比中的质量效应、桥接斜率、最优规模的平坦带）如实报告，不用点估计掩盖证据不足。
+
+\keywords{标度律\quad 数据质量\quad 领域配比\quad 算力约束优化\quad 前沿预测}
+\end{abstract}
+
+\pagestyle{plain}
+
+% === 正文：摘要结束后自动换页，不插入目录 ===
+\input{sections/1_restatement}
+\input{sections/2_analysis}
+\input{sections/3_assumptions}
+\input{sections/4_symbols}
+\input{sections/5_problem1}
+\input{sections/6_problem2}
+\input{sections/7_problem3}
+\input{sections/7b_problem4}
+\input{sections/8_sensitivity}
+\input{sections/9_evaluation}
+
+% === 参考文献 ===
+% 全部条目来自 paper-search 的 Crossref 核验输出或 arXiv 官方 API 返回的元数据，
+% 核验记录见 results/arxiv_verified.json 与 results/arxiv_verified2.json。
+\begin{thebibliography}{99}
+\bibitem{bahri2024explaining} Bahri Y, Dyer E, Kaplan J, et al. Explaining neural scaling laws[J]. Proceedings of the National Academy of Sciences, 2024, 121(27). DOI: 10.1073/pnas.2311878121.
+\bibitem{kaplan2020scaling} Kaplan J, McCandlish S, Henighan T, et al. Scaling Laws for Neural Language Models[J]. arXiv preprint arXiv:2001.08361, 2020.
+\bibitem{hoffmann2022chinchilla} Hoffmann J, Borgeaud S, Mensch A, et al. Training Compute-Optimal Large Language Models[J]. arXiv preprint arXiv:2203.15556, 2022.
+\bibitem{biderman2023pythia} Biderman S, Schoelkopf H, Anthony Q, et al. Pythia: A Suite for Analyzing Large Language Models Across Training and Scaling[C]. ICML, 2023. arXiv:2304.01373.
+\bibitem{liu2024regmix} Liu Q, Zheng X, Muennighoff N, et al. RegMix: Data Mixture as Regression for Language Model Pre-training[C]. ICML, 2024. arXiv:2407.01492.
+\bibitem{zhuang2025metarater} Zhuang X, Peng J, Ma R, et al. Meta-rater: A Multi-dimensional Data Selection Method for Pre-training Language Models[J]. arXiv preprint arXiv:2504.14194, 2025.
+\bibitem{muennighoff2023scaling} Muennighoff N, Rush A M, Barak B, et al. Scaling Data-Constrained Language Models[C]. NeurIPS 36, 2023. arXiv:2305.16264.
+\bibitem{penedo2024fineweb} Penedo G, Kydlíček H, Ben allal L, et al. The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale[C]. NeurIPS 37, 2024. arXiv:2406.17557.
+\bibitem{li2024datacomplm} Li J, Fang A, Smyrnis G, et al. DataComp-LM: In Search of the Next Generation of Training Sets for Language Models[C]. NeurIPS 37, 2024. arXiv:2406.11794.
+\bibitem{albalak2024survey} Albalak A, Elazar Y, Xie S M, et al. A Survey on Data Selection for Language Models[J]. arXiv preprint arXiv:2402.16827, 2024.
+\bibitem{sorscher2022beyond} Sorscher B, Geirhos R, Shekhar S, et al. Beyond Neural Scaling Laws: Beating Power Law Scaling via Data Pruning[C]. NeurIPS 35, 2022. arXiv:2206.14486.
+\bibitem{lee2022dedup} Lee K, Ippolito D, Nystrom A, et al. Deduplicating Training Data Makes Language Models Better[C]. ACL, 2022: 8424--8445. DOI: 10.18653/v1/2022.acl-long.577.
+\bibitem{hu2024minicpm} Hu S, Tu Y, Han X, et al. MiniCPM: Unveiling the Potential of Small Language Models with Scalable Training Strategies[C]. ACL, 2024. arXiv:2404.06395.
+\bibitem{schaeffer2023mirage} Schaeffer R, Miranda B, Koyejo S. Are Emergent Abilities of Large Language Models a Mirage?[C]. NeurIPS 36, 2023. arXiv:2304.15004.
+\bibitem{asai2026synthesizing} Asai A, He J, Shao R, et al. Synthesizing scientific literature with retrieval-augmented language models[J]. Nature, 2026, 650(8103): 857--863. DOI: 10.1038/s41586-025-10072-4.
+\bibitem{evalplus2024leaderboard} Hugging Face. Open LLM Leaderboard v2[EB/OL]. \url{https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard}, 2024. 访问日期 2026-09-23.
+\bibitem{epochai2026models} Epoch AI. Data on All AI Models[EB/OL]. \url{https://epoch.ai/data/all_ai_models.csv}, 2026. 访问日期 2026-09-23.
+\end{thebibliography}
+
+% === 附录 ===
+\begin{appendices}
+\input{sections/A_code}
+\end{appendices}
+
+\end{document}

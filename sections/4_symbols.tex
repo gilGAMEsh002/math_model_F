@@ -1,0 +1,45 @@
+\section{符号说明}
+
+表~\ref{tab:symbols} 列出正文反复使用的符号。局部出现的量在首次出现处就地解释。
+
+\begin{table}[htbp]
+\centering
+\caption{主要符号说明}
+\label{tab:symbols}
+\small
+\begin{tabular}{c|l|l|l}
+\toprule
+\textbf{符号} & \textbf{含义} & \textbf{单位/范围} & \textbf{备注} \\
+\midrule
+$N$ & 模型参数量 & 十亿 (B) & 成本计算用实际个数 \\
+$D$ & 训练 Token 数 & 十亿 (B) & 成本计算用实际个数 \\
+$Q$ & 综合数据质量 & $(0,1]$ & 越高越好 \\
+$p$ & 17 维训练领域配比 & 单纯形 & $p_i\ge0,\ \sum_i p_i=1$ \\
+$L$ & 验证集交叉熵损失 & nats & 越低越好 \\
+$\ell$ & 上下文窗口长度 & token & 外生情景变量 \\
+$C$ & 总算力预算 & FLOPs & $C\approx6ND$ \\
+$S$ & 综合 Benchmark 能力 & 0--100 & 越高越好 \\
+$z_{ig}$ & 样本 $i$ 在第 $g$ 质量组的得分 & $[0,1]$ & 组内指标均值 \\
+$c_i$ & 样本 $i$ 的质量冲突强度 & $[0,1]$ & $\max_g z_g-\min_g z_g$ \\
+$\tau$ & 冲突判定阈值 & $[0,1]$ & 开发集 75\% 分位 \\
+$\lambda$ & 冲突消解强度 & $[0,1]$ & 主用 0.3 \\
+$\kappa$ & 质量折算指数 & $>0$ & 主估计 1.052 \\
+$h(p)$ & 配比调节因子 & $>0$ & $h(p_0)=1$ \\
+$E,A,\alpha,B,\beta$ & 经典标度律参数 & --- & 见\ref{sec:q2_classic}节 \\
+$v_k$ & 13 个验证域的评价权重 & 等权 $1/13$ & 不随 $p$ 改变 \\
+$\eta$ & 注意力开销系数 & $2\times10^{-4}$ & 题给常数 \\
+$g(Q)$ & 单位数据质量成本 & FLOPs/token & 题给三类形式 \\
+$Q_0$ & 基线数据质量 & $0.5$ & 优化下界 \\
+$a_k,b_{kij}$ & 二次混料回归系数 & --- & Scheffé 规范形 \\
+$\varepsilon_x$ & 对变量 $x$ 的弹性 & 无量纲 & $\frac{\partial L}{\partial x}\frac{x}{L}$ \\
+$\Delta L_Q$ & 质量提升 0.1 的损失改善 & nats & $L(Q)-L(Q+0.1)$ \\
+$N_{\mathrm{eq}}$ & 质量改善的等效参数规模 & 十亿 (B) & 见式\eqref{eq:Neq} \\
+$U$ & 归一化后的指标得分 & $[0,1]$ & 方向已统一 \\
+$\varepsilon$ & 几何平均零值截断 & $10^{-3}$ & 敏感性已检验 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{单位约定。} 附件中标量列均以十亿为单位（如 1.04 表示 $1.04\times10^9$），代入 $C=6ND$ 时须乘以 $10^9$ 换算为实际个数；本文全篇遵循这一约定，并在涉及成本的结果中显式标注量级。附件 C 的 \texttt{C\_FLOPs\_1e21} 列以 $10^{21}$ FLOPs 为单位。
+
+\noindent\textbf{下标约定。} $i,j$ 表示 17 个训练域；$k$ 表示 13 个验证域；$g$ 表示 4 个质量语义组；$t$ 表示时间（年）。数据集编号（A1--A18、B1--B12、C1--C10）沿用《数据说明》的编号体系。
