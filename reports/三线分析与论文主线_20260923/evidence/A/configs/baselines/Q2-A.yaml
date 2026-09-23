@@ -1,0 +1,18 @@
+# Baseline A / Q2-A: 经典标度律 + 加性质量修正
+baseline_id: Baseline-A
+question: Q2-A
+seed: 20240923
+paths:
+  shared_splits: configs/shared/splits.json
+  q1_out: artifacts/baselines/Q1-A
+  out: artifacts/baselines/Q2-A
+fit:
+  n_starts: 40
+  fold_n_starts: 15
+  trajectory_train_fraction: 0.7
+  quality_main: B6        # 质量主集
+  quality_alt: B7         # 替代情景
+  quality_large: B8       # 大规模外推分层
+  gamma_allow_intercept_scenarios: [false, true]
+  lambda_scenarios: [0.0, 0.5, 1.0, 2.0]   # 透明情景参数，非估计值
+  q_same_scale_assumption: true            # B6 的 Q_score 与 Q1 的 Q 同尺度，标为未验证假设

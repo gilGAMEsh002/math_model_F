@@ -1,0 +1,51 @@
+{
+  "note": "λ 无联合 Q 与 p 的观测，不可辨识；仅作为透明情景参数报告，Q3-A 固定 p=p0 时该项恒为 0。",
+  "lambda_scenarios": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "f_p0_eval_loss": 5.3446567761711785,
+  "p0": [
+    0.11302252583269279,
+    0.0968248321520278,
+    0.00588968021709595,
+    0.11375419105058357,
+    0.07507775607983627,
+    0.0254628540970504,
+    0.11070066007050916,
+    0.005487697351193036,
+    0.09943242344413017,
+    0.002211033043406226,
+    0.04691494424753537,
+    0.11948759779188561,
+    0.019599998284005892,
+    0.012737064754031531,
+    0.011650822378108678,
+    0.06618116611257162,
+    0.07556475309333588
+  ],
+  "p0_order": [
+    "arxiv",
+    "freelaw",
+    "nih_exporter",
+    "pubmed_central",
+    "wikipedia_en",
+    "dm_mathematics",
+    "github",
+    "philpapers",
+    "stackexchange",
+    "enron_emails",
+    "gutenberg_pg_19",
+    "pile_cc",
+    "ubuntu_irc",
+    "europarl",
+    "hackernews",
+    "pubmed_abstracts",
+    "uspto_backgrounds"
+  ],
+  "q1_predictor_hash": "024af1801deb305afc6a944cf6382acb7b565e8cbd7a3d3b86898022ceb6a6ff",
+  "q1_predictor_path": "artifacts/baselines/Q1-A/mixture_predictor.json",
+  "q_same_scale_assumption": true
+}

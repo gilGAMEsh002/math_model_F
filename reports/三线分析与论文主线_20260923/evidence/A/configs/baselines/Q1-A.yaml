@@ -1,0 +1,24 @@
+# Baseline A / Q1-A: 等权质量评分与岭回归
+baseline_id: Baseline-A
+question: Q1-A
+seed: 20240923
+paths:
+  shared_quality: configs/shared/quality_metrics.json
+  shared_domains: configs/shared/domains.json
+  shared_splits: configs/shared/splits.json
+  out: artifacts/baselines/Q1-A
+quality:
+  reference_set: A1            # 归一化参数只在 A1 上估计
+  merge_priority: [A1, A2, A3] # 重复 (quality_domain,id) 保留优先级
+  bootstrap_n: 2000
+  conflict_quantile: 0.90      # tau = c 的该分位数（A1 参考集）
+  conflict_quantile_sensitivity: [0.80, 0.85, 0.90, 0.95]
+  lambda_grid: [0.0, 0.1, 0.25, 0.5, 1.0]
+  reserved_fraction: 0.2       # 预留核验子集比例（域分层）
+  lambda_selection_rule: "在预留子集上要求域级 Q 排序 Spearman >= 0.99，取满足条件的最小正 lambda"
+ridge:
+  penalty_grid: [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+  cv_folds: 5
+  eval_weights: equal           # 13 个验证域等权
+  standardize_features: true
+  unpenalized_intercept: true

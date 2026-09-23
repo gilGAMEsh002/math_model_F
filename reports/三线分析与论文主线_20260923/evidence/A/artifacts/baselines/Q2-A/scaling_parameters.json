@@ -1,0 +1,59 @@
+{
+  "units": {
+    "N": "N_params_B (billions)",
+    "D": "D_tokens_B (billions)",
+    "note": "L = E + A*N^-alpha + B*D^-beta; N,D in 1e9 units"
+  },
+  "classical": {
+    "theta": [
+      1.6897975629236583,
+      -1.0385139587478842,
+      0.33997658189968993,
+      0.21535778760343133,
+      0.27987812854386446
+    ],
+    "E": 1.6897975629236583,
+    "A": 0.3539803206605902,
+    "alpha": 0.33997658189968993,
+    "B": 1.2403055835508099,
+    "beta": 0.27987812854386446,
+    "cost": 2.5238258731563034e-05,
+    "rmse": 0.0001464960899258885,
+    "n_points": 1176,
+    "n_starts_used": 41,
+    "n_starts_failed": 0,
+    "at_bound": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "derivative_finite_difference_check": {
+    "pt_0": {
+      "dL_dN_analytic": -4.202242826434159,
+      "dL_dN_finite_diff": -4.202242824140705,
+      "rel_error_N": 5.457691074333954e-10,
+      "dL_dD_analytic": -4.546708768656857,
+      "dL_dD_finite_diff": -4.546708770674786,
+      "rel_error_D": 4.4382190213632795e-10
+    },
+    "pt_1": {
+      "dL_dN_analytic": -1.374695290579015,
+      "dL_dN_finite_diff": -1.3746952900237956,
+      "rel_error_N": 4.038854501210673e-10,
+      "dL_dD_analytic": -4.546708768656857,
+      "dL_dD_finite_diff": -4.546708767360688,
+      "rel_error_D": 2.850786052854507e-10
+    },
+    "pt_2": {
+      "dL_dN_analytic": -0.3987465978516513,
+      "dL_dN_finite_diff": -0.39874659827469666,
+      "rel_error_N": 1.0609378947380173e-09,
+      "dL_dD_analytic": -4.546708768656857,
+      "dL_dD_finite_diff": -4.546708767360688,
+      "rel_error_D": 2.850786052854507e-10
+    }
+  }
+}

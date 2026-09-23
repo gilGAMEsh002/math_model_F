@@ -1,0 +1,105 @@
+{
+  "model": "L(N,D,Q,p) = E + A*N^-alpha + B*D^-beta + gamma*(1-Q) + lambda*(f(p)-f(p0))",
+  "units": {
+    "N": "billions",
+    "D": "billions"
+  },
+  "E": 1.6897975629236583,
+  "A": 0.3539803206605902,
+  "alpha": 0.33997658189968993,
+  "B": 1.2403055835508099,
+  "beta": 0.27987812854386446,
+  "gamma": 0.3632753588524318,
+  "gamma_source": "B6",
+  "gamma_allow_intercept": false,
+  "gamma_r2": 0.6936364581815861,
+  "lambda_default": 0.0,
+  "lambda_scenarios": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "p0": [
+    0.11302252583269279,
+    0.0968248321520278,
+    0.00588968021709595,
+    0.11375419105058357,
+    0.07507775607983627,
+    0.0254628540970504,
+    0.11070066007050916,
+    0.005487697351193036,
+    0.09943242344413017,
+    0.002211033043406226,
+    0.04691494424753537,
+    0.11948759779188561,
+    0.019599998284005892,
+    0.012737064754031531,
+    0.011650822378108678,
+    0.06618116611257162,
+    0.07556475309333588
+  ],
+  "p0_order": [
+    "arxiv",
+    "freelaw",
+    "nih_exporter",
+    "pubmed_central",
+    "wikipedia_en",
+    "dm_mathematics",
+    "github",
+    "philpapers",
+    "stackexchange",
+    "enron_emails",
+    "gutenberg_pg_19",
+    "pile_cc",
+    "ubuntu_irc",
+    "europarl",
+    "hackernews",
+    "pubmed_abstracts",
+    "uspto_backgrounds"
+  ],
+  "f_p0_eval_loss": 5.3446567761711785,
+  "q1_predictor_path": "artifacts/baselines/Q1-A/mixture_predictor.json",
+  "supported_range": {
+    "N_B": [
+      0.070542,
+      11.965825
+    ],
+    "D_B": [
+      0.134,
+      299.893
+    ],
+    "Q": [
+      0.1,
+      1.0
+    ]
+  },
+  "cost_model": {
+    "eta": 0.0002,
+    "forms": {
+      "exponential": {
+        "g": "gamma_exp(Q)",
+        "gamma": 10000000.0,
+        "lambda": 6,
+        "params": {
+          "gamma": 10000000.0,
+          "lambda": 6
+        }
+      },
+      "power": {
+        "g": "gamma_pow * Q^lambda_pow",
+        "params": {
+          "gamma": 2000000000.0,
+          "lambda": 4
+        }
+      },
+      "log": {
+        "g": "gamma_log * ln(1 + lambda_log * Q)",
+        "params": {
+          "gamma": 2000000000.0,
+          "lambda": 10
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "q1": [
+    {
+      "dataset": "same_scale_1m",
+      "n": 256,
+      "same_row_ids_and_target": true,
+      "saved_metrics_recomputed": true
+    },
+    {
+      "dataset": "cross_scale_60m",
+      "n": 256,
+      "same_row_ids_and_target": true,
+      "saved_metrics_recomputed": true
+    },
+    {
+      "dataset": "cross_scale_1B",
+      "n": 64,
+      "same_row_ids_and_target": true,
+      "saved_metrics_recomputed": true
+    },
+    {
+      "dataset": "est_10b",
+      "n": 63,
+      "same_row_ids_and_target": true,
+      "saved_metrics_recomputed": true
+    },
+    {
+      "dataset": "est_70b",
+      "n": 63,
+      "same_row_ids_and_target": true,
+      "saved_metrics_recomputed": true
+    }
+  ],
+  "q3_cost_formula_and_feasibility": true,
+  "q3_scenarios": 15,
+  "q3_extrapolated": 7,
+  "q3_attention_training_equal_context": 30000.0,
+  "limits": "Verifies stored predictions and algebra, not training reproducibility or unseen-data performance."
+}

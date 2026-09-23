@@ -1,0 +1,40 @@
+{
+  "primary": "same_scale",
+  "q1_domain_quality_source": "quality_domain_mapping.csv::q_entropy",
+  "mappings": {
+    "same_scale": {
+      "q_min": 0.3527948026574569,
+      "q_max": 0.4871620101591301,
+      "q_mean": 0.410901650293172
+    },
+    "minmax01": {
+      "q_min": 0.0,
+      "q_max": 1.0,
+      "q_mean": 0.43244813013615363
+    },
+    "reference_shift": {
+      "q_min": 0.7241837321063223,
+      "q_max": 1.0,
+      "q_mean": 0.8434599614180757
+    }
+  },
+  "a_side_q_range": {
+    "min": 0.3527948026574569,
+    "max": 0.4871620101591301
+  },
+  "b_side_q_range": {
+    "min": 0.05,
+    "max": 1.0
+  },
+  "common_support": {
+    "lo": 0.3527948026574569,
+    "hi": 0.4871620101591301,
+    "empty": false
+  },
+  "assumption_note": "同尺度（same_scale）为未验证假设：附件 A 的质量坐标与 B6-B8 的 Q_score 来自不同提取流程，仅在某区间重叠；报告公共支撑区间，并以 minmax01 / reference_shift 作为替代单调映射做敏感性。",
+  "baseline_q_convention": "B1/B2/B4/B5/B10 无 Q 列，按约定取 Q=q_reference=1.00。这是基准归一化约定，不代表这些语料被实测为完美质量（§2.4 第 5 条）。",
+  "q1_reference_mixture_quality": 0.41663254110330095,
+  "primary_effect_functional": "quality_linear",
+  "q1_quality_column": "q_entropy",
+  "q1_unmapped_policy": "exclude（未映射域剔除并重新归一化，与 Q1-C 一致）"
+}

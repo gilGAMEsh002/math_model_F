@@ -1,0 +1,7 @@
+﻿owner,role,file,resolved_root,sha256,exists,is_test_set
+Q1-C,q1,mixture_predictor.json,D:\26mathmodel\math_model_F,0db465a076c908797b715a6126fff73cbe168d391024944589fedc3eee4b8994,True,False
+Q1-C,q1,quality_domain_mapping.csv,D:\26mathmodel\math_model_F,02047bcd54d076e248c4bd413ba255e5270662e0058a3b8ee4e2d047a2c3a97c,True,False
+Q2-C,q2,loss_predictor.json,D:\26mathmodel\q2_c,6cbc303e992267c724ee8f91d813995b9c465d79828a0d94da9f2fc9c057cee1,True,False
+Q2-C,q2,mixture_transfer_scenarios.json,D:\26mathmodel\q2_c,564f7424ce4f5447b76880b1e9ab681e4c91a8152d8c8b25e9ccd86444227be0,True,False
+Q2-C,q2,scaling_parameters.json,D:\26mathmodel\q2_c,47b57f8416591114998b1939f21c84e41524b0e1a634806a6cff013a825bb8e5,True,False
+C7,c7,model_architecture_metadata.csv,D:\26mathmodel\math_model_F,ee24622cb3a6334f08d72c9ea373be26d5e5585bb266367c5f66d77499112ffc,True,False

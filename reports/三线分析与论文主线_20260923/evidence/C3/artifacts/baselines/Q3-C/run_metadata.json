@@ -1,0 +1,136 @@
+{
+  "baseline_id": "Q3-C",
+  "question": "Q3",
+  "generated_utc": "2026-09-23T14:33:13Z",
+  "quick_mode": false,
+  "config_path": "D:\\26mathmodel\\q3_c\\configs\\baselines\\Q3-C.yaml",
+  "config_hash": "e9bf4f675e3b8003",
+  "source_hash": "3b8eabdc28032119",
+  "seed": 20260923,
+  "env": {
+    "python": "3.11.6",
+    "executable": "D:\\Software\\Python\\python.exe",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.17.1",
+    "sklearn": "1.5.2",
+    "pyarrow": "24.0.0",
+    "yaml": "6.0.3"
+  },
+  "git_rev_q3c_workspace": null,
+  "git_rev_upstream_repo": "e35bf06f506cf3e7a5fc93b06e8a77fa39a8c1f3",
+  "roots": {
+    "project_root": "D:\\26mathmodel\\q3_c",
+    "q1_root": "D:\\26mathmodel\\math_model_F",
+    "q2_root": "D:\\26mathmodel\\q2_c",
+    "c7_root": "D:\\26mathmodel\\math_model_F"
+  },
+  "upstream_files_sha256": {
+    "mixture_predictor.json": "0db465a076c908797b715a6126fff73cbe168d391024944589fedc3eee4b8994",
+    "quality_domain_mapping.csv": "02047bcd54d076e248c4bd413ba255e5270662e0058a3b8ee4e2d047a2c3a97c",
+    "loss_predictor.json": "6cbc303e992267c724ee8f91d813995b9c465d79828a0d94da9f2fc9c057cee1",
+    "mixture_transfer_scenarios.json": "564f7424ce4f5447b76880b1e9ab681e4c91a8152d8c8b25e9ccd86444227be0",
+    "scaling_parameters.json": "47b57f8416591114998b1939f21c84e41524b0e1a634806a6cff013a825bb8e5",
+    "model_architecture_metadata.csv": "ee24622cb3a6334f08d72c9ea373be26d5e5585bb266367c5f66d77499112ffc"
+  },
+  "upstream_versions": {
+    "q1_predictor": "mixture_predictor.json",
+    "q2_predictor": "loss_predictor.json",
+    "q2_model": "M1",
+    "q2_param_stage": "stage2_M1_staged",
+    "kappa_primary": {
+      "name": "M1_staged",
+      "value": 0.8047071577351047
+    },
+    "kappa_scenarios": {
+      "none": 0.0,
+      "M1_staged": 0.8047071577351047,
+      "M2_staged": 0.38210158532238303,
+      "boot_lo": 0.25755077629407275,
+      "boot_hi": 0.4107968096187216
+    },
+    "quality_channel_status": "scenario_only（Q2-C 判定 kappa/rho 未辨识）"
+  },
+  "sample_flow": [
+    {
+      "stage": "上游接口读取",
+      "n_in": 17,
+      "n_out": 17,
+      "note": "Q1 列序/参考配比/训练支持 + Q2 冻结参数"
+    },
+    {
+      "stage": "候选配比枚举",
+      "n_in": 17,
+      "n_out": 208,
+      "note": "仅用 p0 / 可信区域 / 第一问质量坐标"
+    },
+    {
+      "stage": "候选筛选（廉价网格）",
+      "n_in": 3744,
+      "n_out": 22464,
+      "note": "每个候选在每个离散情景下做一次粗搜索"
+    },
+    {
+      "stage": "逐候选 (N,Q) 精确搜索",
+      "n_in": 1890,
+      "n_out": 720,
+      "note": "复用 Q3-B 式预算/成本内核；每点精确成本"
+    }
+  ],
+  "counts": {
+    "candidates": 208,
+    "finalists": 21,
+    "full_cells": 90,
+    "allocations": 720,
+    "budget_path_rows": 16380,
+    "transitions": 182
+  },
+  "timings_s": {
+    "upstream": 0.01,
+    "candidates": 12.35,
+    "screening": 11.61,
+    "search": 73.02,
+    "budget_paths": 70.27,
+    "slsqp": 649.17
+  },
+  "caveats": [
+    "kappa、rho 被 Q2-C 判定为未辨识，本问以情景网格处理；主情景取 stage2_M1_staged 的 kappa。",
+    "omega 与尺度 s 不可分辨，s 直接取 Q2-C 冻结的 scale_s 以保证跨 baseline 可比。",
+    "Q1-C 未持久化随机森林对象，故不能调用 f(p)=Σ v_k L̂_k(p)；改用两个可由 p 直接算出的冻结泛函。",
+    "LP 顶点使质量上界全部压在单一已映射域上（退化解），可信区域单独不足以避免，须在结论边界中声明。",
+    "本流程只读训练/接口文件，未读取任何最终检验集——见 verify_input_audit.csv。"
+  ],
+  "artifacts": [
+    "all_candidate_evaluations.csv",
+    "budget_paths.csv",
+    "c7_discrete_cases.csv",
+    "c7_grounding.csv",
+    "candidates.csv",
+    "cost_constraint_checks.csv",
+    "enum_vs_slsqp.csv",
+    "finalists.csv",
+    "optimal_allocations.csv",
+    "optimization_scenarios.csv",
+    "q3_report.md",
+    "run_log.txt",
+    "run_log_quick.txt",
+    "run_log_report.txt",
+    "run_metadata.json",
+    "sample_flow.csv",
+    "screening.csv",
+    "screening_argmin_vs_argmaxQ.csv",
+    "screening_cell_ranking.csv",
+    "share_segments.csv",
+    "slsqp_clusters.csv",
+    "slsqp_starts.csv",
+    "transition_candidates.csv",
+    "verify_constraints.csv",
+    "verify_derivatives.csv",
+    "verify_grid_stability.csv",
+    "verify_input_audit.csv",
+    "verify_p_channel.csv",
+    "verify_simplex.csv",
+    "verify_upstream_consistency.csv"
+  ]
+}

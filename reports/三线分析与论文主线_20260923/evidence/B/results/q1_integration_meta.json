@@ -1,0 +1,27 @@
+{
+  "mapping": "17 配方域 → 7 质量域（A16 参考 + 体裁代理）",
+  "direct_or_near": [
+    "arxiv",
+    "github",
+    "stackexchange",
+    "wikipedia_en",
+    "gutenberg_pg_19",
+    "pile_cc"
+  ],
+  "proxy_domains": {
+    "dm_mathematics": "arxiv",
+    "freelaw": "wikipedia",
+    "nih_exporter": "arxiv",
+    "pubmed_central": "arxiv",
+    "philpapers": "arxiv",
+    "enron_emails": "commoncrawl",
+    "ubuntu_irc": "stackexchange",
+    "europarl": "wikipedia",
+    "hackernews": "stackexchange",
+    "pubmed_abstracts": "arxiv",
+    "uspto_backgrounds": "arxiv"
+  },
+  "Q_of_p": "Q(p) = Σ_i p_i · q_i（域质量线性折算，属未验证的建模假设）",
+  "augmented_model": "L_k(p)=Σa_ki p_i+Σb_kij p_i p_j+c_k·Q(p)",
+  "caveat": "13 个域无同名质量域，q 值为体裁代理；不得据此宣称域级因果效应"
+}

@@ -1,0 +1,72 @@
+{
+  "model": "Q = (1-λ)·GeoMean_g(组内均值) + λ·min_g(组内均值)",
+  "groups": {
+    "教育价值": [
+      "fineweb_edu",
+      "dsir_books",
+      "dsir_wiki",
+      "dsir_math",
+      "qurater",
+      "reason"
+    ],
+    "可读性": [
+      "read",
+      "clean",
+      "fluency_en",
+      "ue"
+    ],
+    "专业性": [
+      "prof",
+      "mwl",
+      "fuw"
+    ],
+    "低噪声": [
+      "ad",
+      "fna",
+      "t2",
+      "t3",
+      "up",
+      "term",
+      "num",
+      "wc",
+      "ns"
+    ]
+  },
+  "lambda_main": 0.3,
+  "lambda_grid": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5
+  ],
+  "eps": 0.001,
+  "tau": 0.5771784549726433,
+  "tau_quantile": 0.75,
+  "norm": "1%/99% 分位截尾 min-max（参数在 A1 上冻结）",
+  "negative_metrics": [
+    "ad",
+    "t2",
+    "t3",
+    "up",
+    "fna",
+    "num"
+  ],
+  "banded_metrics": [
+    "wc",
+    "ns"
+  ],
+  "scalerization": "modernbert 四指标 argmax/5（敏感性对照：softmax 期望）",
+  "n_A1": 50412,
+  "domains": {
+    "commoncrawl": 26700,
+    "c4": 13700,
+    "github": 2660,
+    "arxiv": 2360,
+    "wikipedia": 1940,
+    "stackexchange": 1690,
+    "book": 1362
+  },
+  "source": "A1/A2/A3 按数据说明来源（SlimPajama-Meta-rater）同源重建"
+}

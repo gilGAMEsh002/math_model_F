@@ -1,0 +1,147 @@
+# Q2-C baseline 配置：参数与数据双通道质量效率
+# 任务卡：建模方案/baselines/Q2-C.md
+# 公共协议：建模方案/baselines/00_公共约定与接口.md、01_问题分析与Baseline实施计划.md §2
+#
+# 本文件冻结 Q2-C 的全部可调旋钮。修改任一项都会改变配置哈希，下游需重新登记。
+
+baseline_id: Q2-C
+question: Q2
+description: 广义标度律双通道质量效率 L=E+A[N Q^ρ]^(-α)+B[D Q^κ h(p)]^(-β)，与 Q2-B(ρ=0) 嵌套对照
+
+seed: 20260923
+
+# ----------------------------------------------------------------- 目录解析
+# 本工作区 q2_c 与数据仓库 math_model_F 并列（用户指定：在 26mathmodel 下新建文件夹）。
+# upstream_roots 按顺序探测，取第一个存在的路径；并入仓库后第二项生效。
+paths:
+  upstream_roots:
+    - ../math_model_F
+    - ..
+  scaling_dir: real_attachments/B_scaling_laws
+  q1_artifacts: artifacts/baselines/Q1-C
+
+# ----------------------------------------------------------------- 附件 B 文件
+# 编号依据 01_问题分析与Baseline实施计划.md §0.3 数据角色与必用清单。
+data:
+  b1_real_main: pythia_training_log_existing.csv          # B1 经典律主拟合（真实日志）
+  b2_family_out: cerebras_training_log.csv                # B2 半合成族外验证
+  b3_trajectories_dir: training_trajectories              # B3 插值轨迹检查
+  b4_cross_family: scaling_baseline.csv                   # B4 跨族验证（必用）
+  b5_published: published_scaling_data.csv                # B5 文献验证（必用）
+  b6_quality_main: supplementary_NQ_experiment.csv        # B6 质量主集（半合成）
+  b7_quality_expanded: supplementary_NQ_experiment_expanded.csv
+  b8_quality_large: supplementary_NQ_experiment_large.csv
+  b9_large_models: supplementary_large_models.csv         # B9 大模型元数据
+  b10_large_baseline: supplementary_large_baseline.csv    # B10 大模型估算 Loss
+  b11_open_meta: open_model_family_metadata.csv           # B11 辅助索引
+  b12_ckpt_index: pythia_checkpoint_index.csv             # B12 辅助索引
+
+# 列名与单位（公共口径，与题目一致）
+columns:
+  N: N_params_B
+  D: D_tokens_B
+  L: val_loss
+  Q: Q_score
+  source: source
+  family: family
+units:
+  N: 十亿参数（B params）
+  D: 十亿 token（B tokens）
+  L: 验证交叉熵 Loss（nats）
+  Q: 无量纲质量坐标，0<Q<=1，1 为基准质量
+
+# ----------------------------------------------------------------- 模型族
+# M0 经典      : L = E + A N^(-α) + B D^(-β)
+# M1 = Q2-B    : L = E + A N^(-α) + B [D Q^κ h(p)]^(-β)          （ρ=0 嵌套）
+# M2 = Q2-C    : L = E + A [N Q^ρ]^(-α) + B [D Q^κ h(p)]^(-β)    （释放 ρ）
+model:
+  # 参数上下界。κ、ρ 下界取 0：Q<=1 时 κ=ρ=0 即退化为嵌套模型，
+  # 故 0 是"无质量效应"的边界，命中即为嵌套证据而非数值意外。
+  bounds:
+    E: [0.30, 2.50]
+    A: [1.0e-4, 100.0]
+    alpha: [0.010, 1.50]
+    B: [1.0e-4, 100.0]
+    beta: [0.010, 1.50]
+    kappa: [0.0, 3.0]
+    rho: [0.0, 3.0]
+    # 来源偏移 δ：对"质量实验族"(B6/B7/B8)的行给可约损失下限加性偏移，
+    # 吸收与 B1 不同语料/评测族的系统性水平差（§2.4 第 6 条）。
+    delta: [-2.0, 2.0]
+  # 无真实观测时的基准质量约定（B1/B2/B4/B5/B10 无 Q 列）。
+  # 这是约定，不代表这些语料被实测为完美质量（§2.4 第 5 条）。
+  q_reference: 1.0
+  # 来源偏移：B1 与 B6-B8 属不同语料/评测族，不可约损失下限可能不同，
+  # 用加性 δ 吸收系统性水平差，避免把来源偏移误读为质量效应。
+  source_offset: true
+  fit_space: original          # 原空间 NLS（§2.2）；log 空间仅作稳健性对照
+  multi_start:
+    n_starts_stage1: 48        # B1 经典拟合
+    n_starts_stage2: 64        # B6 质量通道
+    n_starts_joint: 64         # 联合微调对照
+    scheme: lhs                # 分层（Latin hypercube）随机起点
+    cluster_tol: 0.15          # 等价解聚类的标准化参数距离阈值
+  least_squares:
+    max_nfev: 20000
+    x_scale: jac
+
+# ------------------------------------------------------------ 分阶段估计（§2.4）
+stages:
+  # 1. B1 拟合经典参数并冻结（分阶段 baseline）
+  # 2. 固定经典参数，在 B6 上估计 (κ, δ)          → M1-staged
+  # 3. 固定经典参数，在 B6 上估计 (κ, ρ, δ)       → M2-staged
+  # 4. 联合微调对照：限制半合成权重 w_B6，分别报告真实/半合成残差
+  joint_weights_B6: [0.10, 0.30, 0.50]
+  quality_primary: b6
+  quality_alternatives: [b7, b8]
+
+# ------------------------------------------------------------ 可辨识性（§2.4.9）
+identify:
+  profile_grid: 61             # 剖面似然格点数
+  profile_ci_level: 0.95       # F 检验阈值
+  corr_flag: 0.90              # |corr| 超过则判为高度相关
+  ci_width_flag: 1.00          # ρ/κ 的 95% 区间宽度超过该值判为过宽
+
+# ------------------------------------------------------------ 弹性与替代（§2.5）
+elasticity:
+  delta_Q: 0.10                # 质量改善步长（Q+0.1）
+  finite_diff_step: 1.0e-5     # 有限差分核验的相对步长
+  fd_rel_tol: 1.0e-3           # 解析导数与差分的相对容差
+
+# ------------------------------------------------------------ 校准与迁移（§2.4.4 / §2.4.7）
+calibration:
+  # 第一问原始 Q → 模型 Q 的单调映射候选。同尺度为最简方案，须标为未验证假设。
+  mappings: [same_scale, minmax01, reference_shift]
+  primary_mapping: same_scale
+transfer:
+  # h(p) 的效应泛函候选（h(p0)=1，h(p)>0）。Δ 定义为相对参考配比 p0 的
+  # "损失型"偏离（越大越差），故 h=exp(-ω·Δ)：优于 p0 的配比 h>1，劣于则 h<1。
+  #   quality_linear : Δ = [Q(p0)-Q(p)]/s_Q，Q(p)=Σ p_i q_i / Σ p_i（exclude 口径，
+  #                    与第一问 Q1-C 的 primary_unmapped_policy 一致）
+  #   mixture_l1     : Δ = ||p-p0||_1/s_1，纯配比偏离，不含质量解释
+  effect_functionals: [quality_linear, mixture_l1]
+  primary_effect: quality_linear
+  # ω 为无量纲迁移强度。缺少共同实验时不得声称"已由 B1 估计"（§2.4 第 7 条），
+  # 只给含零效应在内的小组预设情景。
+  omega_grid: [0.0, 0.5, 1.0, 2.0, 5.0]
+  # 候选配比情景：以第一问导出的参考配比 p0 为中心，用固定种子的单纯形扰动
+  # 与 Dirichlet 抽样生成——只依赖 Q1→Q2 接口的 p0，不重复读取附件 A 原始文件。
+  n_candidate_mixtures: 63
+  candidate_scheme: simplex_perturbation    # simplex_perturbation | dirichlet
+  candidate_delta: 0.05                     # 单纯形扰动步长（p_i ± δ）
+  substitution_delta: 0.05                  # 领域替代分析的 p_i 增 / p_j 减步长
+
+# ----------------------------------------------------------------- 验证（§2.6）
+validation:
+  b1_group_by: N_params_B      # 按模型规模分组留出
+  b1_d_quantile: 0.60          # D 方向前段训练 / 后段检验的分位点
+  trajectory_train_frac: 0.50  # 轨迹前 50% 拟合、后 50% 检验
+  bootstrap:
+    n: 400
+    scheme: grouped_by_size    # 按模型规模整组重抽（固定步距检查点高度相关）
+  b10_extrapolation_min_B: 10.0
+
+# ----------------------------------------------------------------- 输出
+outputs:
+  artifacts_dir: artifacts/baselines/Q2-C
+  report: reports/baselines/Q2-C.md

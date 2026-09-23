@@ -1,0 +1,97 @@
+{
+  "entropy_seconds": 0.01871260000007169,
+  "degenerate_metrics": [],
+  "theta_tau_q90": 0.7238409812289192,
+  "tau_grid": {
+    "q80": 0.6766879017845924,
+    "q85": 0.6974942984328305,
+    "q90": 0.7238409812289192,
+    "q95": 0.7582021820149538
+  },
+  "conflict_rate_total": 0.06700060549347718,
+  "effective_n_metrics_entropy": 8.160320491579695,
+  "effective_n_metrics_equal": 22.0,
+  "note_weight_rank_corr": "熵权与等权的秩相关无定义（等权向量为常数），故改用有效指标数 1/Σw² 刻画权重集中度",
+  "n_dev": 25615,
+  "n_verify": 25615,
+  "sample_flow": {
+    "A1_rows": 51230,
+    "A2_rows": 17523,
+    "A3_rows": 203752,
+    "concat_rows": 272505,
+    "merged_rows": 261086,
+    "dropped_duplicates": 11419,
+    "overlap_A1_A2_arxiv": 1419,
+    "overlap_A1_A3_github": 10000,
+    "overlap_A2_A3": 0,
+    "merged_by_domain": {
+      "arxiv": 17523,
+      "book": 171,
+      "c4": 10000,
+      "commoncrawl": 9640,
+      "github": 203752,
+      "stackexchange": 10000,
+      "wikipedia": 10000
+    }
+  },
+  "lambda_default": 0.2,
+  "domain_quality_merged": [
+    {
+      "quality_domain": "arxiv",
+      "n": 17523,
+      "q_equal": 0.6198105310482823,
+      "q_entropy": 0.4682781431107432,
+      "q_resolved": 0.5508864227164122,
+      "conflict_rate": 0.5238828967642527
+    },
+    {
+      "quality_domain": "book",
+      "n": 171,
+      "q_equal": 0.5324885235712373,
+      "q_entropy": 0.3527948026574569,
+      "q_resolved": 0.47529581119233993,
+      "conflict_rate": 0.2982456140350877
+    },
+    {
+      "quality_domain": "c4",
+      "n": 10000,
+      "q_equal": 0.6203958494999309,
+      "q_entropy": 0.3859015789846885,
+      "q_resolved": 0.5509906896617066,
+      "conflict_rate": 0.1896
+    },
+    {
+      "quality_domain": "commoncrawl",
+      "n": 9640,
+      "q_equal": 0.6188671120821864,
+      "q_entropy": 0.3977643487398037,
+      "q_resolved": 0.5589267335359777,
+      "conflict_rate": 0.12033195020746888
+    },
+    {
+      "quality_domain": "github",
+      "n": 203752,
+      "q_equal": 0.5392320705191772,
+      "q_entropy": 0.3589240375823751,
+      "q_resolved": 0.49145729148452905,
+      "conflict_rate": 0.020309003101810042
+    },
+    {
+      "quality_domain": "stackexchange",
+      "n": 10000,
+      "q_equal": 0.6535113601752659,
+      "q_entropy": 0.48716201015913013,
+      "q_resolved": 0.60413013527202,
+      "conflict_rate": 0.0035
+    },
+    {
+      "quality_domain": "wikipedia",
+      "n": 10000,
+      "q_equal": 0.6124107352384236,
+      "q_entropy": 0.4004865595095231,
+      "q_resolved": 0.5470245928631126,
+      "conflict_rate": 0.0933
+    }
+  ],
+  "mapped_quality_domains": 6
+}

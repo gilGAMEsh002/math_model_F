@@ -1,0 +1,2 @@
+﻿n,kappa,params_identical_EAalphaBbeta,param_mismatch,max_rel_diff,median_rel_diff,verdict
+40,0.8047071577351047,True,,0.0,0.0,参数逐位相同且预测逐点一致（同口径）

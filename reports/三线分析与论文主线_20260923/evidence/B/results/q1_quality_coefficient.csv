@@ -1,0 +1,14 @@
+domain,c_mean,c_sd,t_ratio,significant
+arxiv,0.655395,0.0143356,45.7181,True
+freelaw,0.636057,0.00735237,86.5105,True
+pubmed_central,0.646788,0.010393,62.2333,True
+wikipedia_en,0.691849,0.00405161,170.759,True
+dm_mathematics,0.567354,0.0227794,24.9064,True
+github,0.682184,0.0140797,48.4517,True
+stackexchange,0.651043,0.00939585,69.2904,True
+gutenberg_pg_19,0.63369,0.00433458,146.194,True
+pile_cc,0.657896,0.00231559,284.116,True
+ubuntu_irc,0.788867,0.0137437,57.3985,True
+hackernews,0.622693,0.00387153,160.839,True
+pubmed_abstracts,0.655465,0.0047151,139.014,True
+uspto_backgrounds,0.619872,0.00394647,157.07,True

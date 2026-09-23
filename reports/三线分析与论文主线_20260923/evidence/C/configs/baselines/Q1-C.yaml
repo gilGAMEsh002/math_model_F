@@ -1,0 +1,216 @@
+# Q1-C baseline 配置：熵权质量分 + 随机森林回归
+# 任务卡：建模方案/baselines/Q1-C.md
+# 公共规范：建模方案/baselines/00_公共约定与接口.md
+#
+# 本文件冻结 Q1-C 的全部可调旋钮。修改任何一项都会改变配置哈希，
+# 下游实验需重新登记（见 run_metadata.json 的 config_hash 字段）。
+
+baseline_id: Q1-C
+question: Q1
+description: 熵权质量分（与等权对照） + 随机森林配比回归（与线性对照）
+
+# 全局随机种子。所有抽样、切分、森林自举均由此派生。
+seed: 20260923
+
+# ----------------------------------------------------------------- 上游依赖
+# Q1-C 不重新读取 A1/A2/A3 原始 JSONL，复用上游公共预处理的冻结输出。
+# 上游尚未进入共享发布目录（configs/shared、artifacts/shared/q1），
+# 故此处按 00_公共约定与接口.md 第 5 节「共享清洗可复用」直接引用其版本化产物，
+# 并在 run_metadata.json 中记录其 sha256 与参数文件哈希。
+upstream:
+  preprocessed_dir: ../q1_preprocessing/artifacts/q1/preprocessed
+  preprocess_params: ../q1_preprocessing/configs/quality_preprocess_params.json
+  preprocess_report: ../q1_preprocessing/reports/q1_preprocess_report.md
+  preprocess_version: step1-freeze-A1-2026-09-23
+
+# 相对仓库根目录（math_model_F）
+paths:
+  regmix_dir: real_attachments/A_data_value/regmix_tables
+  domain_mapping: real_attachments/A_data_value/domain_mapping_guide.csv
+
+# --------------------------------------------------- 第一部分：质量评分（熵权 vs 等权）
+quality:
+  # 评分开发参考集：熵权与冲突阈值只在此集合上确定，然后冻结应用到全部集合。
+  # 依 01_问题分析与Baseline实施计划.md §1.2「A1 中按域划分评分规则开发样本和人工核验样本」。
+  reference_set: A1
+  dev_fraction: 0.5
+  stratify_by: domain
+
+  # 22 个标准化质量指标（与上游 order22 完全一致，顺序即列序）
+  metrics:
+    - fineweb_edu
+    - fluency_en
+    - ad_en
+    - qurater
+    - modernbert_cleanliness
+    - modernbert_readability
+    - modernbert_reasoning
+    - modernbert_professionalism
+    - dsir_books
+    - dsir_math
+    - dsir_wiki
+    - rps_doc_word_count
+    - rps_doc_num_sentences
+    - rps_doc_unigram_entropy
+    - rps_doc_frac_unique_words
+    - rps_doc_frac_no_alph_words
+    - rps_doc_frac_chars_top_2gram
+    - rps_doc_frac_chars_top_3gram
+    - rps_doc_mean_word_length
+    - rps_lines_uppercase_letter_fraction
+    - rps_lines_numerical_chars_fraction
+    - rps_lines_ending_with_terminal_punctution_mark
+
+  # 按指标语义预定义的质量组，用于冲突强度 c_i = max_g z_ig - min_g z_ig。
+  # 注：共享 quality_metric_dictionary.csv（Q1-A 交付物）尚未发布，此处为 Q1-C 自定的
+  # 语义分组，需在三人同步后对齐；分组只影响冲突标签与短板项，不影响熵权本身。
+  quality_groups:
+    educational_value: [fineweb_edu]
+    language_quality: [fluency_en, modernbert_readability]
+    cleanliness: [ad_en, modernbert_cleanliness]
+    professionalism: [qurater, modernbert_professionalism, modernbert_reasoning]
+    domain_relevance: [dsir_books, dsir_math, dsir_wiki]
+    lexical_information: [rps_doc_unigram_entropy, rps_doc_frac_unique_words,
+                          rps_doc_frac_no_alph_words, rps_doc_frac_chars_top_2gram,
+                          rps_doc_frac_chars_top_3gram]
+    structure_format: [rps_doc_word_count, rps_doc_num_sentences,
+                       rps_doc_mean_word_length, rps_lines_uppercase_letter_fraction,
+                       rps_lines_numerical_chars_fraction,
+                       rps_lines_ending_with_terminal_punctution_mark]
+
+  # 熵权法约定
+  entropy:
+    # 零值处理：z_ij = 0 时 p_ij = 0，按 0*ln0 := 0 处理（标准约定）。
+    zero_convention: p_log_p_zero_is_zero
+    # 常数列 / 全零列：Σ_i z_ij = 0 或列方差为 0 → 该列冗余度记 0，
+    # 权重为 0，剩余权重在其余列上重新归一化。
+    constant_column: weight_zero_redistribute
+    # 零值敏感性的平移量：z' = (z + eps) / (1 + eps)
+    epsilon: 0.001
+
+  # 冲突阈值 τ：在开发参考集上按 c_i 分位数确定，并做多阈值敏感性。
+  conflict:
+    quantile_grid: [0.80, 0.85, 0.90, 0.95]
+    default_quantile: 0.90
+
+  # 消解规则 Q = (1-λ) Q_base + λ min_g z_ig 的预设网格（不规定唯一最优）
+  lambda_grid: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50]
+  # 默认值：Q1 数据无外部真值可辨识 λ，采用小规模预设下的显式约定值，
+  # 并在报告中声明其确定需要第二问的损失通道。
+  lambda_default: 0.20
+
+# --------------------------------------------- 第二部分：配比回归（随机森林 vs 线性）
+mixture:
+  # 17 个训练域配比（输入），顺序即列序
+  input_cols:
+    - train_the_pile_arxiv
+    - train_the_pile_freelaw
+    - train_the_pile_nih_exporter
+    - train_the_pile_pubmed_central
+    - train_the_pile_wikipedia_en
+    - train_the_pile_dm_mathematics
+    - train_the_pile_github
+    - train_the_pile_philpapers
+    - train_the_pile_stackexchange
+    - train_the_pile_enron_emails
+    - train_the_pile_gutenberg_pg_19
+    - train_the_pile_pile_cc
+    - train_the_pile_ubuntu_irc
+    - train_the_pile_europarl
+    - train_the_pile_hackernews
+    - train_the_pile_pubmed_abstracts
+    - train_the_pile_uspto_backgrounds
+
+  # 13 个验证域 Loss（输出），顺序即列序
+  target_cols:
+    - metric/the_pile_arxiv_val_loss
+    - metric/the_pile_freelaw_val_loss
+    - metric/the_pile_pubmed_central_val_loss
+    - metric/the_pile_wikipedia_en_val_loss
+    - metric/the_pile_dm_mathematics_val_loss
+    - metric/the_pile_github_val_loss
+    - metric/the_pile_stackexchange_val_loss
+    - metric/the_pile_gutenberg_pg_19_val_loss
+    - metric/the_pile_pile_cc_val_loss
+    - metric/the_pile_ubuntu_irc_val_loss
+    - metric/the_pile_hackernews_val_loss
+    - metric/the_pile_pubmed_abstracts_val_loss
+    - metric/the_pile_uspto_backgrounds_val_loss
+
+  # 行归一化：A4 行和 0.996-1.003，按 §1.2/§0.2 要求归一化后再建模
+  normalize_rows: true
+  # 评价权重 v：baseline 令 13 个目标等权，且不随 p 改变（§1.4）
+  target_weights: equal
+
+  # 线性对照（对应 Q1-A 的岭回归设定）
+  # alpha 网格向小端延伸至 1e-4：若最优落在网格边界，必须报告为边界命中而非真实最优。
+  ridge:
+    alpha_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]
+    fit_intercept: true
+
+  # 随机森林：仅在训练折内搜索小网格（任务卡第 3 条）
+  forest:
+    n_estimators: [300, 600]
+    max_depth: [null, 8, 12]
+    min_samples_leaf: [1, 2, 4]
+    max_features: [1.0]
+    n_jobs: -1
+
+  # 内部交叉验证（只用于 A4/A5 选参，禁止接触 A6-A15）
+  cv_folds: 5
+  cv_seed: 20260923
+  # 选参准则：13 个目标「逐目标 RMSE 的均值」（越小越好），综合目标另行列报
+  cv_selection_metric: mean_target_rmse
+
+  # Top-k 选方与后悔值评估的 k 值
+  topk: [1, 3, 5, 10]
+
+  # 质量特征 Q(p) = Σ_i p_i q_i 的消融设定（交叉消融用）
+  quality_feature:
+    # none      : 仅 17 个配比（主参照，对应 §1.5 第 6 条「可不加入 Q」）
+    # equal     : 追加等权域质量得到的 Q(p)
+    # entropy   : 追加熵权域质量得到的 Q(p)
+    modes: [none, equal, entropy]
+    # 11 个训练域在 A16 中映射类型为 inferred（无同名质量域）
+    # exclude : Q(p) = Σ_{已映射} p_i q_i / Σ_{已映射} p_i（显式缺失，不虚构取值）
+    # proxy   : 未映射域取已完成映射域的均值作为中性代理（敏感性对照）
+    primary_unmapped_policy: exclude
+    proxy_unmapped_policy: proxy
+
+  # 参考域（部分消融用）：行归一化后最小配比域，用于「去掉一个配比变量」的敏感性
+  drop_reference_col: train_the_pile_europarl
+
+# ----------------------------------------------------------------- 数据切分（冻结）
+splits:
+  train:
+    mixture: train_mixture_1m.csv
+    loss: train_pile_loss_1m.csv
+  final_test:
+    - name: same_scale_1m
+      mixture: test_mixture_1m.csv
+      loss: test_pile_loss_1m.csv
+    - name: cross_scale_60m
+      mixture: test_mixture_60m.csv
+      loss: test_pile_loss_60m.csv
+    - name: cross_scale_1B
+      mixture: test_mixture_1B.csv
+      loss: test_pile_loss_1B.csv
+  extrapolation_diagnostic:
+    - name: est_10b
+      mixture: est_mixture_10b.csv
+      loss: est_pile_loss_10b.csv
+    - name: est_70b
+      mixture: est_mixture_70b.csv
+      loss: est_pile_loss_70b.csv
+
+# ----------------------------------------------------------------- 外推诊断设定
+extrapolation:
+  # 扰动稳健性：对配比加 Dirichlet 噪声后观察预测变化（10B/70B 仅作一致性诊断）
+  perturbation:
+    n_draws: 200
+    concentrations: [200.0, 50.0, 20.0]
+
+# ----------------------------------------------------------------- 输出
+outputs:
+  artifacts_dir: artifacts/baselines/Q1-C
+  report: reports/baselines/Q1-C.md

@@ -1,0 +1,2 @@
+candidate,reason,check,max_share_variation
+none_detected,Q3-A 固定 Q=Q0、p=p0，加性质量项为常数；训练/注意力成本份额之比在固定 ell 下不随 C 变化，不产生结构转移。,budget_paths 中 N*/D*/份额随 log C 连续变化,0.0

@@ -1,0 +1,3 @@
+﻿set,n_domains,spearman_Q_equal_vs_Q_entropy,mean_abs_rank_shift,topk1_agree,ranked_by_equal,ranked_by_entropy
+A1,7,0.8571428571428571,0.5714285714285714,True,stackexchange > arxiv > c4 > commoncrawl > wikipedia > github > book,stackexchange > arxiv > wikipedia > commoncrawl > c4 > github > book
+merged,7,0.75,0.8571428571428571,True,stackexchange > c4 > arxiv > commoncrawl > wikipedia > github > book,stackexchange > arxiv > wikipedia > commoncrawl > c4 > github > book

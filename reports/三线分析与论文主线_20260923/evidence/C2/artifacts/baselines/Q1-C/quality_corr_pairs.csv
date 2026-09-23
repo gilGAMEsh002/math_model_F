@@ -1,0 +1,3 @@
+﻿metric_i,metric_j,corr,metric_dropped
+dsir_books,dsir_math,0.9951825375384934,dsir_math
+dsir_books,dsir_wiki,0.9989541220634621,dsir_wiki

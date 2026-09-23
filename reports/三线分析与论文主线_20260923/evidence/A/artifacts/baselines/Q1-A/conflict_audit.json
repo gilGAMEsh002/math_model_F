@@ -1,0 +1,116 @@
+{
+  "tau": 0.933977431677412,
+  "quantile": 0.9,
+  "pool": "A1",
+  "lambda_grid": [
+    {
+      "lambda": 0.0,
+      "domain_rank_spearman_vs_base": 1.0,
+      "mean_q_shrinkage": 0.0,
+      "reserved_n": 10246
+    },
+    {
+      "lambda": 0.1,
+      "domain_rank_spearman_vs_base": 1.0,
+      "mean_q_shrinkage": 0.03564834434745012,
+      "reserved_n": 10246
+    },
+    {
+      "lambda": 0.25,
+      "domain_rank_spearman_vs_base": 0.9642857142857143,
+      "mean_q_shrinkage": 0.08912086086862533,
+      "reserved_n": 10246
+    },
+    {
+      "lambda": 0.5,
+      "domain_rank_spearman_vs_base": 0.9285714285714286,
+      "mean_q_shrinkage": 0.17824172173725067,
+      "reserved_n": 10246
+    },
+    {
+      "lambda": 1.0,
+      "domain_rank_spearman_vs_base": 0.8928571428571429,
+      "mean_q_shrinkage": 0.35648344347450134,
+      "reserved_n": 10246
+    }
+  ],
+  "lambda_selected": 0.1,
+  "reserved_n": 10246,
+  "tau_sensitivity": {
+    "0.8": {
+      "tau": 0.8183704010134812,
+      "conflict_rate_A1": 0.2,
+      "conflict_rate_all_sets": 0.24053377048175698,
+      "by_domain_A1": {
+        "arxiv": 0.9281183932346723,
+        "book": 0.6491228070175439,
+        "c4": 0.3318,
+        "commoncrawl": 0.07977178423236514,
+        "github": 0.1971,
+        "stackexchange": 0.04,
+        "wikipedia": 0.236
+      }
+    },
+    "0.85": {
+      "tau": 0.868021206771852,
+      "conflict_rate_A1": 0.1500097599063049,
+      "conflict_rate_all_sets": 0.19005231992523536,
+      "by_domain_A1": {
+        "arxiv": 0.9105003523608175,
+        "book": 0.5321637426900585,
+        "c4": 0.2584,
+        "commoncrawl": 0.04232365145228216,
+        "github": 0.1405,
+        "stackexchange": 0.0249,
+        "wikipedia": 0.1656
+      }
+    },
+    "0.9": {
+      "tau": 0.933977431677412,
+      "conflict_rate_A1": 0.1,
+      "conflict_rate_all_sets": 0.1377094137563868,
+      "by_domain_A1": {
+        "arxiv": 0.86892177589852,
+        "book": 0.4327485380116959,
+        "c4": 0.1771,
+        "commoncrawl": 0.018775933609958505,
+        "github": 0.0855,
+        "stackexchange": 0.0093,
+        "wikipedia": 0.0916
+      }
+    },
+    "0.95": {
+      "tau": 0.9944998198437622,
+      "conflict_rate_A1": 0.0500097599063049,
+      "conflict_rate_all_sets": 0.0870556061987238,
+      "by_domain_A1": {
+        "arxiv": 0.649753347427766,
+        "book": 0.1286549707602339,
+        "c4": 0.0648,
+        "commoncrawl": 0.003838174273858921,
+        "github": 0.0488,
+        "stackexchange": 0.0015,
+        "wikipedia": 0.043
+      }
+    }
+  },
+  "conflict_types": [
+    {
+      "type": "edu_high_ad_low",
+      "count": 777,
+      "rate": 0.01516689439781378
+    },
+    {
+      "type": "format_low",
+      "count": 5123,
+      "rate": 0.1
+    },
+    {
+      "type": "relevance_low",
+      "count": 5123,
+      "rate": 0.1
+    }
+  ],
+  "n_dedup": 261086,
+  "n_A1": 51230
+}

@@ -1,0 +1,113 @@
+{
+  "C3_units_cases": [
+    {
+      "N_B": 1.0,
+      "D_B": 100.0,
+      "Q": 1.0,
+      "Q3_saved_unit_prediction": 1.6911408471985636,
+      "Q2_same_physical_point_prediction": 2.385578185266307,
+      "absolute_gap": 0.6944373380677433
+    },
+    {
+      "N_B": 7.0,
+      "D_B": 300.0,
+      "Q": 0.8,
+      "Q3_saved_unit_prediction": 1.6907568666060884,
+      "Q2_same_physical_point_prediction": 2.1367458976989964,
+      "absolute_gap": 0.445989031092908
+    },
+    {
+      "N_B": 0.2,
+      "D_B": 7.0,
+      "Q": 0.416633,
+      "Q3_saved_unit_prediction": 1.6929836985213569,
+      "Q2_same_physical_point_prediction": 3.1778826975713392,
+      "absolute_gap": 1.4848989990499823
+    }
+  ],
+  "C3_saved_L_matches_raw_unit_code": true,
+  "C3_correct_unit_rescore_only_not_reoptimization": {
+    "median_abs_gap": 0.32023339534868533,
+    "max_abs_gap": 2.251726229785068
+  },
+  "C3_budget_feasibility_recomputed": true,
+  "C3_rows": 720,
+  "C3_winners_outside_declared_L1": 360,
+  "C3_vertex_l1_distance": 1.4224972648239003,
+  "C3_declared_l1_radius": 0.6,
+  "C3_unique_kappa_allocations": [
+    0.8047071577351047
+  ],
+  "C3_unique_kappa_budget_paths": [
+    0.8047071577351047
+  ],
+  "correct_unit_fixed_Q_h1_analytic_reference": {
+    "C": 1e+19,
+    "ell": 4096,
+    "Q": 0.416633,
+    "N_B": 0.156563882745894,
+    "D_B": 9.366449345964103,
+    "L": 3.1624018683231183
+  },
+  "limits": "No full retraining or reoptimization. Correct-unit rescoring is a diagnostic, not a corrected optimal allocation.",
+  "B3_same_unit_error": {
+    "saved_L_matches_raw_unit_formula_to_csv_rounding": true,
+    "one_B_params_100_B_tokens_Q1_raw": 1.6911408442508955,
+    "one_B_params_100_B_tokens_Q1_correct": 2.385578178410373,
+    "median_correct_unit_rescore_gap": 0.5653858176760858,
+    "rows": 45
+  },
+  "B_Q1_original_csv_hashes": [
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_mixture_1m.csv",
+      "sha256": "197267b7d6f15367e2f46c881e564c35b0d34e51b1754bb09d07e650cf8e1ce8",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_pile_loss_1m.csv",
+      "sha256": "e027b1674f60140a65a87b5e4a59ab5f09dc33e8fd02c080682678074b160f53",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_mixture_60m.csv",
+      "sha256": "197267b7d6f15367e2f46c881e564c35b0d34e51b1754bb09d07e650cf8e1ce8",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_pile_loss_60m.csv",
+      "sha256": "8fe69d59ab7dd4fae4736459f4265ec93c7ed1ad1eca407346052560edc72b5b",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_mixture_1B.csv",
+      "sha256": "dd38052949c0a5f84165bdcb3ae3a331c7f07efd9bb83848bd579dfc4ce75a2c",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/test_pile_loss_1B.csv",
+      "sha256": "b2451e2b7fa15400688edc39e4d32f21ccbe0fb356e07d62a0e9ccddf247114f",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/est_mixture_10b.csv",
+      "sha256": "880c7ca1ebef470422e2b93d9bfcd0976db7db4e34ea57047518d95fe43327d1",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/est_pile_loss_10b.csv",
+      "sha256": "226457581f3f59e15e44d8f72dee31fa7492c821699725fef47627d82cf34c0d",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/est_mixture_70b.csv",
+      "sha256": "880c7ca1ebef470422e2b93d9bfcd0976db7db4e34ea57047518d95fe43327d1",
+      "matches_frozen_B_commit": true
+    },
+    {
+      "path": "real_attachments/A_data_value/regmix_tables/est_pile_loss_70b.csv",
+      "sha256": "d0883b2d1a44da9386a6d629a3623c724ee291cba1ac87b6d1079e5377307682",
+      "matches_frozen_B_commit": true
+    }
+  ],
+  "B_Q1_saved_coefficient_metrics_verified": 10
+}
