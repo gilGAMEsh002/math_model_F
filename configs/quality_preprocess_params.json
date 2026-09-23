@@ -1,0 +1,217 @@
+{
+  "spec": {
+    "order22": [
+      "fineweb_edu",
+      "fluency_en",
+      "ad_en",
+      "qurater",
+      "modernbert_cleanliness",
+      "modernbert_readability",
+      "modernbert_reasoning",
+      "modernbert_professionalism",
+      "dsir_books",
+      "dsir_math",
+      "dsir_wiki",
+      "rps_doc_word_count",
+      "rps_doc_num_sentences",
+      "rps_doc_unigram_entropy",
+      "rps_doc_frac_unique_words",
+      "rps_doc_frac_no_alph_words",
+      "rps_doc_frac_chars_top_2gram",
+      "rps_doc_frac_chars_top_3gram",
+      "rps_doc_mean_word_length",
+      "rps_lines_uppercase_letter_fraction",
+      "rps_lines_numerical_chars_fraction",
+      "rps_lines_ending_with_terminal_punctution_mark"
+    ],
+    "negative_metrics": [
+      "rps_doc_frac_chars_top_2gram",
+      "rps_doc_frac_chars_top_3gram",
+      "rps_doc_frac_no_alph_words"
+    ],
+    "non_monotonic_metrics": [
+      "rps_doc_word_count",
+      "rps_doc_num_sentences",
+      "rps_doc_mean_word_length"
+    ],
+    "dsir_metrics": [
+      "dsir_books",
+      "dsir_math",
+      "dsir_wiki"
+    ],
+    "modernbert_rank": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "trapezoid_quantiles": [
+      0.05,
+      0.25,
+      0.75,
+      0.95
+    ],
+    "reference_set": "A1"
+  },
+  "scalar_median": [
+    -2104.2264163600003,
+    -2126.0061405899996,
+    -2129.006429995,
+    253.0,
+    20.0,
+    4.60656079,
+    55.73770491803278,
+    23.4567901234568,
+    2.2703260536077874,
+    1.7534460126347866,
+    5.322730202758136,
+    18.14584024424503,
+    1.197585613397965,
+    50.0,
+    1.2148745656013489,
+    -0.9814453125,
+    1.2109375,
+    -2.376953125,
+    2.765625,
+    -1.62109375,
+    0.634765625,
+    -0.5673828125,
+    1.0107421875,
+    -7.9609375,
+    -5.4765625,
+    1.2431640625,
+    -2.501953125,
+    5.5703125,
+    1.400390625,
+    -6.8984375,
+    -1.830078125,
+    -1.09326171875,
+    0.5791015625,
+    4.0859375,
+    2.30859375,
+    -1.32421875,
+    5.3671875,
+    3.505859375,
+    -1.3681640625,
+    -3.16796875,
+    -4.65625,
+    -4.25,
+    -0.355712890625,
+    2.529296875,
+    1.130859375,
+    1.279296875,
+    -2.873046875
+  ],
+  "qurater_dim_min": [
+    -7.74609375,
+    -8.375,
+    -6.73828125,
+    -7.828125
+  ],
+  "qurater_dim_max": [
+    9.4921875,
+    10.875,
+    7.78125,
+    12.8203125
+  ],
+  "minmax_bounds": {
+    "fineweb_edu": [
+      -0.65213782,
+      4.37556982
+    ],
+    "fluency_en": [
+      0.00197618,
+      0.99946526
+    ],
+    "ad_en": [
+      0.00079318,
+      0.99980398
+    ],
+    "qurater": [
+      0.04371613,
+      0.85793286
+    ],
+    "modernbert_cleanliness": [
+      0.20000003,
+      0.99999999
+    ],
+    "modernbert_readability": [
+      0.01623938,
+      0.99994394
+    ],
+    "modernbert_reasoning": [
+      1.82e-05,
+      0.99999968
+    ],
+    "modernbert_professionalism": [
+      0.20000207,
+      0.99999858
+    ],
+    "dsir_books": [
+      -14.03289725,
+      -3.21977051
+    ],
+    "dsir_math": [
+      -14.3273451,
+      -3.17251389
+    ],
+    "dsir_wiki": [
+      -14.2612292,
+      -3.25855947
+    ],
+    "rps_doc_unigram_entropy": [
+      0.0,
+      7.84673154
+    ],
+    "rps_doc_frac_unique_words": [
+      5.08836333,
+      100.0
+    ],
+    "rps_doc_frac_no_alph_words": [
+      4.34782609,
+      100.0
+    ],
+    "rps_doc_frac_chars_top_2gram": [
+      0.0,
+      135.13338723
+    ],
+    "rps_doc_frac_chars_top_3gram": [
+      0.0,
+      201.68148747
+    ],
+    "rps_lines_uppercase_letter_fraction": [
+      0.0,
+      86.95652174
+    ],
+    "rps_lines_numerical_chars_fraction": [
+      0.0,
+      72.34424037
+    ],
+    "rps_lines_ending_with_terminal_punctution_mark": [
+      0.0,
+      100.0
+    ]
+  },
+  "trapezoid": {
+    "rps_doc_word_count": {
+      "L": 3.4339872,
+      "a": 4.70048037,
+      "b": 6.33682573,
+      "U": 7.88987113
+    },
+    "rps_doc_num_sentences": {
+      "L": 1.38629436,
+      "a": 2.30258509,
+      "b": 3.8286414,
+      "U": 5.39362755
+    },
+    "rps_doc_mean_word_length": {
+      "L": 1.66240592,
+      "a": 1.75954557,
+      "b": 2.00491707,
+      "U": 2.52170901
+    }
+  }
+}

@@ -1,2 +1,2 @@
-[22:15:45] 从产物重建 ctx 并重渲染报告（不重算数值）
-[22:15:45] 报告已写入 D:\26mathmodel\q3_c\reports/baselines/Q3-C.md
+[00:37:28] 从产物重建 ctx 并重渲染报告（不重算数值）
+[00:37:29] 报告已写入 /tmp/opencode/wt-c/reports/baselines/Q3-C.md

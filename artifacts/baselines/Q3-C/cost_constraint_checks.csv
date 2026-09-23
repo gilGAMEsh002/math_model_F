@@ -1,6 +1,6 @@
 ﻿check,pass,max_violation,tolerance,note
 budget_tight_and_consistent,True,2.097152e-16,1e-09,D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差
-cost_shares_sum_to_one,True,2.220446049250313e-16,1e-09,训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差
+cost_shares_sum_to_one,True,3.3306690738754696e-16,1e-09,训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差
 attn_share_equals_eta_l_over_6,True,8.881784197001252e-16,1e-12,C_attn/C_train = eta*l/6
 Q_within_bounds,True,0.0,1e-09,Q0 <= Q <= q_hi
 simplex_feasible,True,2.220446049250313e-16,1e-09,sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规

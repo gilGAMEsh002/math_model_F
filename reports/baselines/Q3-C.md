@@ -1,7 +1,7 @@
 # Q3-C｜候选配比枚举与局部联合优化（第三问 baseline C）
 
 - **baseline**：`Q3-C`（第三问）
-- **配置**：`/tmp/opencode/wt-c3/configs/baselines/Q3-C.yaml` ｜ 配置哈希 `e9bf4f675e3b8003` ｜ 源码哈希 `074f04bd49cc32c7`
+- **配置**：`/tmp/opencode/wt-c/configs/baselines/Q3-C.yaml` ｜ 配置哈希 `e9bf4f675e3b8003` ｜ 源码哈希 `074f04bd49cc32c7`
 - **随机种子**：`20260923`
 - **产物目录**：`artifacts/baselines/Q3-C`
 - **本卡范围**：仅实现 `建模方案/baselines/Q3-C.md` 所述方法——候选配比枚举、逐候选 (N,Q) 搜索、多起点 SLSQP 局部细调与交叉核验。**不实现** Q3-A（固定 Q/p 的一维搜索）与 Q3-B（固定配比的二维搜索）这两条独立 baseline 的方法与交付物。
@@ -286,7 +286,7 @@ $\omega=0$ 时 $h\equiv1$，配比对预测损失**完全没有影响** → $p^*
 | check | pass | max_violation | tolerance | note |
 | --- | --- | --- | --- | --- |
 | budget_tight_and_consistent | True | 2.0972e-16 | 1.0000e-09 | D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差 |
-| cost_shares_sum_to_one | True | 2.2204e-16 | 1.0000e-09 | 训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差 |
+| cost_shares_sum_to_one | True | 3.3307e-16 | 1.0000e-09 | 训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差 |
 | attn_share_equals_eta_l_over_6 | True | 8.8818e-16 | 1.0000e-12 | C_attn/C_train = eta*l/6 |
 | Q_within_bounds | True | 0 | 1.0000e-09 | Q0 <= Q <= q_hi |
 | simplex_feasible | True | 2.2204e-16 | 1.0000e-09 | sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规 |
