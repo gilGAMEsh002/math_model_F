@@ -1,0 +1,158 @@
+# Q3-C baseline 配置：候选配比枚举与局部联合优化
+# 任务卡：建模方案/baselines/Q3-C.md
+# 公共协议：建模方案/baselines/00_公共约定与接口.md、01_问题分析与Baseline实施计划.md §3
+#
+# 本文件冻结 Q3-C 的全部可调旋钮。修改任一项都会改变配置哈希，下游需重新登记。
+#
+# 范围声明（按 Baseline-C.md「第三问本轮做到候选配比枚举与基本资源搜索」）：
+#   本 baseline 只实现 Q3-C 卡片所述内容——候选配比枚举、对每个候选搜索 (N,Q)、
+#   以及作为交叉核验的多起点 SLSQP 局部细调。**不实现** Q3-A（固定 Q/p 的一维
+#   资源搜索）与 Q3-B（固定配比的二维搜索）那两条独立 baseline 的交付物。
+
+baseline_id: Q3-C
+question: Q3
+description: 冻结 Q2 主模型 M1(Q2-B, rho=0)，枚举第一问训练信息/可信区域内的候选配比，逐候选搜索 (N,Q)，并作多起点 SLSQP 交叉核验
+
+seed: 20260923
+
+# ----------------------------------------------------------------- 目录解析
+# 本工作区 q3_c 与数据仓库 math_model_F 并列（与 q2_c 同构：在 26mathmodel 下新建文件夹）。
+# candidate_roots 按序探测，取第一个存在的路径；并入仓库后 _root 自身即生效。
+paths:
+  upstream_roots:
+    - ../math_model_F
+    - ..
+  # Q2-C 产物尚未并入 math_model_F（只在分支 baseline-q2-c 与并列工作区 q2_c 中）。
+  # 这里显式登记为**只读**备用根，属于临时桥接；并入后可删除，删除不影响结果。
+  q2_bridge_root: ../q2_c
+  scaling_dir: real_attachments/B_scaling_laws
+  q1_artifacts: artifacts/baselines/Q1-C
+  q2_artifacts: artifacts/baselines/Q2-C
+  c7_dir: real_attachments/C_efficiency_evolution
+
+# ----------------------------------------------------------------- 上游版本登记
+# 公共接口（§5）：Q2→Q3 损失预测器、Q1→Q2 配比预测器。
+upstream:
+  # Q2-C 的结论是主模型退回 Q2-B(rho=0)，故 Q3 使用 M1；kappa、rho 记为情景假设。
+  q2_model: M1
+  q2_predictor_file: loss_predictor.json
+  # Q2→Q3 的**可执行**接口（口径核验用；与上面的 JSON 描述符放在同一产物目录）
+  q2_code_file: predict_q2c_loss.py
+  q1_predictor_file: mixture_predictor.json
+  # Q2-C 里「M1(Q2-B) 主模型」的冻结参数来自 stage2_M1_staged（scaling_parameters.json）。
+  q2_param_stage: stage2_M1_staged
+
+# ----------------------------------------------------------------- 冻结的 Q2 主模型
+# L = E + A*N^(-alpha) + B*(D * Q^kappa * h(p))^(-beta)，rho = 0
+model:
+  fixed_params:
+    E: 1.689797562918097
+    A: 0.35398032067156865
+    alpha: 0.33997658189164076
+    B: 1.2403055835454702
+    beta: 0.2798781285456506
+  # kappa 情景：Q2-C 判定 kappa 未辨识（B1 无 Q 列、B8 与 B6/B7 矛盾），
+  # 故它只能作情景参数。none 即「无质量通道」，退回经典 M0。
+  kappa_scenarios:
+    none: 0.0                       # 无质量效应（M0 对照）
+    M1_staged: 0.8047071577351047   # Q2-C stage2_M1_staged（主情景）
+    M2_staged: 0.38210158532238303  # Q2-C stage2_M2_staged 的 kappa
+    boot_lo: 0.25755077629407275    # M2 分组 bootstrap 2.5%
+    boot_hi: 0.4107968096187216     # M2 分组 bootstrap 97.5%
+  kappa_primary: M1_staged
+  # 无 Q 列来源的基准质量约定（Q2-C 沿用，§2.4 第 5 条）。本问只作登记，不用于 Q 取值。
+  q_reference_convention: 1.0
+
+# ----------------------------------------------------------------- 预算与成本
+cost:
+  eta: 2.0e-4                    # 题给
+  # D*{(6+eta*l)*N + [g(Q)-g(Q0)]_+} <= C
+  # 注意：YAML 1.1 的浮点解析要求指数带符号，`1.0e7` 会被解析成**字符串**。
+  # 故此处一律写显式符号或十进制，避免"看起来是数字"的静默类型错误。
+  g_forms:
+    exponential: {gamma: 1.0e+7, lam: 6.0}
+    power:       {gamma: 5.0e+9, lam: 4.0}
+    logarithmic: {gamma: 2.0e+9, lam: 10.0}
+  # 主比较用题给参数的三种成本（§3.3）。可选「基准点成本/斜率校准对照」本轮不实施，
+  # 理由见报告结论边界（Q3-C 卡：可选细调不自动成为本轮任务）。
+
+# ----------------------------------------------------------------- 上下文情景
+# eta*l/6 的注意力份额：l_crit = 6/eta = 30000。C7 中某架构支持的最大长度不自动
+# 赋予其他架构；l 为「上下文能力情景」，并附有元数据对应的离散案例。
+context:
+  ell_scenarios: [2048, 4096, 8192, 32768, 131072]
+  ell_primary: 4096
+  c7_file: model_architecture_metadata.csv
+
+# ----------------------------------------------------------------- 预算情景
+budget:
+  C_scenarios: [1.0e+19, 1.0e+22, 1.0e+24]   # 题给三档
+  C_grid_log10: {min: 17.0, max: 26.0, n: 91} # 连续 log C 网格（观察变点）
+
+# ----------------------------------------------------------------- 质量取值区间
+# Q0 是基准语料质量；Q 的可行区间决定质量投入是否有意义。
+#   基线：Q0 固定（不依赖 p）
+#   情景：Q0 = Q(p)（随语料组成变化）——Q3-C 第 2 条要求单独列出
+quality:
+  q0_modes: [fixed_ref, mixture]   # fixed_ref = 基线；mixture = 关联情景
+  # 数据支持范围：附件 A 的质量坐标只覆盖 6 个已映射域，Q(p) 可达上界即 max_i q_i。
+  # 先在此范围内求解；再单独报告放宽到 Q2 预测器支持上界的外推。
+  q_supported_max: 0.4871620101591301
+  q_extended_max: 1.0
+  # 效应强度 omega（h = exp(-omega*Delta)）。Q2-C 的网格是 [0, 0.5, 1, 2, 5]；
+  # 因 h 的尺度 s 直接取 Q2-C 冻结的 scale_s（见 mixtures.frozen_scale），omega 的
+  # 含义才与 Q2-C 一致。物理上 h 关于 p 可分离且单调依赖 Q(p)，故 omega 只改变
+  # 效应幅度、不改变 argmax_p h（这一点由 verify.p_channel_invariance 数值核验）。
+  omega_scenarios: [0.0, 0.5, 1.0, 2.0]
+  omega_primary: 1.0
+  omega_note: "omega=0 即 Q2-B 零效应情景（h=1），作对照"
+
+# ----------------------------------------------------------------- 候选配比
+# 候选只从第一问训练信息与既定可信区域生成，不用最终检验 Loss 偷选（Q3-C 第 1 条）。
+mixtures:
+  delta: 0.05                 # 单纯形扰动步长（与 Q2-C 冻结值一致，保持口径可比）
+  trust_region: q1_support_p05_p95   # 可信区域 = Q1 训练支持 [p05, p95] 盒 ∩ 单纯形
+  trust_l1_radius: 0.60       # 附加 L1 半径（相对 p0），超出者标为外推
+  select_top_k: 10            # 由训练信息（第一问质量坐标）排序取改善/恶化各 K 个
+  # 第二泛函：纯配比偏离，不含质量解释（Q2-C 冻结的两个泛函之一，作对照）
+  functionals: [quality_linear, mixture_l1]
+
+# ----------------------------------------------------------------- 搜索
+search:
+  N_gross_grid: 201           # log N 粗网格
+  Q_grid: 101                 # Q 粗网格
+  refine_rounds: 4            # 局部加密轮数
+  refine_shrink: 5.0          # 每轮窗口收缩倍数
+  refine_points: 61           # 每轮每维格点数
+  # Q2-C 的数据支持范围（外推须显式标注）
+  N_support_B: [0.070542, 11.97]
+  D_support_B: [0.134, 600.0]
+  # 数值搜索边界：下界取 1e-4 B（远小于支持下界，用于观察边界命中），
+  # 上界 1e4 B（B10 大模型表最大 1e4 B，是外推情景的上限依据）。
+  N_search_B: [1.0e-4, 1.0e+4]
+  slsqp:
+    n_starts: 24              # 多起点（LHS），用于标注局部解
+    maxiter: 500
+    ftol: 1.0e-13
+
+# ----------------------------------------------------------------- 数值核验
+verify:
+  fd_rel_step: 1.0e-6         # 有限差分相对步长（仅用于核验解析导数）
+  fd_rel_tol: 1.0e-3
+  budget_rel_tol: 1.0e-9      # 成本残差容差
+  simplex_tol: 1.0e-9
+  # 结构性转移判据（预先定义，§3.4）
+  transition:
+    q_boundary_tol: 1.0e-6    # Q* 落在端点（Q0 或上界）的判定容差
+    share_seg_tol: 0.01       # 成本份额分段变化的相对容差
+    support_frac_tol: 0.02    # 配比支持集跨阈判定
+  grid_coarsen_factors: [2, 4]  # 用更粗网格复核「未发现转移」的稳健性
+  # 粗网格稳定性判据：结论 = (预测损失, Q* 状态)，只看这两项是否变化。
+  # N*、Q* 的**位置**只作诊断量报告——本模型的 L̂ 在最优点附近极平坦
+  # （候选间跨度仅 ~1e-3），要求位置也几乎不动会把"平坦谷底里挪了几步"误判为不稳定。
+  grid_l_rel_tol: 1.0e-6
+
+# ----------------------------------------------------------------- 输出
+outputs:
+  artifacts_dir: artifacts/baselines/Q3-C
+  report: reports/baselines/Q3-C.md

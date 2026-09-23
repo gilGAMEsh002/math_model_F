@@ -1,0 +1,7 @@
+﻿owner,role,file,resolved_root,sha256,exists,is_test_set
+Q1-C,q1,mixture_predictor.json,/tmp/opencode/q2_c,a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5,True,False
+Q1-C,q1,quality_domain_mapping.csv,/tmp/opencode/q2_c,ae71f47ca94324545e7bb108be5e453b070e684986e49a09057b75a9cb9f4f99,True,False
+Q2-C,q2,loss_predictor.json,/tmp/opencode/q2_c,729227647c542e953e9c569093457f22431f8a1678876e27450a927073a88fe1,True,False
+Q2-C,q2,mixture_transfer_scenarios.json,/tmp/opencode/q2_c,889eca60166c417445400a380fbf3423af90bbd923702460b3be6f431ae0b3cb,True,False
+Q2-C,q2,scaling_parameters.json,/tmp/opencode/q2_c,3498f69102e2216583b340901710258204f5ce55b6a89b7373b8fde69e196bed,True,False
+C7,c7,model_architecture_metadata.csv,/tmp/opencode/wt-c3,ee24622cb3a6334f08d72c9ea373be26d5e5585bb266367c5f66d77499112ffc,True,False

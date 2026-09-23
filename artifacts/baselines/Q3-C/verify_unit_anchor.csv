@@ -1,0 +1,2 @@
+﻿point,L_pred,expected,L_kappa0,kappa_degenerate_ok,old_wrong_unit_value,pass
+"N=1e9,D=1e11,Q=1,h=1",2.385578185266307,2.385578,2.385578185266307,True,1.691141,True
