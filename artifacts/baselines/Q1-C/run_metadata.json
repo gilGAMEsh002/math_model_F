@@ -1,0 +1,97 @@
+{
+  "baseline_id": "Q1-C",
+  "question": "Q1",
+  "description": "熵权质量分（与等权对照） + 随机森林配比回归（与线性对照）",
+  "run_command": "python src/baselines/Q1-C/run_all.py",
+  "run_utc": "2026-09-23T16:01:39Z",
+  "wall_seconds": 93.39156800000637,
+  "config_path": "D:\\26mathmodel\\q1-c\\configs\\baselines\\Q1-C.yaml",
+  "config_hash": "981ef9cf86aaffbf",
+  "seed": 20260923,
+  "git_rev": null,
+  "environment": {
+    "python": "3.11.6",
+    "executable": "D:\\Software\\Python\\python.exe",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "sklearn": "1.5.2",
+    "scipy": "1.17.1",
+    "pyarrow": "24.0.0"
+  },
+  "upstream": {
+    "preprocessed_dir": "D:\\26mathmodel\\q1-c\\artifacts\\q1\\preprocessed",
+    "version": "step1-freeze-A1-2026-09-23",
+    "note": "复用上游冻结的标准化质量矩阵 Z∈[0,1]^(N×22)；未重新读取原始 JSONL"
+  },
+  "input_hashes_sha256": {
+    "preprocessed/A1_processed.parquet": "334ceab3446b0c3a15b251f15f2111b631ba799e94a206fcc8920ef9eb8fb5d3",
+    "preprocessed/A2_processed.parquet": "92e6599f1751cfb9a8aa11cb184f4a3abc5228705255dd9c1e91bd68103750e5",
+    "preprocessed/A3_processed.parquet": "149d6c854851c09d6bff9542f4462b8514bccc7a5c3caa91f8cd4f391f3c6195",
+    "preprocess_params": "2cfba720f5973ccd998e0b9d6307c74fa890615a193d39d1b7e999853970869c",
+    "preprocess_report": "6323f6c6dcb6c3971fde3e04454df969734e47cd9f35230e44bb4ceb6747fa6e",
+    "domain_mapping_guide.csv": "4a4479f41b9f46116e688cd0c13ccdad4e687192fc1a38c4add690771ebff480",
+    "regmix/train_mixture_1m.csv": "04a32ef4ab594376bf90e11404c033668f887c351d6a03ad3744824c7296a2d8",
+    "regmix/train_pile_loss_1m.csv": "49a959aa07ce5c20831d5abe3a7896ff0cd90a398bd407c8913fd5588be0465a",
+    "regmix/test_mixture_1m.csv": "197267b7d6f15367e2f46c881e564c35b0d34e51b1754bb09d07e650cf8e1ce8",
+    "regmix/test_pile_loss_1m.csv": "e027b1674f60140a65a87b5e4a59ab5f09dc33e8fd02c080682678074b160f53",
+    "regmix/test_mixture_60m.csv": "197267b7d6f15367e2f46c881e564c35b0d34e51b1754bb09d07e650cf8e1ce8",
+    "regmix/test_pile_loss_60m.csv": "8fe69d59ab7dd4fae4736459f4265ec93c7ed1ad1eca407346052560edc72b5b",
+    "regmix/test_mixture_1B.csv": "dd38052949c0a5f84165bdcb3ae3a331c7f07efd9bb83848bd579dfc4ce75a2c",
+    "regmix/test_pile_loss_1B.csv": "b2451e2b7fa15400688edc39e4d32f21ccbe0fb356e07d62a0e9ccddf247114f",
+    "regmix/est_mixture_10b.csv": "880c7ca1ebef470422e2b93d9bfcd0976db7db4e34ea57047518d95fe43327d1",
+    "regmix/est_pile_loss_10b.csv": "226457581f3f59e15e44d8f72dee31fa7492c821699725fef47627d82cf34c0d",
+    "regmix/est_mixture_70b.csv": "880c7ca1ebef470422e2b93d9bfcd0976db7db4e34ea57047518d95fe43327d1",
+    "regmix/est_pile_loss_70b.csv": "d0883b2d1a44da9386a6d629a3623c724ee291cba1ac87b6d1079e5377307682",
+    "config_yaml": "5e1a061d750ee2fd20e88e06b235b024c070df25941e1907bc77626c531fd429"
+  },
+  "sample_sizes": {
+    "quality_A1": 51230,
+    "quality_A2": 17523,
+    "quality_A3": 203752,
+    "quality_merged_dedup": 261086,
+    "quality_dev": 25615,
+    "quality_verify": 25615,
+    "mixture_train": 512,
+    "same_scale_1m": 256,
+    "cross_scale_60m": 256,
+    "cross_scale_1B": 64,
+    "est_10b": 63,
+    "est_70b": 63
+  },
+  "metric_definitions": {
+    "rmse": "sqrt(mean((y-yhat)^2))",
+    "mae": "mean(|y-yhat|)",
+    "r2": "1 - SS_res/SS_tot（对留出集计算，可为负）",
+    "spearman": "候选集内真实与预测 Loss 的秩相关",
+    "topk_hit": "预测最优是否落入真实前 k",
+    "regret": "预测最优配方的真实 Loss - 候选集真实最小 Loss",
+    "composite": "13 个目标等权平均后的综合 Loss"
+  },
+  "interval_methods": {
+    "domain_quality_ci95": "各域内文档独立的均值的正态近似区间（非 bootstrap，非情景包络）",
+    "no_prediction_interval": "本 baseline 不输出预测区间；外推情景包络属第二问范围"
+  },
+  "posthoc_diagnostics": {
+    "note": "第三部分为事后诊断，不参与选参、不接触最终测试集调参；用于检验结论对复合口径与配比扰动的稳健性（报告 §6.3.1/§6.3.2/§6.5）",
+    "artifacts": [
+      "mixture_posthoc_target_linearity.csv",
+      "mixture_posthoc_composite_sensitivity.csv",
+      "mixture_perturbation_calibration.csv",
+      "mixture_selection_stability.csv"
+    ],
+    "perturbation_input_displacement": "以各候选配比自身为中心构造 Dirichlet(α=p·conc)，故浓度可换算为输入空间位移；标定见 calibration 表"
+  },
+  "extrapolation_flags": {
+    "real_holdout": [
+      "same_scale_1m",
+      "cross_scale_60m",
+      "cross_scale_1B"
+    ],
+    "estimated_or_semi_synthetic": [
+      "est_10b",
+      "est_70b"
+    ]
+  },
+  "artifacts_dir": "D:\\26mathmodel\\q1-c\\artifacts\\baselines\\Q1-C"
+}
