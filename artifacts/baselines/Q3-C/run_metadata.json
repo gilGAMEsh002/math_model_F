@@ -1,37 +1,37 @@
 {
   "baseline_id": "Q3-C",
   "question": "Q3",
-  "generated_utc": "2026-09-23T14:33:13Z",
+  "generated_utc": "2026-09-23T15:50:22Z",
   "quick_mode": false,
-  "config_path": "D:\\26mathmodel\\q3_c\\configs\\baselines\\Q3-C.yaml",
+  "config_path": "/tmp/opencode/wt-c3/configs/baselines/Q3-C.yaml",
   "config_hash": "e9bf4f675e3b8003",
-  "source_hash": "3b8eabdc28032119",
+  "source_hash": "074f04bd49cc32c7",
   "seed": 20260923,
   "env": {
-    "python": "3.11.6",
-    "executable": "D:\\Software\\Python\\python.exe",
-    "platform": "Windows-10-10.0.26200-SP0",
-    "numpy": "2.4.6",
+    "python": "3.14.4",
+    "executable": "/usr/bin/python3",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "numpy": "2.5.1",
     "pandas": "3.0.3",
-    "scipy": "1.17.1",
-    "sklearn": "1.5.2",
-    "pyarrow": "24.0.0",
+    "scipy": "1.18.1",
+    "sklearn": null,
+    "pyarrow": "25.0.0",
     "yaml": "6.0.3"
   },
-  "git_rev_q3c_workspace": null,
-  "git_rev_upstream_repo": "e35bf06f506cf3e7a5fc93b06e8a77fa39a8c1f3",
+  "git_rev_q3c_workspace": "70c0accac07a9be4fe67b81d38c7a4d0af420403",
+  "git_rev_upstream_repo": null,
   "roots": {
-    "project_root": "D:\\26mathmodel\\q3_c",
-    "q1_root": "D:\\26mathmodel\\math_model_F",
-    "q2_root": "D:\\26mathmodel\\q2_c",
-    "c7_root": "D:\\26mathmodel\\math_model_F"
+    "project_root": "/tmp/opencode/wt-c3",
+    "q1_root": "/tmp/opencode/q2_c",
+    "q2_root": "/tmp/opencode/q2_c",
+    "c7_root": "/tmp/opencode/wt-c3"
   },
   "upstream_files_sha256": {
-    "mixture_predictor.json": "0db465a076c908797b715a6126fff73cbe168d391024944589fedc3eee4b8994",
-    "quality_domain_mapping.csv": "02047bcd54d076e248c4bd413ba255e5270662e0058a3b8ee4e2d047a2c3a97c",
-    "loss_predictor.json": "6cbc303e992267c724ee8f91d813995b9c465d79828a0d94da9f2fc9c057cee1",
-    "mixture_transfer_scenarios.json": "564f7424ce4f5447b76880b1e9ab681e4c91a8152d8c8b25e9ccd86444227be0",
-    "scaling_parameters.json": "47b57f8416591114998b1939f21c84e41524b0e1a634806a6cff013a825bb8e5",
+    "mixture_predictor.json": "a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5",
+    "quality_domain_mapping.csv": "ae71f47ca94324545e7bb108be5e453b070e684986e49a09057b75a9cb9f4f99",
+    "loss_predictor.json": "729227647c542e953e9c569093457f22431f8a1678876e27450a927073a88fe1",
+    "mixture_transfer_scenarios.json": "889eca60166c417445400a380fbf3423af90bbd923702460b3be6f431ae0b3cb",
+    "scaling_parameters.json": "3498f69102e2216583b340901710258204f5ce55b6a89b7373b8fde69e196bed",
     "model_architecture_metadata.csv": "ee24622cb3a6334f08d72c9ea373be26d5e5585bb266367c5f66d77499112ffc"
   },
   "upstream_versions": {
@@ -62,37 +62,37 @@
     {
       "stage": "候选配比枚举",
       "n_in": 17,
-      "n_out": 208,
+      "n_out": 207,
       "note": "仅用 p0 / 可信区域 / 第一问质量坐标"
     },
     {
       "stage": "候选筛选（廉价网格）",
-      "n_in": 3744,
-      "n_out": 22464,
+      "n_in": 3726,
+      "n_out": 22356,
       "note": "每个候选在每个离散情景下做一次粗搜索"
     },
     {
       "stage": "逐候选 (N,Q) 精确搜索",
-      "n_in": 1890,
+      "n_in": 1260,
       "n_out": 720,
       "note": "复用 Q3-B 式预算/成本内核；每点精确成本"
     }
   ],
   "counts": {
-    "candidates": 208,
-    "finalists": 21,
+    "candidates": 207,
+    "finalists": 14,
     "full_cells": 90,
     "allocations": 720,
     "budget_path_rows": 16380,
-    "transitions": 182
+    "transitions": 214
   },
   "timings_s": {
-    "upstream": 0.01,
-    "candidates": 12.35,
-    "screening": 11.61,
-    "search": 73.02,
-    "budget_paths": 70.27,
-    "slsqp": 649.17
+    "upstream": 0.02,
+    "candidates": 16.5,
+    "screening": 10.63,
+    "search": 66.21,
+    "budget_paths": 65.23,
+    "slsqp": 671.72
   },
   "caveats": [
     "kappa、rho 被 Q2-C 判定为未辨识，本问以情景网格处理；主情景取 stage2_M1_staged 的 kappa。",
@@ -103,6 +103,7 @@
   ],
   "artifacts": [
     "all_candidate_evaluations.csv",
+    "all_candidate_evaluations_outside_l1.csv",
     "budget_paths.csv",
     "c7_discrete_cases.csv",
     "c7_grounding.csv",
@@ -110,7 +111,9 @@
     "cost_constraint_checks.csv",
     "enum_vs_slsqp.csv",
     "finalists.csv",
+    "kappa_ablation.csv",
     "optimal_allocations.csv",
+    "optimal_allocations_outside_l1.csv",
     "optimization_scenarios.csv",
     "q3_report.md",
     "run_log.txt",
@@ -131,6 +134,7 @@
     "verify_input_audit.csv",
     "verify_p_channel.csv",
     "verify_simplex.csv",
+    "verify_unit_anchor.csv",
     "verify_upstream_consistency.csv"
   ]
 }

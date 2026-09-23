@@ -1,12 +1,13 @@
 ﻿check,pass,max_violation,tolerance,note
-budget_tight_and_consistent,True,1.3421772800000001e-16,1e-09,D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差
-cost_shares_sum_to_one,True,3.3306690738754696e-16,1e-09,训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差
-attn_share_equals_eta_l_over_6,True,1.7763568394002505e-15,1e-12,C_attn/C_train = eta*l/6
+budget_tight_and_consistent,True,2.097152e-16,1e-09,D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差
+cost_shares_sum_to_one,True,2.220446049250313e-16,1e-09,训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差
+attn_share_equals_eta_l_over_6,True,8.881784197001252e-16,1e-12,C_attn/C_train = eta*l/6
 Q_within_bounds,True,0.0,1e-09,Q0 <= Q <= q_hi
-simplex_feasible,True,0.02806422347889173,1e-09,sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规
-analytic_gradient_matches_fd,True,7.573620212800035e-07,0.001,解析 dL/dN、dL/dQ 与中心差分一致
+simplex_feasible,True,2.220446049250313e-16,1e-09,sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规
+physical_unit_anchor,True,1.8526630674031708e-07,1e-05,"物理单位锚点：N=1e9,D=1e11,Q=1,h=1 -> 2.385578（旧错误单位 1.691141）；该检查独立于代数相同的数值-解析对照，防止上下游同时误解单位"
+analytic_gradient_matches_fd,True,8.406388955749468e-07,0.001,解析 dL/dN、dL/dQ 与差分一致；Q=Q0 处按可行域取右导数 g'(Q0)
 upstream_predictor_agrees,True,0.0,1e-12,"与 predict_q2c_loss.py(M1, rho=0) 逐点一致"
-grid_coarsening_stable,True,8.427875373391813e-13,1e-06,粗网格下结论不变：相对损失变化（dL 除以 L 取绝对值）在容差内，且 Q* 状态（下界/内部/上界）相同；N*/Q* 位置只作诊断量
+grid_coarsening_stable,True,2.959775711074871e-10,1e-06,粗网格下结论不变：相对损失变化（dL 除以 L 取绝对值）在容差内，且 Q* 状态（下界/内部/上界）相同；N*/Q* 位置只作诊断量
 p_channel_invariant_argminL_eq_argmaxh,True,0.0,0.0,argmin_p L 恒等于 argmax_p h（h 可分离的必然后果），故 p* 与预算无关
 argmax_h_eq_argmaxQ_for_quality_linear,True,0.0,0.0,quality_linear 的 Δ 是 Q 的仿射减函数，故 argmax h 恒等于 argmax Q；mixture_l1 的 h 在 p0 取最大，二者本就不同（非缺陷）。仅对 h 可辨识（ω>0）的单元判定：ω=0 时 h 恒为 1，任何候选都是 argmax，该单元下 p 不可辨识
 no_final_test_set_read,True,0.0,0.0,输入审计中不含任何最终检验/估算文件

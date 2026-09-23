@@ -261,37 +261,44 @@ def main() -> int:
     fin_tags.update(cand.nsmallest(k_sel, "Q")["candidate"])
     fin_tags.update(cand.loc[cand["source"].astype(str).str.contains("analytic"), "candidate"])
     fin_tags.update(cand.loc[cand["is_p0"], "candidate"])
-    finals = cand[cand["candidate"].isin(fin_tags)].reset_index(drop=True)
-    save_table(finals, cfg, "finalists.csv")
+    finals_all = cand[cand["candidate"].isin(fin_tags)].reset_index(drop=True)
+    save_table(finals_all, cfg, "finalists.csv")
+    # P0 修复：主最优只在可信区域（L1 半径）内的终选候选上竞争；
+    # 区域外候选（如 LP 顶点）单列为压力测试，不参与主表排名。
+    finals = finals_all[finals_all["in_trust_l1"]].reset_index(drop=True)
+    finals_out = finals_all[~finals_all["in_trust_l1"]].reset_index(drop=True)
     ctx["finals"] = finals
-    log(f"[4] 终选候选 {len(finals)} 个：{sorted(fin_tags)}")
+    ctx["finals_out"] = finals_out
+    log(f"[4] 终选候选 {len(finals_all)} 个（可信区域内 {len(finals)}，区域外 {len(finals_out)}）："
+        f"{sorted(fin_tags)}")
 
     full_cells = cells_of(cfg, q0_ref=q0_ref)
-    Pf = finals[cols].to_numpy(float)
-    alloc = []
-    alloc_all = []                       # 每个 (情景, 终选候选) 的完整评估，供不变性核验
-    with Timer() as t4:
+
+    def solve_finalists(sub: pd.DataFrame):
+        """对给定终选子集在每个情景下取最小 L，返回 (最优表, 逐候选评估表)。"""
+        Psub = sub[cols].to_numpy(float)
+        alloc, alloc_all = [], []
         for f in functionals:
             for om in omegas:
-                hv = h_of_mixture(Pf, p0, qmap, cols, f, om, s_by[f])
+                hv = h_of_mixture(Psub, p0, qmap, cols, f, om, s_by[f])
                 for cell in full_cells:
                     best = None
-                    for i in range(len(finals)):
-                        Q0i = q0_ref if cell["q0_mode"] == "fixed_ref" else float(finals["Q"].iloc[i])
+                    for i in range(len(sub)):
+                        Q0i = q0_ref if cell["q0_mode"] == "fixed_ref" else float(sub["Q"].iloc[i])
                         r = search_fixed_p(model, float(hv[i]), Q0i, cell["cost_form"],
                                            cell["C"], cell["ell"], cell["kappa"],
                                            Q0i, q_hi, cfg)
                         r.update({"functional": f, "omega": om, "C": cell["C"],
                                   "cost_form": cell["cost_form"], "ell": cell["ell"],
                                   "q0_mode": cell["q0_mode"], "kappa": cell["kappa"],
-                                  "candidate": finals["candidate"].iloc[i],
-                                  "aliases": finals["aliases"].iloc[i],
-                                  "source": finals["source"].iloc[i],
-                                  "trust_status": finals["trust_status"].iloc[i],
-                                  "in_trust_box": bool(finals["in_trust_box"].iloc[i]),
-                                  "in_trust_l1": bool(finals["in_trust_l1"].iloc[i]),
+                                  "candidate": sub["candidate"].iloc[i],
+                                  "aliases": sub["aliases"].iloc[i],
+                                  "source": sub["source"].iloc[i],
+                                  "trust_status": sub["trust_status"].iloc[i],
+                                  "in_trust_box": bool(sub["in_trust_box"].iloc[i]),
+                                  "in_trust_l1": bool(sub["in_trust_l1"].iloc[i]),
                                   "h_true": float(hv[i]), "Q0": Q0i,
-                                  "Q_cand": float(finals["Q"].iloc[i])})
+                                  "Q_cand": float(sub["Q"].iloc[i])})
                         alloc_all.append({k: v for k, v in r.items()
                                           if k not in ("N", "D")} |
                                          {"N_B": r["N"] / 1e9, "D_B": r["D"] / 1e9})
@@ -305,10 +312,16 @@ def main() -> int:
                     best["N_B"] = best["N"] / 1e9
                     best.pop("D", None); best.pop("N", None)
                     best["L_pred"] = best.pop("L")
-                    win = finals.index[finals["candidate"] == best["candidate"]][0]
-                    best.update({c: float(finals[c].iloc[win]) for c in cols})
+                    win = sub.index[sub["candidate"] == best["candidate"]][0]
+                    best.update({c: float(sub[c].iloc[win]) for c in cols})
                     alloc.append(best)
-    alloc_df = pd.DataFrame(alloc)
+        return pd.DataFrame(alloc), pd.DataFrame(alloc_all)
+
+    with Timer() as t4:
+        alloc_df, alloc_all_df = solve_finalists(finals)
+        alloc_out_df = pd.DataFrame()
+        if len(finals_out):
+            alloc_out_df, alloc_out_all_df = solve_finalists(finals_out)
     # 列顺序：情景 → 最优配比标识 → 资源 → 成本 → 状态
     front = ["functional", "omega", "C", "cost_form", "ell", "q0_mode", "kappa",
              "candidate", "source", "trust_status", "in_trust_box", "in_trust_l1",
@@ -316,13 +329,19 @@ def main() -> int:
     rest = [c for c in alloc_df.columns if c not in front]
     alloc_df = alloc_df[front + rest]
     save_table(alloc_df, cfg, "optimal_allocations.csv")
-    alloc_all_df = pd.DataFrame(alloc_all)
     save_table(alloc_all_df, cfg, "all_candidate_evaluations.csv")
+    if len(alloc_out_df):
+        save_table(alloc_out_df, cfg, "optimal_allocations_outside_l1.csv")
+        save_table(alloc_out_all_df, cfg, "all_candidate_evaluations_outside_l1.csv")
     ctx["alloc"] = alloc_df
     ctx["alloc_all"] = alloc_all_df
-    log(f"[4] 全情景精确求解：{len(full_cells)} 个情景 x {len(finals)} 个终选 x "
+    ctx["alloc_out"] = alloc_out_df
+    log(f"[4] 全情景精确求解（可信区域内）：{len(full_cells)} 个情景 x {len(finals)} 个终选 x "
         f"{len(functionals)} 泛函 x {len(omegas)} 个 omega = {len(alloc_df)} 个最优分配"
         f"（完整逐候选评估 {len(alloc_all_df)} 行已留存）")
+    if len(alloc_out_df):
+        log(f"    区域外压力测试（不参与主表排名）：{len(finals_out)} 个候选 -> "
+            f"{len(alloc_out_df)} 行，见 optimal_allocations_outside_l1.csv")
     flow("逐候选 (N,Q) 精确搜索", len(finals) * len(full_cells),
          len(alloc_df), "复用 Q3-B 式预算/成本内核；每点精确成本")
 
@@ -332,6 +351,47 @@ def main() -> int:
     ctx["p_winners"] = win_by_cell
     for (f, om), tags in win_by_cell.items():
         log(f"    [{f} | omega={om}] 各情景最优配比集合 = {tags}")
+
+    # ================================================================ 4b. κ 消融（真实运行）
+    # 旧核心表只含 kappa_primary 一个值，配置列出的其他 κ 并未真正跑过。
+    # 这里对全部 κ 情景（含 none=0）在代表情景上真实重算，输出可复核对照表。
+    kab_cells = [{"C": float(cfg["budget"]["C_scenarios"][1]),
+                  "cost_form": form, "ell": int(cfg["context"]["ell_primary"]),
+                  "q0_mode": q0m}
+                 for form in cfg["cost"]["g_forms"]
+                 for q0m in cfg["quality"]["q0_modes"]]
+    f_pri_k = "quality_linear" if "quality_linear" in functionals else functionals[0]
+    Pk = finals[cols].to_numpy(float)
+    hv_k = h_of_mixture(Pk, p0, qmap, cols, f_pri_k, om_pri, s_by[f_pri_k])
+    kab = []
+    with Timer() as t4b:
+        for kname, kval in cfg["model"]["kappa_scenarios"].items():
+            for cell in kab_cells:
+                best = None
+                for i in range(len(finals)):
+                    Q0i = q0_ref if cell["q0_mode"] == "fixed_ref" else float(finals["Q"].iloc[i])
+                    r = search_fixed_p(model, float(hv_k[i]), Q0i, cell["cost_form"],
+                                       cell["C"], cell["ell"], float(kval),
+                                       Q0i, q_hi, cfg)
+                    if best is None or r["L"] < best["L"]:
+                        best = {**r, "candidate": finals["candidate"].iloc[i],
+                                "Q0": Q0i, "h": float(hv_k[i])}
+                kab.append({"kappa_name": kname, "kappa": float(kval),
+                            "functional": f_pri_k, "omega": om_pri,
+                            "C": cell["C"], "cost_form": cell["cost_form"],
+                            "ell": cell["ell"], "q0_mode": cell["q0_mode"],
+                            "candidate": best["candidate"],
+                            "N_B": best["N"] / 1e9, "D_B": best["D"] / 1e9,
+                            "Q": best["Q"], "Q0": best["Q0"], "h": best["h"],
+                            "L_pred": best["L"],
+                            "regime": classify_q_regime(
+                                best["Q"], best["Q0"], q_hi,
+                                float(cfg["verify"]["transition"]["q_boundary_tol"]))})
+    kab_df = pd.DataFrame(kab)
+    save_table(kab_df, cfg, "kappa_ablation.csv")
+    ctx["kappa_ablation"] = kab_df
+    log(f"[4b] κ 消融（真实运行）：{kab_df['kappa_name'].nunique()} 个 κ 情景 x "
+        f"{len(kab_cells)} 个代表情景 = {len(kab_df)} 行，见 kappa_ablation.csv")
 
     # 核心核验：精确解层面 argmin L ≡ argmax h（⇒ p* 与预算/长度/成本/κ/ω 无关）
     v_inv = V.cell_ranking(alloc_all_df, ["functional", "omega", "C", "cost_form",
@@ -345,6 +405,7 @@ def main() -> int:
         f"候选间 L 跨度中位数 {v_inv['L_spread'].median():.3e}")
 
     # ================================================================ 5. 预算路径
+    Pf = finals[cols].to_numpy(float)   # 可信区域内终选的配比矩阵
     paths = []
     with Timer() as t5:
         for f in functionals:
@@ -485,17 +546,24 @@ def main() -> int:
     # ================================================================ 8. 核验
     log("[8] 数值核验")
     v_deriv = V.derivative_check(model, cfg, [
-        {"N": 1e9, "Q": 0.3, "h": 1.0, "Q0": q0_ref, "form": "power",
+        # Q=q0_ref 处检验右导数（g'(Q0)），避免跨拐点的中心差分
+        {"N": 1e9, "Q": q0_ref, "h": 1.0, "Q0": q0_ref, "form": "power",
          "C": 1e22, "ell": 4096, "kappa": kappa},
-        {"N": 1e10, "Q": 0.45, "h": 1.2, "Q0": q0_ref, "form": "exponential",
+        {"N": 1e10, "Q": 0.6, "h": 1.2, "Q0": q0_ref, "form": "exponential",
          "C": 1e24, "ell": 32768, "kappa": kappa},
-        {"N": 1e11, "Q": 0.2, "h": 0.8, "Q0": q0_ref, "form": "logarithmic",
+        {"N": 1e11, "Q": 0.9, "h": 0.8, "Q0": q0_ref, "form": "logarithmic",
          "C": 1e19, "ell": 2048, "kappa": kappa},
-    ] + ([{"N": 1e10, "Q": 0.35, "h": 1.0, "Q0": q0_ref, "form": "power",
+    ] + ([{"N": 1e10, "Q": 0.6, "h": 1.0, "Q0": q0_ref, "form": "power",
            "C": 1e22, "ell": 4096, "kappa": 0.0}] if kappa != 0.0 else []))
     save_table(v_deriv, cfg, "verify_derivatives.csv")
     log(f"    解析梯度 vs 有限差分：{int(v_deriv['pass'].sum())}/{len(v_deriv)} 通过"
         f"（最大相对偏差 {v_deriv[['dL_dN_rel_err','dL_dQ_rel_err']].to_numpy().max():.2e}）")
+
+    v_anchor = V.unit_anchor_check(model, cfg, kappa)
+    save_table(v_anchor, cfg, "verify_unit_anchor.csv")
+    log(f"    物理单位锚点：L(N=1e9,D=1e11,Q=1)={v_anchor['L_pred'].iloc[0]:.6f} "
+        f"（应为 2.385578，旧错误单位 1.691141）-> "
+        f"{'通过' if bool(v_anchor['pass'].iloc[0]) else '未通过'}")
 
     v_cons = V.constraint_check(model, cfg, alloc_df)
     save_table(v_cons, cfg, "verify_constraints.csv")
@@ -556,7 +624,8 @@ def main() -> int:
     if segs:
         save_table(pd.concat(segs, ignore_index=True), cfg, "share_segments.csv")
 
-    checks = build_checks(cfg, v_cons, v_simp, v_deriv, v_up, v_stab, v_inv, v_in)
+    checks = build_checks(cfg, v_cons, v_simp, v_deriv, v_up, v_stab, v_inv, v_in,
+                          v_anchor=v_anchor)
     save_table(checks, cfg, "cost_constraint_checks.csv")
     ctx["checks"] = checks
     log(f"[8] 检查表：{int(checks['pass'].sum())}/{len(checks)} 项通过"
@@ -655,7 +724,7 @@ def _share_sum_residual(v_cons) -> float:
 
 
 def build_checks(cfg: dict, v_cons, v_simp, v_deriv, v_up, v_stab, v_inv,
-                 v_in) -> pd.DataFrame:
+                 v_in, v_anchor=None) -> pd.DataFrame:
     """成本与约束检查表。**独立成函数**，使 `--report-only` 能用同一份代码从
     verify_*.csv 重建它——否则报告里这张表会停留在旧口径，与产物脱钩。
 
@@ -691,11 +760,18 @@ def build_checks(cfg: dict, v_cons, v_simp, v_deriv, v_up, v_stab, v_inv,
          "tolerance": float(cfg["verify"]["simplex_tol"]),
          "note": ("sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 "
                   "in_trust_box=True 的候选要求，盒外对照点按设计不计违规")},
+        {"check": "physical_unit_anchor",
+         "pass": (bool(v_anchor["pass"].iloc[0]) if v_anchor is not None and len(v_anchor) else False),
+         "max_violation": (float(abs(float(v_anchor["L_pred"].iloc[0]) - 2.385578))
+                           if v_anchor is not None and len(v_anchor) else float("nan")),
+         "tolerance": 1e-5,
+         "note": ("物理单位锚点：N=1e9,D=1e11,Q=1,h=1 -> 2.385578（旧错误单位 1.691141）；"
+                  "该检查独立于代数相同的数值-解析对照，防止上下游同时误解单位")},
         {"check": "analytic_gradient_matches_fd", "pass": bool(v_deriv["pass"].all()),
          "max_violation": float(v_deriv[["dL_dN_rel_err", "dL_dQ_rel_err"]]
                                 .to_numpy().max()),
          "tolerance": float(cfg["verify"]["fd_rel_tol"]),
-         "note": "解析 dL/dN、dL/dQ 与中心差分一致"},
+         "note": "解析 dL/dN、dL/dQ 与差分一致；Q=Q0 处按可行域取右导数 g'(Q0)"},
         {"check": "upstream_predictor_agrees", "pass": bool(v_up["max_rel_diff"].iloc[0] < 1e-12),
          "max_violation": float(v_up["max_rel_diff"].iloc[0]), "tolerance": 1e-12,
          "note": "与 predict_q2c_loss.py(M1, rho=0) 逐点一致"},
@@ -748,18 +824,23 @@ def rebuild_ctx(cfg: dict) -> dict:
 
     cand = rd("candidates.csv")
     alloc = rd("optimal_allocations.csv")
+    _finals_all = rd("finalists.csv")
+    _finals_main = (_finals_all[_finals_all["in_trust_l1"]].reset_index(drop=True)
+                    if "in_trust_l1" in _finals_all.columns else _finals_all)
     # LP 解析参照不单独落盘：它等价于 candidates.csv 里那一行（并已核对 Q 上界），
     # 故从产物取回，而不是重跑一次 LP——保证报告数字与产物逐位一致。
     lpv = cand[cand["candidate"] == "lp_vertex_box"]
     lp = ({"q_max": float(lpv["Q"].iloc[0]),
            "p": [float(lpv[c].iloc[0]) for c in cols]} if len(lpv) else {})
     v_inv = rd("verify_p_channel.csv")
+    _anchor_path = os.path.join(adir, "verify_unit_anchor.csv")
+    v_anchor = (rd("verify_unit_anchor.csv") if os.path.isfile(_anchor_path) else None)
     # 检查表由 verify_*.csv 重建（同 build_checks），否则改口径后这张表会停留在旧版。
     checks = build_checks(cfg, rd("verify_constraints.csv"), rd("verify_simplex.csv"),
                           rd("verify_derivatives.csv"),
                           rd("verify_upstream_consistency.csv"),
                           rd("verify_grid_stability.csv"), v_inv,
-                          rd("verify_input_audit.csv"))
+                          rd("verify_input_audit.csv"), v_anchor=v_anchor)
     save_table(checks, cfg, "cost_constraint_checks.csv")
     # source_hash 取自 run_metadata.json（**产出这批产物的代码**），而非当前磁盘上的源码：
     # `--report-only` 恰恰常用于"改了措辞但数值未动"的场合，此时重新计算会把**现在**的
@@ -782,8 +863,14 @@ def rebuild_ctx(cfg: dict) -> dict:
         "omega_primary": float(cfg["quality"]["omega_primary"]),
         "kappa": float(cfg["model"]["kappa_scenarios"][k_pri]), "kappa_name": k_pri,
         "q0_ref": q0_ref, "q_hi": float(cfg["quality"]["q_extended_max"]),
-        "cand": cand, "finals": rd("finalists.csv"), "alloc": alloc,
+        "cand": cand, "finals": _finals_main, "finals_all": _finals_all, "alloc": alloc,
         "alloc_all": None, "paths": rd("budget_paths.csv"),
+        "alloc_out": (rd("optimal_allocations_outside_l1.csv")
+                      if os.path.isfile(os.path.join(adir, "optimal_allocations_outside_l1.csv"))
+                      else pd.DataFrame()),
+        "kappa_ablation": (rd("kappa_ablation.csv")
+                           if os.path.isfile(os.path.join(adir, "kappa_ablation.csv"))
+                           else pd.DataFrame()),
         "trans": rd("transition_candidates.csv"), "checks": checks,
         "v_inv": v_inv, "v_in": rd("verify_input_audit.csv"),
         "xchk": rd("enum_vs_slsqp.csv"), "slsqp_clusters": rd("slsqp_clusters.csv"),

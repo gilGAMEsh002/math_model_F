@@ -27,6 +27,11 @@ from __future__ import annotations
 
 import numpy as np
 
+# N、D 在成本端以「个」记账，但 Q2-C 的 A、B 系数以「十亿参数 / 十亿 Token」坐标拟合。
+# 损失端必须换算 n=N/1e9、d=D/1e9，否则 N^(-alpha)、D^(-beta) 会被放大 (1e9)^alpha 倍量级，
+# 把 Loss 压到不可约项附近（物理锚点 N=1e9,D=1e11,Q=1 应为 2.385578，而非 1.691141）。
+UNIT = 1e9
+
 # 成本函数形式：题给 g(Q) 与其导数 g'(Q) = c'(Q)（c = g(Q)-g(Q0)，常数项导数为 0）
 _G_FORMS = {
     "exponential":  ("gamma * exp(lam*Q)",        lambda g, l, Q: g * np.exp(l * Q),
@@ -79,12 +84,15 @@ class Q3Model:
 
     # ------------------------------------------------------------- 损失
     def predict(self, N, D, Q, h=1.0, kappa=0.0):
-        """M1 原始形式；dgrp 偏移不适用（Q3 不在质量实验族内），故不含 delta。"""
+        """M1 原始形式；dgrp 偏移不适用（Q3 不在质量实验族内），故不含 delta。
+
+        N、D 为实际个数；内部换算为 Q2-C 的十亿坐标（n=N/1e9、d=D/1e9）。
+        """
         N = np.asarray(N, float); D = np.asarray(D, float)
         Q = np.asarray(Q, float); h = np.asarray(h, float)
         return (self.E
-                + self.A * np.power(N, -self.alpha)
-                + self.B * np.power(D * np.power(Q, kappa) * h, -self.beta))
+                + self.A * np.power(N / UNIT, -self.alpha)
+                + self.B * np.power(D / UNIT * np.power(Q, kappa) * h, -self.beta))
 
     def D_from_budget(self, N, Q, Q0, form: str, C: float, ell: float):
         """消去 D：D = C / u（预算紧约束）。返回 (D, u, c)。"""
@@ -98,7 +106,10 @@ class Q3Model:
                        kappa: float, need_grad: bool = False):
         """给定 (N,Q,p→h) 与预算，返回消去 D 后的预测 Loss（及可选解析梯度）。
 
-        返回 dict：L, D, u, c, dL_dN, dL_dQ（need_grad 时）。
+        成本端用实际个数：D = C/u, u = aN + c(Q)；损失端换算入十亿坐标
+        n=N/1e9、d=D/1e9，T = d*Q^kappa*h。可行域为 Q>=Q0，故 dL/dQ 取右导数。
+
+        返回 dict：L, D, u, c, T, dL_dN, dL_dQ（need_grad 时）。
         """
         N = np.atleast_1d(np.asarray(N, float))
         Q = np.atleast_1d(np.asarray(Q, float))
@@ -107,15 +118,17 @@ class Q3Model:
         c = self.quality_cost(Q, Q0, form)
         u = a * N + c
         D = C / u
-        T = C * np.power(Q, kappa) * h / u
-        L = self.E + self.A * np.power(N, -self.alpha) + self.B * np.power(T, -self.beta)
+        n = N / UNIT
+        T = D / UNIT * np.power(Q, kappa) * h
+        L = self.E + self.A * np.power(n, -self.alpha) + self.B * np.power(T, -self.beta)
         out = {"L": L, "D": D, "u": u, "c": c, "T": T}
         if need_grad:
-            # dL/dN = -alpha*A*N^(-alpha-1) + beta*a*B*T^(-beta)/u
-            dL_dN = (-self.alpha * self.A * np.power(N, -self.alpha - 1.0)
+            # dL/dN = -alpha*A*(N/1e9)^(-alpha)/N + beta*a*B*T^(-beta)/u
+            dL_dN = (-self.alpha * self.A * np.power(n, -self.alpha) / N
                      + self.beta * a * self.B * np.power(T, -self.beta) / u)
+            # 可行域 Q>=Q0：Q=Q0 处取右导数 g'(Q0)，而不是把 c=0 处的导数置零。
+            cp = np.where(Q >= Q0, self.g_prime(Q, form), 0.0)
             # dL/dQ = -beta*B*T^(-beta) * (kappa/Q - c'(Q)/u)
-            cp = self.g_prime(Q, form) * (c > 0)          # c>0 时才启用质量成本导数
             dL_dQ = -self.beta * self.B * np.power(T, -self.beta) * (kappa / Q - cp / u)
             out["dL_dN"] = dL_dN
             out["dL_dQ"] = dL_dQ

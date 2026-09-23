@@ -57,7 +57,9 @@ def upstream_consistency(cfg: dict, model, kappa: float, rng_seed: int = 2026092
     Q = rng.uniform(0.2, 1.0, n)
     h = rng.uniform(0.5, 2.0, n)
     a = model.predict(N, D, Q, h, kappa)
-    b = up.predict(N, D, Q, h, dgrp=np.zeros(n))
+    # Q2→Q3 官方预测器以十亿坐标调用（见其 docstring：N=7.0, D=300.0）；
+    # 本地 model.predict 接受实际个数。两者必须在同一物理点上一致。
+    b = up.predict(N / 1e9, D / 1e9, Q, h, dgrp=np.zeros(n))
     rel = np.abs(a - b) / np.maximum(np.abs(b), 1e-300)
     ok = bool(all(param_match.values())) and rel.max() < 1e-12
     return pd.DataFrame([{
@@ -67,6 +69,25 @@ def upstream_consistency(cfg: dict, model, kappa: float, rng_seed: int = 2026092
         "max_rel_diff": float(rel.max()), "median_rel_diff": float(np.median(rel)),
         "verdict": ("参数逐位相同且预测逐点一致（同口径）" if ok
                     else "与上游预测器不一致，须查明"),
+    }])
+
+
+# ------------------------------------------------------------------ 1b. 物理单位锚点
+def unit_anchor_check(model, cfg: dict, kappa: float) -> pd.DataFrame:
+    """物理单位锚点：N=1e9、D=1e11、Q=1、h=1 时经典项应为 2.385578。
+
+    Q=1 时质量指数 κ 不应改变结果（退化测试）。该检查独立于代数相同的数值-解析对照，
+    可捕捉"上下游同时误解单位"的接口错误（旧实现给出 1.691141）。
+    """
+    L = float(np.asarray(model.predict(1e9, 1e11, 1.0, 1.0, kappa)).ravel()[0])
+    L_kappa0 = float(np.asarray(model.predict(1e9, 1e11, 1.0, 1.0, 0.0)).ravel()[0])
+    ok = (abs(L - 2.385578) < 1e-5) and (abs(L - L_kappa0) < 1e-12)
+    return pd.DataFrame([{
+        "point": "N=1e9,D=1e11,Q=1,h=1",
+        "L_pred": L, "expected": 2.385578,
+        "L_kappa0": L_kappa0, "kappa_degenerate_ok": bool(abs(L - L_kappa0) < 1e-12),
+        "old_wrong_unit_value": 1.691141,
+        "pass": bool(ok),
     }])
 
 
@@ -87,7 +108,11 @@ def derivative_check(model, cfg: dict, cases: list[dict]) -> pd.DataFrame:
         qp = min(Q * (1 + h), 1.0); qm = max(Q * (1 - h), 1e-9)
         Lp = model.loss_at_budget(np.array([N]), np.array([qp]), **kw)["L"][0]
         Lm = model.loss_at_budget(np.array([N]), np.array([qm]), **kw)["L"][0]
-        gQ_fd = (Lp - Lm) / (qp - qm)
+        # 可行域 Q>=Q0：Q 在 Q0 处有拐点，用前向差分核验右导数，避免跨拐点的中心差分。
+        if Q <= float(cs["Q0"]) + 1e-9:
+            gQ_fd = (Lp - float(o["L"][0])) / (qp - Q)
+        else:
+            gQ_fd = (Lp - Lm) / (qp - qm)
         rows.append({
             "N_B": N / 1e9, "Q": Q, "cost_form": cs["form"], "ell": int(cs["ell"]),
             "kappa": float(cs["kappa"]),

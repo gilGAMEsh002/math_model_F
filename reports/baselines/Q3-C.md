@@ -1,7 +1,7 @@
 # Q3-C｜候选配比枚举与局部联合优化（第三问 baseline C）
 
 - **baseline**：`Q3-C`（第三问）
-- **配置**：`D:\26mathmodel\q3_c\configs\baselines\Q3-C.yaml` ｜ 配置哈希 `e9bf4f675e3b8003` ｜ 源码哈希 `3b8eabdc28032119`
+- **配置**：`/tmp/opencode/wt-c3/configs/baselines/Q3-C.yaml` ｜ 配置哈希 `e9bf4f675e3b8003` ｜ 源码哈希 `074f04bd49cc32c7`
 - **随机种子**：`20260923`
 - **产物目录**：`artifacts/baselines/Q3-C`
 - **本卡范围**：仅实现 `建模方案/baselines/Q3-C.md` 所述方法——候选配比枚举、逐候选 (N,Q) 搜索、多起点 SLSQP 局部细调与交叉核验。**不实现** Q3-A（固定 Q/p 的一维搜索）与 Q3-B（固定配比的二维搜索）这两条独立 baseline 的方法与交付物。
@@ -10,14 +10,14 @@
 
 冻结 Q2 主模型 **M1（= Q2-B，$\rho=0$）**，参数取自 Q2-C 的 `stage2_M1_staged`；质量通道指数 $\kappa$ 按 Q2-C 的判定作**情景参数**（主情景 $\kappa=0.8047$）。预算 $C$ 取题给三档并在 $\log_{10}C\in[17,26]$ 上连续扫描；成本函数 $g(Q)$ 取题给三式（指数/幂/对数）。参考配比 $p_0$ 的语料质量 $Q(p_0)=0.416633$。
 
-- **泛函 `mixture_l1`，$\omega=0.0$（零效应对照）**：配比**不可辨识** —— `fixed_ref` 下全部候选并列最优、`mixture` 下由 $\arg\max Q$ 决定，两种 $Q_0$ 设定并列出现 `lp_vertex_box`、`reference_p0`。这是平局而非转移，见 §6.4。
+- **泛函 `mixture_l1`，$\omega=0.0$（零效应对照）**：配比**不可辨识** —— `fixed_ref` 下全部候选并列最优、`mixture` 下由 $\arg\max Q$ 决定，两种 $Q_0$ 设定并列出现 `dirichlet_a20_19`、`reference_p0`。这是平局而非转移，见 §6.4。
 - **泛函 `mixture_l1`，$\omega=0.5$**：全部情景的最优配比均为 `reference_p0`（各情景一致）
 - **泛函 `mixture_l1`，$\omega=1.0$**：全部情景的最优配比均为 `reference_p0`（各情景一致）
 - **泛函 `mixture_l1`，$\omega=2.0$**：全部情景的最优配比均为 `reference_p0`（各情景一致）
-- **泛函 `quality_linear`，$\omega=0.0$（零效应对照）**：配比**不可辨识** —— `fixed_ref` 下全部候选并列最优、`mixture` 下由 $\arg\max Q$ 决定，两种 $Q_0$ 设定并列出现 `lp_vertex_box`、`reference_p0`。这是平局而非转移，见 §6.4。
-- **泛函 `quality_linear`，$\omega=0.5$**：全部情景的最优配比均为 `lp_vertex_box`（各情景一致）
-- **泛函 `quality_linear`，$\omega=1.0$**：全部情景的最优配比均为 `lp_vertex_box`（各情景一致）
-- **泛函 `quality_linear`，$\omega=2.0$**：全部情景的最优配比均为 `lp_vertex_box`（各情景一致）
+- **泛函 `quality_linear`，$\omega=0.0$（零效应对照）**：配比**不可辨识** —— `fixed_ref` 下全部候选并列最优、`mixture` 下由 $\arg\max Q$ 决定，两种 $Q_0$ 设定并列出现 `dirichlet_a20_19`、`reference_p0`。这是平局而非转移，见 §6.4。
+- **泛函 `quality_linear`，$\omega=0.5$**：全部情景的最优配比均为 `dirichlet_a20_19`（各情景一致）
+- **泛函 `quality_linear`，$\omega=1.0$**：全部情景的最优配比均为 `dirichlet_a20_19`（各情景一致）
+- **泛函 `quality_linear`，$\omega=2.0$**：全部情景的最优配比均为 `dirichlet_a20_19`（各情景一致）
 
 **主结论**：$\hat L$ 对 $h(p)$ **完全可分离**（$h$ 只进入 $T=D Q^\kappa h$，与 $N,D,Q$ 无交互）且 $\partial\hat L/\partial h<0$，故
 
@@ -29,7 +29,7 @@ $$
 
 因此**未发现**「最优配比随预算转移」的结构性证据。按任务卡验收条款，这属于「完全可分离 $h(p)$ 下 $p$ 不变」的**正确结果**，不应强求转移。真正随预算变化的是 $Q^*$ 的**状态**（下界 $Q_0$ ↔ 内部解 ↔ 上界），见第 8 节。
 
-**一个必须如实说明的量级事实**：各情景单元内候选之间的 $\hat L$ 跨度中位数仅 0.003483（相对 $\hat L\approx1.69$ 约 0.00206098）。即「选哪个 $p$」对预测损失的影响**远小于模型自身的误差**，因此 $p^*$ 的确定靠的是 $h$ 的单调性论证，而**不能**靠数值分辨 $\hat L$ 的差异。任何声称从数据中「学出」最优配比的结论，都必须报告这个跨度。
+**一个必须如实说明的量级事实**：各情景单元内候选之间的 $\hat L$ 跨度中位数仅 0.560084（相对 $\hat L\approx1.69$ 约 0.33141091）。即「选哪个 $p$」对预测损失的影响**远小于模型自身的误差**，因此 $p^*$ 的确定靠的是 $h$ 的单调性论证，而**不能**靠数值分辨 $\hat L$ 的差异。任何声称从数据中「学出」最优配比的结论，都必须报告这个跨度。
 
 ## 2. 方法、口径与求解流程
 
@@ -88,7 +88,7 @@ $p$ 限制在**第一问训练支持的 $[p_{{05}}, p_{{95}}]$ 盒 $\cap$ 单纯
 | 阶段 | 做法 |
 | --- | --- |
 | ① 上游读取 | Q1-C 列序/$p_0$/训练支持、Q2-C 冻结参数与转移情景、C7 架构元数据 |
-| ② 候选枚举 | 见 2.3，得 208 个候选 |
+| ② 候选枚举 | 见 2.3，得 207 个候选 |
 | ③ 廉价筛选 | 每个候选在每个离散情景下做一次粗网格搜索（41×21），用于挑终选候选并检查 $\arg\min L$ 与 $\arg\max Q$ 是否一致 |
 | ④ 精确求解 | 终选候选 × 全情景网格，逐点精确成本、粗网格 + 局部加密（201×101 起，4 轮收缩至 61²） |
 | ⑤ 预算路径 | 沿 $\log_{10}C$ 网格（91 点）跟踪 $Q^*,N^*,D^*$ 与成本份额 |
@@ -100,9 +100,9 @@ $p$ 限制在**第一问训练支持的 $[p_{{05}}, p_{{95}}]$ 盒 $\cap$ 单纯
 | stage | n_in | n_out | note |
 | --- | --- | --- | --- |
 | 上游接口读取 | 17 | 17 | Q1 列序/参考配比/训练支持 + Q2 冻结参数 |
-| 候选配比枚举 | 17 | 208 | 仅用 p0 / 可信区域 / 第一问质量坐标 |
-| 候选筛选（廉价网格） | 3744 | 22464 | 每个候选在每个离散情景下做一次粗搜索 |
-| 逐候选 (N,Q) 精确搜索 | 1890 | 720 | 复用 Q3-B 式预算/成本内核；每点精确成本 |
+| 候选配比枚举 | 17 | 207 | 仅用 p0 / 可信区域 / 第一问质量坐标 |
+| 候选筛选（廉价网格） | 3726 | 22356 | 每个候选在每个离散情景下做一次粗搜索 |
+| 逐候选 (N,Q) 精确搜索 | 1260 | 720 | 复用 Q3-B 式预算/成本内核；每点精确成本 |
 
 **说明**：本问是**确定性优化**，没有训练/验证/测试样本划分；上表的「样本」是**候选配比与情景单元**的计数流转，用于说明数据从哪里来、经过哪些变换、最终进入哪张表。上游文件与其 SHA-256 登记在 `run_metadata.json`。
 
@@ -122,24 +122,24 @@ $p$ 限制在**第一问训练支持的 $[p_{{05}}, p_{{95}}]$ 盒 $\cap$ 单纯
 
 | functional | omega | C | cost_form | ell | q0_mode | candidate | N_B | D_B | Q | Q0 | L_pred | share_train | share_attn | share_quality |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| quality_linear | 1 | 1.0000e+19 | exponential | 4096 | fixed_ref | lp_vertex_box | 49.830281 | 0.029094 | 1 | 0.416633 | 1.68998 | 0.869853 | 0.118764 | 0.011383 |
-| quality_linear | 1 | 1.0000e+22 | exponential | 4096 | fixed_ref | lp_vertex_box | 1113.302882 | 1.316526 | 1 | 0.416633 | 1.68986 | 0.879415 | 0.12007 | 0.000515 |
-| quality_linear | 1 | 1.0000e+24 | exponential | 4096 | fixed_ref | lp_vertex_box | 8900.478047 | 16.474993 | 1 | 0.416633 | 1.689829 | 0.879812 | 0.120124 | 6.4458e-05 |
-| quality_linear | 1 | 1.0000e+19 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 49.440175 | 0.029529 | 1 | 0.416633 | 1.689979 | 0.875942 | 0.119595 | 0.004463 |
-| quality_linear | 1 | 1.0000e+22 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 1112.756142 | 1.317589 | 1 | 0.416633 | 1.68986 | 0.879693 | 0.120107 | 0.000199 |
-| quality_linear | 1 | 1.0000e+24 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 8900.478047 | 16.475645 | 1 | 0.416633 | 1.689829 | 0.879847 | 0.120128 | 2.4902e-05 |
-| quality_linear | 1 | 1.0000e+19 | power | 4096 | fixed_ref | lp_vertex_box | 50.001918 | 0.028917 | 1 | 0.416633 | 1.68998 | 0.867531 | 0.118447 | 0.014023 |
-| quality_linear | 1 | 1.0000e+22 | power | 4096 | fixed_ref | lp_vertex_box | 1113.302882 | 1.316364 | 1 | 0.416633 | 1.68986 | 0.879307 | 0.120055 | 0.000638 |
-| quality_linear | 1 | 1.0000e+24 | power | 4096 | fixed_ref | lp_vertex_box | 8900.478047 | 16.474739 | 1 | 0.416633 | 1.689829 | 0.879798 | 0.120122 | 7.9892e-05 |
-| quality_linear | 1 | 1.0000e+19 | exponential | 4096 | mixture | lp_vertex_box | 49.830281 | 0.029099 | 1 | 0.487162 | 1.68998 | 0.870016 | 0.118786 | 0.011198 |
-| quality_linear | 1 | 1.0000e+22 | exponential | 4096 | mixture | lp_vertex_box | 1113.302882 | 1.316537 | 1 | 0.487162 | 1.68986 | 0.879423 | 0.120071 | 0.000507 |
-| quality_linear | 1 | 1.0000e+24 | exponential | 4096 | mixture | lp_vertex_box | 8900.478047 | 16.475011 | 1 | 0.487162 | 1.689829 | 0.879813 | 0.120124 | 6.3401e-05 |
-| quality_linear | 1 | 1.0000e+19 | logarithmic | 4096 | mixture | lp_vertex_box | 49.391627 | 0.02958 | 1 | 0.487162 | 1.689979 | 0.876601 | 0.119685 | 0.003714 |
-| quality_linear | 1 | 1.0000e+22 | logarithmic | 4096 | mixture | lp_vertex_box | 1112.756142 | 1.317634 | 1 | 0.487162 | 1.68986 | 0.879723 | 0.120112 | 0.000165 |
-| quality_linear | 1 | 1.0000e+24 | logarithmic | 4096 | mixture | lp_vertex_box | 8900.478047 | 16.475714 | 1 | 0.487162 | 1.689829 | 0.87985 | 0.120129 | 2.0686e-05 |
-| quality_linear | 1 | 1.0000e+19 | power | 4096 | mixture | lp_vertex_box | 49.977363 | 0.028942 | 1 | 0.487162 | 1.68998 | 0.867853 | 0.118491 | 0.013656 |
-| quality_linear | 1 | 1.0000e+22 | power | 4096 | mixture | lp_vertex_box | 1113.302882 | 1.316386 | 1 | 0.487162 | 1.68986 | 0.879322 | 0.120057 | 0.000621 |
-| quality_linear | 1 | 1.0000e+24 | power | 4096 | mixture | lp_vertex_box | 8900.478047 | 16.474774 | 1 | 0.487162 | 1.689829 | 0.8798 | 0.120122 | 7.7734e-05 |
+| quality_linear | 1 | 1.0000e+19 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 2.452148 | 0.516223 | 0.937432 | 0.416633 | 2.317979 | 0.759513 | 0.103699 | 0.136788 |
+| quality_linear | 1 | 1.0000e+22 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 48.52587 | 29.866785 | 1 | 0.416633 | 1.900623 | 0.869587 | 0.118728 | 0.011685 |
+| quality_linear | 1 | 1.0000e+24 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 383.518808 | 381.795394 | 1 | 0.416633 | 1.793603 | 0.878554 | 0.119952 | 0.001494 |
+| quality_linear | 1 | 1.0000e+19 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 2.348984 | 0.570462 | 1 | 0.416633 | 2.306534 | 0.804003 | 0.109773 | 0.086223 |
+| quality_linear | 1 | 1.0000e+22 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 48.122332 | 30.333614 | 1 | 0.416633 | 1.900389 | 0.875835 | 0.119581 | 0.004585 |
+| quality_linear | 1 | 1.0000e+24 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 383.14221 | 382.521107 | 1 | 0.416633 | 1.793588 | 0.87936 | 0.120062 | 0.000578 |
+| quality_linear | 1 | 1.0000e+19 | power | 4096 | fixed_ref | dirichlet_a20_19 | 2.699314 | 0.437555 | 0.979251 | 0.416633 | 2.323228 | 0.708659 | 0.096756 | 0.194585 |
+| quality_linear | 1 | 1.0000e+22 | power | 4096 | fixed_ref | dirichlet_a20_19 | 48.669102 | 29.697059 | 1 | 0.416633 | 1.900714 | 0.867198 | 0.118401 | 0.014401 |
+| quality_linear | 1 | 1.0000e+24 | power | 4096 | fixed_ref | dirichlet_a20_19 | 383.707245 | 381.471794 | 1 | 0.416633 | 1.793608 | 0.878241 | 0.119909 | 0.00185 |
+| quality_linear | 1 | 1.0000e+19 | exponential | 4096 | mixture | dirichlet_a20_19 | 2.448537 | 0.517491 | 0.937074 | 0.438297 | 2.317889 | 0.760258 | 0.103801 | 0.135942 |
+| quality_linear | 1 | 1.0000e+22 | exponential | 4096 | mixture | dirichlet_a20_19 | 48.52587 | 29.868293 | 1 | 0.438297 | 1.900622 | 0.869631 | 0.118734 | 0.011635 |
+| quality_linear | 1 | 1.0000e+24 | exponential | 4096 | mixture | dirichlet_a20_19 | 383.518808 | 381.797858 | 1 | 0.438297 | 1.793603 | 0.87856 | 0.119953 | 0.001487 |
+| quality_linear | 1 | 1.0000e+19 | logarithmic | 4096 | mixture | dirichlet_a20_19 | 2.337473 | 0.575738 | 1 | 0.438297 | 2.306071 | 0.807463 | 0.110246 | 0.082291 |
+| quality_linear | 1 | 1.0000e+22 | logarithmic | 4096 | mixture | dirichlet_a20_19 | 48.098699 | 30.356019 | 1 | 0.438297 | 1.900381 | 0.876051 | 0.11961 | 0.004339 |
+| quality_linear | 1 | 1.0000e+24 | logarithmic | 4096 | mixture | dirichlet_a20_19 | 383.14221 | 382.533129 | 1 | 0.438297 | 1.793588 | 0.879388 | 0.120066 | 0.000547 |
+| quality_linear | 1 | 1.0000e+19 | power | 4096 | mixture | dirichlet_a20_19 | 2.692692 | 0.439457 | 0.978191 | 0.438297 | 2.32307 | 0.709993 | 0.096938 | 0.193069 |
+| quality_linear | 1 | 1.0000e+22 | power | 4096 | mixture | dirichlet_a20_19 | 48.669102 | 29.700045 | 1 | 0.438297 | 1.900711 | 0.867285 | 0.118413 | 0.014302 |
+| quality_linear | 1 | 1.0000e+24 | power | 4096 | mixture | dirichlet_a20_19 | 383.707245 | 381.476722 | 1 | 0.438297 | 1.793608 | 0.878252 | 0.119911 | 0.001837 |
 
 ### 5.2 全部情景下最优配比的复现性
 
@@ -147,61 +147,61 @@ $p$ 限制在**第一问训练支持的 $[p_{{05}}, p_{{95}}]$ 盒 $\cap$ 单纯
 
 | functional | omega | n_distinct_optimal_p | optimal_candidates |
 | --- | --- | --- | --- |
-| mixture_l1 | 0 | 2 | lp_vertex_box, reference_p0 |
+| mixture_l1 | 0 | 2 | dirichlet_a20_19, reference_p0 |
 | mixture_l1 | 0.5 | 1 | reference_p0 |
 | mixture_l1 | 1 | 1 | reference_p0 |
 | mixture_l1 | 2 | 1 | reference_p0 |
-| quality_linear | 0 | 2 | lp_vertex_box, reference_p0 |
-| quality_linear | 0.5 | 1 | lp_vertex_box |
-| quality_linear | 1 | 1 | lp_vertex_box |
-| quality_linear | 2 | 1 | lp_vertex_box |
+| quality_linear | 0 | 2 | dirichlet_a20_19, reference_p0 |
+| quality_linear | 0.5 | 1 | dirichlet_a20_19 |
+| quality_linear | 1 | 1 | dirichlet_a20_19 |
+| quality_linear | 2 | 1 | dirichlet_a20_19 |
 
 ### 5.3 质量投入的状态
 
 | functional | omega | cost_form | q0_mode | regime | n |
 | --- | --- | --- | --- | --- | --- |
-| mixture_l1 | 0 | exponential | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 0 | exponential | fixed_ref | upper_bound | 10 |
 | mixture_l1 | 0 | exponential | fixed_ref | interior | 5 |
-| mixture_l1 | 0 | exponential | fixed_ref | upper_bound | 5 |
-| mixture_l1 | 0 | exponential | mixture | lower_bound_Q0 | 5 |
+| mixture_l1 | 0 | exponential | mixture | upper_bound | 10 |
 | mixture_l1 | 0 | exponential | mixture | interior | 5 |
-| mixture_l1 | 0 | exponential | mixture | upper_bound | 5 |
-| mixture_l1 | 0 | logarithmic | fixed_ref | upper_bound | 10 |
-| mixture_l1 | 0 | logarithmic | fixed_ref | lower_bound_Q0 | 5 |
-| mixture_l1 | 0 | logarithmic | mixture | upper_bound | 10 |
-| mixture_l1 | 0 | logarithmic | mixture | lower_bound_Q0 | 5 |
-| mixture_l1 | 0 | power | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 0 | logarithmic | fixed_ref | upper_bound | 15 |
+| mixture_l1 | 0 | logarithmic | mixture | upper_bound | 15 |
+| mixture_l1 | 0 | power | fixed_ref | upper_bound | 10 |
 | mixture_l1 | 0 | power | fixed_ref | interior | 5 |
-| mixture_l1 | 0 | power | fixed_ref | upper_bound | 5 |
-| mixture_l1 | 0 | power | mixture | lower_bound_Q0 | 5 |
+| mixture_l1 | 0 | power | mixture | upper_bound | 10 |
 | mixture_l1 | 0 | power | mixture | interior | 5 |
-| mixture_l1 | 0 | power | mixture | upper_bound | 5 |
-| mixture_l1 | 0.5 | exponential | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 0.5 | exponential | fixed_ref | upper_bound | 10 |
 | mixture_l1 | 0.5 | exponential | fixed_ref | interior | 5 |
-| mixture_l1 | 0.5 | exponential | fixed_ref | upper_bound | 5 |
-| mixture_l1 | 0.5 | exponential | mixture | lower_bound_Q0 | 5 |
+| mixture_l1 | 0.5 | exponential | mixture | upper_bound | 10 |
 | mixture_l1 | 0.5 | exponential | mixture | interior | 5 |
-| mixture_l1 | 0.5 | exponential | mixture | upper_bound | 5 |
-| mixture_l1 | 0.5 | logarithmic | fixed_ref | upper_bound | 10 |
-| mixture_l1 | 0.5 | logarithmic | fixed_ref | lower_bound_Q0 | 5 |
-| mixture_l1 | 0.5 | logarithmic | mixture | upper_bound | 10 |
-| mixture_l1 | 0.5 | logarithmic | mixture | lower_bound_Q0 | 5 |
-| mixture_l1 | 0.5 | power | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 0.5 | logarithmic | fixed_ref | upper_bound | 15 |
+| mixture_l1 | 0.5 | logarithmic | mixture | upper_bound | 15 |
+| mixture_l1 | 0.5 | power | fixed_ref | upper_bound | 10 |
 | mixture_l1 | 0.5 | power | fixed_ref | interior | 5 |
-| mixture_l1 | 0.5 | power | fixed_ref | upper_bound | 5 |
-| mixture_l1 | 0.5 | power | mixture | lower_bound_Q0 | 5 |
+| mixture_l1 | 0.5 | power | mixture | upper_bound | 10 |
 | mixture_l1 | 0.5 | power | mixture | interior | 5 |
-| mixture_l1 | 0.5 | power | mixture | upper_bound | 5 |
-| mixture_l1 | 1 | exponential | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 1 | exponential | fixed_ref | upper_bound | 10 |
 | mixture_l1 | 1 | exponential | fixed_ref | interior | 5 |
-| mixture_l1 | 1 | exponential | fixed_ref | upper_bound | 5 |
-| mixture_l1 | 1 | exponential | mixture | lower_bound_Q0 | 5 |
+| mixture_l1 | 1 | exponential | mixture | upper_bound | 10 |
 | mixture_l1 | 1 | exponential | mixture | interior | 5 |
-| mixture_l1 | 1 | exponential | mixture | upper_bound | 5 |
-| mixture_l1 | 1 | logarithmic | fixed_ref | upper_bound | 10 |
-| mixture_l1 | 1 | logarithmic | fixed_ref | lower_bound_Q0 | 5 |
+| mixture_l1 | 1 | logarithmic | fixed_ref | upper_bound | 15 |
+| mixture_l1 | 1 | logarithmic | mixture | upper_bound | 15 |
+| mixture_l1 | 1 | power | fixed_ref | upper_bound | 10 |
+| mixture_l1 | 1 | power | fixed_ref | interior | 5 |
+| mixture_l1 | 1 | power | mixture | upper_bound | 10 |
+| mixture_l1 | 1 | power | mixture | interior | 5 |
+| mixture_l1 | 2 | exponential | fixed_ref | upper_bound | 10 |
+| mixture_l1 | 2 | exponential | fixed_ref | interior | 5 |
+| mixture_l1 | 2 | exponential | mixture | upper_bound | 10 |
+| mixture_l1 | 2 | exponential | mixture | interior | 5 |
+| mixture_l1 | 2 | logarithmic | fixed_ref | upper_bound | 15 |
+| mixture_l1 | 2 | logarithmic | mixture | upper_bound | 15 |
+| mixture_l1 | 2 | power | fixed_ref | upper_bound | 10 |
+| mixture_l1 | 2 | power | fixed_ref | interior | 5 |
+| mixture_l1 | 2 | power | mixture | upper_bound | 10 |
+| mixture_l1 | 2 | power | mixture | interior | 5 |
 
-_（共 102 行，此处只列前 40 行；完整表见对应 CSV）_
+_（共 76 行，此处只列前 40 行；完整表见对应 CSV）_
 ## 6. 对照与交叉核验
 
 ### 6.1 配比通道不变性：$\arg\min_p\hat L \equiv \arg\max_p h$
@@ -214,26 +214,26 @@ _（共 102 行，此处只列前 40 行；完整表见对应 CSV）_
 
 | functional | omega | C | cost_form | ell | q0_mode | argmin_L_candidate | L_min | L_spread | n_tied_at_L_min |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 2048 | fixed_ref | reference_p0 | 1.692314 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 2048 | mixture | lp_vertex_box | 1.692266 | 7.8241e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 4096 | fixed_ref | reference_p0 | 1.692338 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 4096 | mixture | lp_vertex_box | 1.69229 | 7.8988e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 8192 | fixed_ref | reference_p0 | 1.692383 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 8192 | mixture | lp_vertex_box | 1.692333 | 8.0376e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 32768 | fixed_ref | reference_p0 | 1.692588 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 32768 | mixture | lp_vertex_box | 1.692534 | 8.6745e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 131072 | fixed_ref | reference_p0 | 1.693022 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | exponential | 131072 | mixture | lp_vertex_box | 1.69296 | 9.6540e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 2048 | fixed_ref | reference_p0 | 1.692314 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 2048 | mixture | lp_vertex_box | 1.692266 | 7.8241e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 4096 | fixed_ref | reference_p0 | 1.692338 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 4096 | mixture | lp_vertex_box | 1.69229 | 7.8988e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 8192 | fixed_ref | reference_p0 | 1.692383 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 8192 | mixture | lp_vertex_box | 1.692333 | 8.0376e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 32768 | fixed_ref | reference_p0 | 1.692588 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 32768 | mixture | lp_vertex_box | 1.692534 | 8.6745e-05 | 2 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 131072 | fixed_ref | reference_p0 | 1.693022 | 0 | 21 |
-| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 131072 | mixture | lp_vertex_box | 1.69296 | 0.0001 | 2 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 2048 | fixed_ref | reference_p0 | 3.123095 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 2048 | mixture | dirichlet_a20_19 | 3.120686 | 0.004157 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 4096 | fixed_ref | reference_p0 | 3.135573 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 4096 | mixture | dirichlet_a20_19 | 3.133238 | 0.004032 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 8192 | fixed_ref | reference_p0 | 3.15869 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 8192 | mixture | dirichlet_a20_19 | 3.156481 | 0.003816 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 32768 | fixed_ref | reference_p0 | 3.264134 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 32768 | mixture | dirichlet_a20_19 | 3.262391 | 0.003017 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 131072 | fixed_ref | reference_p0 | 3.48506 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | exponential | 131072 | mixture | dirichlet_a20_19 | 3.483923 | 0.001973 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 2048 | fixed_ref | reference_p0 | 3.137817 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 2048 | mixture | dirichlet_a20_19 | 3.132219 | 0.010354 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 4096 | fixed_ref | reference_p0 | 3.148194 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 4096 | mixture | dirichlet_a20_19 | 3.142655 | 0.010245 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 8192 | fixed_ref | reference_p0 | 3.167551 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 8192 | mixture | dirichlet_a20_19 | 3.162122 | 0.010044 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 32768 | fixed_ref | reference_p0 | 3.257906 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 32768 | mixture | dirichlet_a20_19 | 3.252961 | 0.009155 | 1 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 131072 | fixed_ref | reference_p0 | 3.456393 | 0 | 14 |
+| mixture_l1 | 0 | 1.0000e+19 | logarithmic | 131072 | mixture | dirichlet_a20_19 | 3.452362 | 0.007476 | 1 |
 
 _（共 720 行，此处只列前 20 行；完整表见对应 CSV）_
 
@@ -253,31 +253,31 @@ _（共 720 行，此处只列前 20 行；完整表见对应 CSV）_
 
 ### 6.3 枚举 vs 多起点 SLSQP
 
-12 个代表性情景上比较「枚举最优」与「SLSQP 最优等价解类」，其中 SLSQP 严格更优的单元数 = 0。
+12 个代表性情景上比较「枚举最优」与「SLSQP 最优等价解类」，其中 SLSQP 严格更优的单元数 = 12。
 
 | C | cost_form | ell | q0_mode | enum_candidate | enum_L | enum_N_B | enum_Q | slsqp_L | slsqp_N_B | slsqp_Q | dL_slsqp_minus_enum | slsqp_Q_cand | enum_Q_cand | verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1.0000e+19 | exponential | 4096 | fixed_ref | lp_vertex_box | 1.68998 | 49.830281 | 1 | 1.690077 | 14.828949 | 1 | 9.6987e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+19 | power | 4096 | fixed_ref | lp_vertex_box | 1.68998 | 50.001918 | 1 | 1.690077 | 14.943892 | 1 | 9.7297e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+19 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 1.689979 | 49.440175 | 1 | 1.690076 | 14.414088 | 1 | 9.6170e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+22 | exponential | 4096 | fixed_ref | lp_vertex_box | 1.68986 | 1113.302882 | 1 | 1.689894 | 320.783611 | 1 | 3.3143e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+22 | power | 4096 | fixed_ref | lp_vertex_box | 1.68986 | 1113.302882 | 1 | 1.689894 | 319.485784 | 1 | 3.3148e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+22 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 1.68986 | 1112.756142 | 1 | 1.689894 | 320.656112 | 0.999986 | 3.3130e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+24 | exponential | 4096 | fixed_ref | lp_vertex_box | 1.689829 | 8900.478047 | 1 | 1.689845 | 2577.339987 | 0.999999 | 1.6335e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+24 | power | 4096 | fixed_ref | lp_vertex_box | 1.689829 | 8900.478047 | 1 | 1.689845 | 2543.820714 | 0.999997 | 1.6336e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+24 | logarithmic | 4096 | fixed_ref | lp_vertex_box | 1.689829 | 8900.478047 | 1 | 1.689845 | 2552.341762 | 1 | 1.6335e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+19 | exponential | 4096 | mixture | lp_vertex_box | 1.68998 | 49.830281 | 1 | 1.690077 | 14.797105 | 1 | 9.6970e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+19 | power | 4096 | mixture | lp_vertex_box | 1.68998 | 49.977363 | 1 | 1.690077 | 14.946475 | 1 | 9.7264e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
-| 1.0000e+19 | logarithmic | 4096 | mixture | lp_vertex_box | 1.689979 | 49.391627 | 1 | 1.690075 | 14.396409 | 1 | 9.6098e-05 | 0.475372 | 0.487162 | SLSQP 未优于枚举（枚举已取到该族最优） |
+| 1.0000e+19 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 2.317979 | 2.452148 | 0.937432 | 1.850673 | 106.381388 | 1 | -0.467306 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+19 | power | 4096 | fixed_ref | dirichlet_a20_19 | 2.323228 | 2.699314 | 0.979251 | 1.850705 | 106.496338 | 1 | -0.472523 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+19 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 2.306534 | 2.348984 | 1 | 1.836424 | 129.52316 | 1 | -0.470111 | 0.477948 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+22 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 1.900623 | 48.52587 | 1 | 1.745466 | 2394.892819 | 1 | -0.155158 | 0.475373 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+22 | power | 4096 | fixed_ref | dirichlet_a20_19 | 1.900714 | 48.669102 | 1 | 1.745469 | 2393.231944 | 1 | -0.155246 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+22 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 1.900389 | 48.122332 | 1 | 1.745467 | 2394.204133 | 1 | -0.154922 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+24 | exponential | 4096 | fixed_ref | dirichlet_a20_19 | 1.793603 | 383.518808 | 1 | 1.71781 | 9999.999923 | 1 | -0.075793 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+24 | power | 4096 | fixed_ref | dirichlet_a20_19 | 1.793608 | 383.707245 | 1 | 1.71781 | 9999.999998 | 1 | -0.075798 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+24 | logarithmic | 4096 | fixed_ref | dirichlet_a20_19 | 1.793588 | 383.14221 | 1 | 1.71781 | 9999.999999 | 1 | -0.075778 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+19 | exponential | 4096 | mixture | dirichlet_a20_19 | 2.317889 | 2.448537 | 0.937074 | 1.850666 | 106.43296 | 1 | -0.467223 | 0.475373 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+19 | power | 4096 | mixture | dirichlet_a20_19 | 2.32307 | 2.692692 | 0.978191 | 1.850701 | 106.585767 | 1 | -0.472368 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
+| 1.0000e+19 | logarithmic | 4096 | mixture | dirichlet_a20_19 | 2.306071 | 2.337473 | 1 | 1.850584 | 106.009529 | 1 | -0.455487 | 0.475372 | 0.438297 | SLSQP 更优：枚举候选集未覆盖连续最优，须扩充候选 |
 
-SLSQP 共得 141 个等价解类；各情景的最优类标记为 `is_best_cluster`。类数多于情景数即说明存在**多个局部解**，必须在结论中使用全局最优类并声明其余为局部解。
+SLSQP 共得 33 个等价解类；各情景的最优类标记为 `is_best_cluster`。类数多于情景数即说明存在**多个局部解**，必须在结论中使用全局最优类并声明其余为局部解。
 
 ### 6.4 $\omega=0$ 对照（无质量效应）
 
 $\omega=0$ 时 $h\equiv1$，配比对预测损失**完全没有影响** → $p^*$ 不可辨识。两种 $Q_0$ 设定下「不可辨识」的表现**不同**，必须分开读：
 
-- `q0_mode=fixed_ref`（$Q_0$ 固定）：各候选的 $\hat L$ **逐位相同**，单元内 21 个候选**全部并列最优**（$\hat L$ 跨度恰为 0，即精确 0）。此时表里的 `candidate` 只是候选集的枚举顺序，**不含任何信息**，不可解读为「最优配比」，更不可写成结论。
-- `q0_mode=mixture`（$Q_0=Q(p)$ 随候选变化）：各候选的 $\hat L$ 不再相同，但差异只来自 $T=C Q^\kappa/u$ 里的 $Q$；并列数降为 2，$\hat L$ 跨度最大仅 0.000100247715 —— 最优解回到 $\arg\max Q$。
+- `q0_mode=fixed_ref`（$Q_0$ 固定）：各候选的 $\hat L$ **逐位相同**，单元内 14 个候选**全部并列最优**（$\hat L$ 跨度恰为 0，即精确 0）。此时表里的 `candidate` 只是候选集的枚举顺序，**不含任何信息**，不可解读为「最优配比」，更不可写成结论。
+- `q0_mode=mixture`（$Q_0=Q(p)$ 随候选变化）：各候选的 $\hat L$ 不再相同，但差异只来自 $T=C Q^\kappa/u$ 里的 $Q$；并列数降为 1，$\hat L$ 跨度最大仅 0.010377307078 —— 最优解回到 $\arg\max Q$。
 
 同时 Q2-C 判定 $\kappa$ 未辨识，$\kappa\to0$ 时同理。故结论是：**只有 $\kappa\neq0$ 且 $\omega\neq0$ 时配比才可辨识**（本数据上即可辨识单元 540/720，全部落在 $\omega>0$）；而本模型的 $h(p)$ 通道完全可分离，故一旦可辨识，其最优点就与预算无关。第 5.2 节中 $\omega=0$ 行出现 2 个「最优配比」，正是上述两种设定并列的结果，**不是**配比随情景转移——读表时若不区分 $Q_0$ 设定，就会把一个纯技术性平局误读成经济含义上的转移。
 
@@ -285,14 +285,15 @@ $\omega=0$ 时 $h\equiv1$，配比对预测损失**完全没有影响** → $p^*
 
 | check | pass | max_violation | tolerance | note |
 | --- | --- | --- | --- | --- |
-| budget_tight_and_consistent | True | 1.3422e-16 | 1.0000e-09 | D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差 |
-| cost_shares_sum_to_one | True | 3.3307e-16 | 1.0000e-09 | 训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差 |
-| attn_share_equals_eta_l_over_6 | True | 1.7764e-15 | 1.0000e-12 | C_attn/C_train = eta*l/6 |
+| budget_tight_and_consistent | True | 2.0972e-16 | 1.0000e-09 | D = C/u，回算 D*{(6+eta*l)N + c(Q)} 与 C 的相对残差 |
+| cost_shares_sum_to_one | True | 2.2204e-16 | 1.0000e-09 | 训练+注意力+质量+未使用 = 1（分母为 C）。残差处于机器精度（约 1e-16，即 1–2 ULP），来源是 used/C 与 (C-used)/C 相加的末位舍入，不是建模或求解误差 |
+| attn_share_equals_eta_l_over_6 | True | 8.8818e-16 | 1.0000e-12 | C_attn/C_train = eta*l/6 |
 | Q_within_bounds | True | 0 | 1.0000e-09 | Q0 <= Q <= q_hi |
-| simplex_feasible | True | 0.028064 | 1.0000e-09 | sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规 |
-| analytic_gradient_matches_fd | True | 7.5736e-07 | 0.001 | 解析 dL/dN、dL/dQ 与中心差分一致 |
+| simplex_feasible | True | 2.2204e-16 | 1.0000e-09 | sum(p)=1 且 p>=0 是硬约束，全部通过；可信区域盒只对 in_trust_box=True 的候选要求，盒外对照点按设计不计违规 |
+| physical_unit_anchor | True | 1.8527e-07 | 1.0000e-05 | 物理单位锚点：N=1e9,D=1e11,Q=1,h=1 -> 2.385578（旧错误单位 1.691141）；该检查独立于代数相同的数值-解析对照，防止上下游同时误解单位 |
+| analytic_gradient_matches_fd | True | 8.4064e-07 | 0.001 | 解析 dL/dN、dL/dQ 与差分一致；Q=Q0 处按可行域取右导数 g'(Q0) |
 | upstream_predictor_agrees | True | 0 | 1.0000e-12 | 与 predict_q2c_loss.py(M1, rho=0) 逐点一致 |
-| grid_coarsening_stable | True | 8.4279e-13 | 1.0000e-06 | 粗网格下结论不变：相对损失变化（dL 除以 L 取绝对值）在容差内，且 Q* 状态（下界/内部/上界）相同；N*/Q* 位置只作诊断量 |
+| grid_coarsening_stable | True | 2.9598e-10 | 1.0000e-06 | 粗网格下结论不变：相对损失变化（dL 除以 L 取绝对值）在容差内，且 Q* 状态（下界/内部/上界）相同；N*/Q* 位置只作诊断量 |
 | p_channel_invariant_argminL_eq_argmaxh | True | 0 | 0 | argmin_p L 恒等于 argmax_p h（h 可分离的必然后果），故 p* 与预算无关 |
 | argmax_h_eq_argmaxQ_for_quality_linear | True | 0 | 0 | quality_linear 的 Δ 是 Q 的仿射减函数，故 argmax h 恒等于 argmax Q；mixture_l1 的 h 在 p0 取最大，二者本就不同（非缺陷）。仅对 h 可辨识（ω>0）的单元判定：ω=0 时 h 恒为 1，任何候选都是 argmax，该单元下 p 不可辨识 |
 | no_final_test_set_read | True | 0 | 0 | 输入审计中不含任何最终检验/估算文件 |
@@ -309,50 +310,50 @@ $\omega=0$ 时 $h\equiv1$，配比对预测损失**完全没有影响** → $p^*
 
 ## 8. 结构性转移
 
-按**预先定义**的事件（① $Q^*$ 离开/进入边界；② $p^*$ 支持集稳定变化；③ 成本份额曲线可复现的分段变化）在连续 $\log C$ 网格上扫描，共得到 182 个事件。
+按**预先定义**的事件（① $Q^*$ 离开/进入边界；② $p^*$ 支持集稳定变化；③ 成本份额曲线可复现的分段变化）在连续 $\log C$ 网格上扫描，共得到 214 个事件。
 
 **按事件类型分解**（这是判断「哪条通道发生转移」的直接依据）：
 
 | event_type | n |
 | --- | --- |
-| Q_regime_change | 182 |
+| Q_regime_change | 214 |
 
 未出现的类型：`p_support_change`, `share_segment_change` —— 即配比通道与成本份额通道在本模型族内**没有**结构性转移，这与第 6.1 节的解析结论一致，是模型结构的必然后果，**不应**为了「有转移」而放宽判据。
 
 | event | cost_form | ell | kappa | from | to | C_before | C_after | log10_C_mid | share_quality_before | share_quality_after | note | functional | omega |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Q_regime_change | exponential | 2048 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.01762 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 2048 | 0.804707 | interior | upper_bound | 3.1623e+23 | 3.9811e+23 | 23.55 | 0.131353 | 0.128095 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 2048 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.01762 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 2048 | 0.804707 | interior | upper_bound | 3.1623e+23 | 3.9811e+23 | 23.55 | 0.131353 | 0.128095 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 4096 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.032534 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 4096 | 0.804707 | interior | upper_bound | 3.1623e+23 | 3.9811e+23 | 23.55 | 0.130834 | 0.124833 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 4096 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.032534 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 4096 | 0.804707 | interior | upper_bound | 3.1623e+23 | 3.9811e+23 | 23.55 | 0.130834 | 0.124833 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 8192 | 0.804707 | lower_bound_Q0 | interior | 6.3096e+19 | 7.9433e+19 | 19.85 | 0 | 0.013939 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 8192 | 0.804707 | interior | upper_bound | 2.5119e+23 | 3.1623e+23 | 23.45 | 0.13148 | 0.128862 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 8192 | 0.804707 | lower_bound_Q0 | interior | 6.3096e+19 | 7.9433e+19 | 19.85 | 0 | 0.013939 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 8192 | 0.804707 | interior | upper_bound | 2.5119e+23 | 3.1623e+23 | 23.45 | 0.13148 | 0.128862 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 32768 | 0.804707 | lower_bound_Q0 | interior | 3.9811e+19 | 5.0119e+19 | 19.65 | 0 | 0.041219 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 32768 | 0.804707 | interior | upper_bound | 1.5849e+23 | 1.9953e+23 | 23.25 | 0.130529 | 0.122684 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 32768 | 0.804707 | lower_bound_Q0 | interior | 3.9811e+19 | 5.0119e+19 | 19.65 | 0 | 0.041219 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 32768 | 0.804707 | interior | upper_bound | 1.5849e+23 | 1.9953e+23 | 23.25 | 0.130529 | 0.122684 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 131072 | 0.804707 | lower_bound_Q0 | interior | 1.2589e+19 | 1.5849e+19 | 19.15 | 0 | 0.040134 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 131072 | 0.804707 | interior | upper_bound | 5.0119e+22 | 6.3096e+22 | 22.75 | 0.130529 | 0.122948 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 131072 | 0.804707 | lower_bound_Q0 | interior | 1.2589e+19 | 1.5849e+19 | 19.15 | 0 | 0.040134 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | exponential | 131072 | 0.804707 | interior | upper_bound | 5.0119e+22 | 6.3096e+22 | 22.75 | 0.130529 | 0.122948 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 2048 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+20 | 7.9433e+20 | 20.85 | 0 | 0.385107 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 2048 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+20 | 7.9433e+20 | 20.85 | 0 | 0.385107 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 4096 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+20 | 7.9433e+20 | 20.85 | 0 | 0.379642 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 4096 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+20 | 7.9433e+20 | 20.85 | 0 | 0.379642 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 8192 | 0.804707 | lower_bound_Q0 | upper_bound | 5.0119e+20 | 6.3096e+20 | 20.75 | 0 | 0.386381 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 8192 | 0.804707 | lower_bound_Q0 | upper_bound | 5.0119e+20 | 6.3096e+20 | 20.75 | 0 | 0.386381 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 32768 | 0.804707 | lower_bound_Q0 | upper_bound | 2.5119e+20 | 3.1623e+20 | 20.45 | 0 | 0.392934 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 32768 | 0.804707 | lower_bound_Q0 | upper_bound | 2.5119e+20 | 3.1623e+20 | 20.45 | 0 | 0.392934 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 131072 | 0.804707 | lower_bound_Q0 | upper_bound | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.393402 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
-| Q_regime_change | logarithmic | 131072 | 0.804707 | lower_bound_Q0 | upper_bound | 7.9433e+19 | 1.0000e+20 | 19.95 | 0 | 0.393402 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 2048 | 0.804707 | lower_bound_Q0 | interior | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.032453 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 2048 | 0.804707 | interior | upper_bound | 3.9811e+21 | 5.0119e+21 | 21.65 | 0.130837 | 0.124812 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 2048 | 0.804707 | lower_bound_Q0 | interior | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.032453 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 2048 | 0.804707 | interior | upper_bound | 3.9811e+21 | 5.0119e+21 | 21.65 | 0.130837 | 0.124812 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 4096 | 0.804707 | lower_bound_Q0 | interior | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.045079 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 4096 | 0.804707 | interior | upper_bound | 3.9811e+21 | 5.0119e+21 | 21.65 | 0.130316 | 0.121596 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 4096 | 0.804707 | lower_bound_Q0 | interior | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.045079 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 4096 | 0.804707 | interior | upper_bound | 3.9811e+21 | 5.0119e+21 | 21.65 | 0.130316 | 0.121596 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 8192 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+17 | 1.0000e+18 | 17.95 | 0 | 0.029289 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 8192 | 0.804707 | interior | upper_bound | 3.1623e+21 | 3.9811e+21 | 21.55 | 0.130953 | 0.125562 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 8192 | 0.804707 | lower_bound_Q0 | interior | 7.9433e+17 | 1.0000e+18 | 17.95 | 0 | 0.029289 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 8192 | 0.804707 | interior | upper_bound | 3.1623e+21 | 3.9811e+21 | 21.55 | 0.130953 | 0.125562 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 32768 | 0.804707 | lower_bound_Q0 | interior | 3.9811e+17 | 5.0119e+17 | 17.65 | 0 | 0.011159 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 32768 | 0.804707 | interior | upper_bound | 1.5849e+21 | 1.9953e+21 | 21.25 | 0.131563 | 0.12942 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 32768 | 0.804707 | lower_bound_Q0 | interior | 3.9811e+17 | 5.0119e+17 | 17.65 | 0 | 0.011159 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 32768 | 0.804707 | interior | upper_bound | 1.5849e+21 | 1.9953e+21 | 21.25 | 0.131563 | 0.12942 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 131072 | 0.804707 | lower_bound_Q0 | interior | 1.2589e+17 | 1.5849e+17 | 17.15 | 0 | 0.009587 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 131072 | 0.804707 | interior | upper_bound | 5.0119e+20 | 6.3096e+20 | 20.75 | 0.13161 | 0.129668 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 131072 | 0.804707 | lower_bound_Q0 | interior | 1.2589e+17 | 1.5849e+17 | 17.15 | 0 | 0.009587 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | exponential | 131072 | 0.804707 | interior | upper_bound | 5.0119e+20 | 6.3096e+20 | 20.75 | 0.13161 | 0.129668 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 2048 | 0.804707 | lower_bound_Q0 | upper_bound | 7.9433e+18 | 1.0000e+19 | 18.95 | 0 | 0.379596 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 2048 | 0.804707 | lower_bound_Q0 | upper_bound | 7.9433e+18 | 1.0000e+19 | 18.95 | 0 | 0.379596 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 4096 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+18 | 7.9433e+18 | 18.85 | 0 | 0.391102 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 4096 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+18 | 7.9433e+18 | 18.85 | 0 | 0.391102 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 8192 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+18 | 7.9433e+18 | 18.85 | 0 | 0.380864 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 8192 | 0.804707 | lower_bound_Q0 | upper_bound | 6.3096e+18 | 7.9433e+18 | 18.85 | 0 | 0.380864 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 32768 | 0.804707 | lower_bound_Q0 | upper_bound | 3.1623e+18 | 3.9811e+18 | 18.55 | 0 | 0.387324 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 32768 | 0.804707 | lower_bound_Q0 | upper_bound | 3.1623e+18 | 3.9811e+18 | 18.55 | 0 | 0.387324 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 131072 | 0.804707 | lower_bound_Q0 | upper_bound | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.387848 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
+| Q_regime_change | logarithmic | 131072 | 0.804707 | lower_bound_Q0 | upper_bound | 1.0000e+18 | 1.2589e+18 | 18.05 | 0 | 0.387848 | 预定义事件 1（Q* 离开/进入边界） | mixture_l1 | 0.5 |
 
-_（共 182 行，此处只列前 30 行；完整表见对应 CSV）_
+_（共 214 行，此处只列前 30 行；完整表见对应 CSV）_
 
 **判据的预先声明**（避免事后挑选）：$Q^*$ 端点判定容差 1.0000e-06；配比支持集变化要求在同一情景维度上连续 ≥3 个格点与整体最优不同（占比容差 0.02）；所有候选变点都要在更粗网格（放大 [2, 4] 倍）下复现才登记。
 
