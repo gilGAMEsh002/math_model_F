@@ -1,0 +1,2 @@
+r3b_initial_log10_range,refine_rounds,points_per_round,last_log10_step,implied_relative_N_step,continuous_max_abs_N_rel_change,continuous_min_abs_nonzero_N_rel_change
+6.0,2,40,0.003846153846153846,0.008895427755585494,0.0014734652766505985,0.0001390201529444246

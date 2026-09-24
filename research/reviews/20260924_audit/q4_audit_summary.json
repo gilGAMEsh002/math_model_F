@@ -1,0 +1,21 @@
+{
+  "n_valid": 4561,
+  "raw_type_counts": {
+    "🔶 fine-tuned on domain-specific datasets": 1785,
+    "🤝 base merges and moerges": 1724,
+    "💬 chat models (RLHF, DPO, IFT, ...)": 718,
+    "🟢 pretrained": 275,
+    "🟩 continuously pretrained": 58,
+    "🌸 multimodal": 9,
+    "❓ other": 7
+  },
+  "wrongly_called_pretrained_finetuned": 1785,
+  "original_false_chat_count": 3858,
+  "all_period_open_p90": 37.69501386218636,
+  "latest_quarter_open_p90": 40.424995320340855,
+  "time_range": [
+    "2024-06-08",
+    "2025-03-13"
+  ],
+  "note": "Type recoding is sensitivity evidence, not a validated replacement forecast."
+}
