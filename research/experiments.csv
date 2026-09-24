@@ -7,3 +7,4 @@ R2a,channel_regret_discrimination,A|B|C,Q2-Q3,minimal_discrimination,completed,t
 R2b,quality_coordinate_reconciliation,A|C,Q1-Q2,minimal_discrimination,completed,true,20260924T002352Z_r2b_3130407,python -m src.entry experiment --name r2b,reports/r2b_verdict.json,B6/B7 γ≈0.362 CI 不含 0；B8 γ 压 0 边界；跨来源无统一正 γ ⇒ identifiable=false
 R3a,common_quality_anchor,A|C,Q1-Q2,method_development,completed,true,20260924T003414Z_r3a_3134470,python -m src.entry experiment --name r3a,reports/r3a_summary.md,A/C 同记录评分对齐；A↔C ρ=0.699，预处理差异为主；isotonic 留出 ρ=0.702；B 规则未应用；≠B6–B8 锚点
 R3b,source_offset_effect_on_strategy,C,Q3,method_development,completed,true,20260924T003454Z_r3b_3134763,python -m src.entry experiment --name r3b,reports/r3b_summary.json,δ 加性→决策不变（确认）；排除质量族后所有情景 regime 一致 max|ΔN|/N≤0.9%；仅 κ 改变方向
+F0,manuscript_freeze,A|B|C,ALL,writeup,completed,true,docs+audit(no new run),,reports/F0_主张证据核对.md,主张-证据核对、最终表述规范、最终大纲、图表清单、摘要草稿、必做清单；无新增实验

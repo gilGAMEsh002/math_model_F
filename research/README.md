@@ -93,6 +93,10 @@ run_id `20260923T165441Z_acceptance_2974389`（首轮）→ 最新 `20260923T171
 - **已解决**：C 的 Q1 配比预测器已重建为可执行对象（`artifacts/c_q1_predictor/`），对拍 `equivalent=true`（n=9828，max abs diff 1.78e-15）；验收 14 项 **13 pass / 0 fail / 0 blocked / 1 n/a**。
 - 仍阻塞：B 的质量重建数据为 LFS 指针，未 pull；B 的质量评分标记为不同样本/复现未完成。
 
+## 6b. 成稿交付（F0–F5）
+
+`reports/F0_主张证据核对.md`、`F1_论文主线_一页说明.md`、`F2_最终章节大纲.md`、`F3_核心图表清单.md`、`F4_摘要草稿.md`、`F5_必须补做最小清单.md`。
+
 ## 7. 下一阶段（不本轮执行）
 
 - **R1**：修复后三线统一口径比较（入口：`experiment --config configs/r1_three_line.yaml`；需先实现比较器）。

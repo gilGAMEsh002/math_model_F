@@ -5,6 +5,6 @@ run: true
 entry: "python -m src.entry experiment --name r3a"
 scope: "在同一批 A1 原始质量记录上应用 A 与 C 的评分规则；分解预处理/赋权/冲突规则差异"
 outputs: [reports/r3a_score_alignment.csv, reports/r3a_summary.json, reports/r3a_summary.md]
-headline: "A↔C Spearman=0.699；C预处理+等权=0.894（预处理差异为主）而 A预处理+C权重=0.687；isotonic 留出验证 Spearman=0.702"
+headline: "A↔C Spearman=0.699；C预处理+等权=0.894而 A预处理+C权重=0.687；isotonic 留出验证 Spearman=0.702"
 blocked: "B 规则未应用于 A1（同源重建样本 A1=50412≠51230；LFS 未 pull）"
 critical: "文本评分对齐 ≠ 与 B6–B8 Q_score 的真实训练收益锚点；缺共同观测时跨附件映射只作假设情景"
