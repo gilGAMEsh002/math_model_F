@@ -1,0 +1,211 @@
+{
+  "run_id": "20260924T002208Z_r2a_3129358",
+  "created_utc": "2026-09-24T00:22:08Z",
+  "status": "success",
+  "command": "/home/sshuser/projects/数学建模26/F题-研究整合/research/src/entry.py experiment --name r2a",
+  "cwd": "/home/sshuser/projects/数学建模26/F题-研究整合/research",
+  "seed": null,
+  "config": null,
+  "upstream": {
+    "A": {
+      "branch": "baseline-a",
+      "commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932"
+    },
+    "B": {
+      "branch": "baseline-b",
+      "commit": "e498b2c6979a154c15a385a9a315827ef801a169"
+    },
+    "C": {
+      "branch": "baseline-c",
+      "commit": "cf7657616dc04cd2547339ed1fdb6c4dc2d4b378"
+    }
+  },
+  "c_upstream_hashes": {
+    "C_q1_predictor": "a402c6abf85f9dc99a05731c9313e62afe6b31df3f8b7a4a70fd0ce538e1a7d5",
+    "C_q2_predictor": "729227647c542e953e9c569093457f22431f8a1678876e27450a927073a88fe1",
+    "C_q3_alloc": "4ad81893fd2b4a9db6cd9826664c2c7169d4e99bc38736ea538a4721409d53cf",
+    "C_unit_anchor": "116baad8eddf92c0142cd1f4f2e5a28909f8712b9fab07cf9b878ab5d614a17e",
+    "C_kappa_ablation": "768129d4d62d1e0d7239dad94a978f0db5036a7d0651aede290b16791094db6d",
+    "A_mixture_predictor": "024af1801deb305afc6a944cf6382acb7b565e8cbd7a3d3b86898022ceb6a6ff",
+    "A_loss_predictor": "721b69c2f36640a2282e28007473d4c7685759903610c9e0d3770dfdb4ed1b72",
+    "B_q2_params": "f87ec4ce3cd3c83c7786cc7a48ce04a912af05742c4624d8e266e4820b3dd081",
+    "B_q3_alloc": "c6311566f76dd446a5d288a5257851d397c2a9d02bb347624ac62818e4289bed"
+  },
+  "research_revision": {
+    "branch": "research/storyline",
+    "commit": "b849d8b73924e9a3adedd838eb80f715ca89a7ab",
+    "dirty": true,
+    "dirty_files": [
+      "M research/experiments.csv",
+      " M research/src/entry.py",
+      "?? research/configs/r2a_channels.yaml",
+      "?? research/reports/r2a_prereview.json",
+      "?? research/reports/r2a_stability.csv",
+      "?? research/reports/r2a_summary.json",
+      "?? research/runs/20260924T002151Z_r2a_3129192/",
+      "?? research/src/r2a_stability.py"
+    ],
+    "diff_sha256": "5a72d914abd1d67c2bd715b7edad78317ef87f11ad0faec11aa93def4100d6fe"
+  },
+  "environment": {
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+    "executable": "/home/sshuser/projects/数学建模26/F题-研究整合/research/.venv/bin/python",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "pyarrow": "25.0.0",
+    "yaml": "6.0.3",
+    "matplotlib": "3.11.1"
+  },
+  "source_snapshot": "source_snapshot.tar.gz",
+  "patch_bytes": 2609,
+  "elapsed_s": 2.801,
+  "metrics": {
+    "B": 100,
+    "seed": 20260923,
+    "lambda_inside_A4A5": {
+      "A": 0.0,
+      "B": 0.0,
+      "C": 0.0
+    },
+    "train_regret_at_lambda": {
+      "A": 0.1732746637784519,
+      "B": 0.035935310217049654,
+      "C": 0.018835021899295867
+    },
+    "exploratory": "A6-A11 已被查看；本结果为探索性外部复核，非首次盲测；A12-A15 仅诊断",
+    "prereview": {
+      "separable_mixture_channel": {
+        "claim": "h(p) 是 Q(p) 的正单调变换且与 (C,ell,kappa,omega) 无关 ⇒ argmin_p L = argmax_p Q(p)；配比通道不改变候选排序，无需重复运行必然同选方的实验。",
+        "form": "L = E + A n^-a + B (d Q^kappa h(p))^-b；A/B 第三问固定 p=p0（通道关闭）。",
+        "existing_numeric_evidence": {
+          "file": "artifacts/baselines/Q3-C/verify_p_channel.csv",
+          "cells": 720,
+          "argmin_L_is_argmax_h_true": 720
+        }
+      }
+    },
+    "per_set": [
+      {
+        "set": "1m",
+        "line": "A",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.7085578808417692,
+        "stable_top1_regret": 0.7085578808417692,
+        "point_top5_regret": 0.32959222243382413,
+        "stable_top5_regret": 0.32959222243382413,
+        "random_expected_regret": 0.5335057505334797,
+        "stable_beats_point": false,
+        "point_beats_random": false
+      },
+      {
+        "set": "1m",
+        "line": "B",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.4140189060798063,
+        "stable_top1_regret": 0.4140189060798063,
+        "point_top5_regret": 0.2821010607939504,
+        "stable_top5_regret": 0.2821010607939504,
+        "random_expected_regret": 0.5335057505334797,
+        "stable_beats_point": false,
+        "point_beats_random": true
+      },
+      {
+        "set": "1m",
+        "line": "C",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.0,
+        "stable_top1_regret": 0.0,
+        "point_top5_regret": 0.06349215690906237,
+        "stable_top5_regret": 0.06349215690906237,
+        "random_expected_regret": 0.5335057505334797,
+        "stable_beats_point": false,
+        "point_beats_random": true
+      },
+      {
+        "set": "60m",
+        "line": "A",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.617886084776659,
+        "stable_top1_regret": 0.617886084776659,
+        "point_top5_regret": 0.2596177596312306,
+        "stable_top5_regret": 0.2596177596312306,
+        "random_expected_regret": 0.38028355508756206,
+        "stable_beats_point": false,
+        "point_beats_random": false
+      },
+      {
+        "set": "60m",
+        "line": "B",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.2878156900405888,
+        "stable_top1_regret": 0.2878156900405888,
+        "point_top5_regret": 0.20117570620316744,
+        "stable_top5_regret": 0.20117570620316744,
+        "random_expected_regret": 0.38028355508756206,
+        "stable_beats_point": false,
+        "point_beats_random": true
+      },
+      {
+        "set": "60m",
+        "line": "C",
+        "n": 256,
+        "lambda": 0.0,
+        "point_top1_regret": 0.007963822438167067,
+        "stable_top1_regret": 0.007963822438167067,
+        "point_top5_regret": 0.05027532027317942,
+        "stable_top5_regret": 0.05027532027317942,
+        "random_expected_regret": 0.38028355508756206,
+        "stable_beats_point": false,
+        "point_beats_random": true
+      },
+      {
+        "set": "1B",
+        "line": "A",
+        "n": 64,
+        "lambda": 0.0,
+        "point_top1_regret": 0.11560340569230787,
+        "stable_top1_regret": 0.11560340569230787,
+        "point_top5_regret": 0.1197429635846154,
+        "stable_top5_regret": 0.1197429635846154,
+        "random_expected_regret": 0.11426107478004877,
+        "stable_beats_point": false,
+        "point_beats_random": false
+      },
+      {
+        "set": "1B",
+        "line": "B",
+        "n": 64,
+        "lambda": 0.0,
+        "point_top1_regret": 0.33293076746153805,
+        "stable_top1_regret": 0.33293076746153805,
+        "point_top5_regret": 0.13350691896923078,
+        "stable_top5_regret": 0.13350691896923078,
+        "random_expected_regret": 0.11426107478004877,
+        "stable_beats_point": false,
+        "point_beats_random": false
+      },
+      {
+        "set": "1B",
+        "line": "C",
+        "n": 64,
+        "lambda": 0.0,
+        "point_top1_regret": 0.06956565961538486,
+        "stable_top1_regret": 0.06956565961538486,
+        "point_top5_regret": 0.030470936261538562,
+        "stable_top5_regret": 0.030470936261538562,
+        "random_expected_regret": 0.11426107478004877,
+        "stable_beats_point": false,
+        "point_beats_random": true
+      }
+    ]
+  },
+  "failures": []
+}

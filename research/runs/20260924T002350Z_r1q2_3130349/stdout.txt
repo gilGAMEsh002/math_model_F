@@ -1,0 +1,5 @@
+[r1_q2] wrote reports/r1_q2_sources.csv  rows=51
+[r1_q2] wrote reports/r1_q2_summary.md
+[r1_q2] wrote reports/r1_q2_b_hashes.json  files=9
+[r1_q2] by line/fit_mode: {('A', 'fixed_model_cross_source'): 3, ('A', 'refit_per_source_internal'): 4, ('B', 'fixed_model_cross_source'): 5, ('B', 'refit_per_source_internal'): 11, ('C', 'fixed_model_cross_source'): 25, ('C', 'refit_per_source_internal'): 3}
+[r1_q2] source-offset: C M0 SSE=16.989 -> +delta=6.800 (66% of total drop), then kappa=3.420, rho=1.640

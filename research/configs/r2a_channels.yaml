@@ -1,0 +1,26 @@
+# R2a：预测改善能否形成稳定的选方改善（已执行）
+id: R2a
+name: channel_regret_discrimination
+status: completed
+run: true
+completed_run_id: 20260924T002151Z_r2a_3129192
+done_run_id: 20260924T002151Z_r2a_3129192
+method:
+  point: argmin predicted equal-weight eval loss
+  stable: argmin(ensemble_mean + lambda*ensemble_std)
+  lambda_selection: "A4/A5 内部网格 {0,0.25,0.5,1,2}，取训练后悔值最小"
+  ensembles:
+    A: "A4/A5 bootstrap 岭回归（200 次以内，闭式）"
+    B: "A4/A5 bootstrap 二次混料岭回归（alpha_quad 冻结）"
+    C: "持久化随机森林的逐树集成（不重拟合）"
+  ground_truth: "A6-A11 实际配方实验 Loss（探索性外部复核，非首次盲测）"
+pre_review:
+  mixture_channel: "h(p) 为 Q(p) 的正单调变换且与 (C,ell,kappa,omega) 无关 ⇒ argmin_p L = argmax_p Q(p)；不重复运行必然同选方的实验"
+result_summary: "λ 在 A4/A5 内被选为 0（三条线）⇒ 稳定选方退化为点预测选方，未带来增益；C 的点选方在三尺度均优于随机期望，B 在 1B 劣于随机，A 在三尺度均劣于随机"
+outputs:
+  - reports/r2a_stability.csv
+  - reports/r2a_prereview.json
+  - reports/r2a_summary.json
+caveats:
+  - "A12-A15 仅估算表一致性诊断，不参与选方评价"
+  - "新增方法只在 A4/A5 内部选择；A6-A11 标记为探索性"

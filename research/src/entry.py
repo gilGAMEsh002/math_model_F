@@ -97,6 +97,42 @@ def cmd_experiment(args):
             run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
         return
 
+    # Path D: R2a stability experiment.
+    if name == "r2a":
+        from .r2a_stability import run_r2a
+        with Run("r2a", command=" ".join(sys.argv)) as run:
+            res = run_r2a(outdir=run.dir)
+            run.set_metrics(res["summary"])
+            for f in ("r2a_stability.csv", "r2a_prereview.json", "r2a_summary.json", "r2a_regret.png"):
+                s = run.dir / f
+                if s.exists():
+                    (RESEARCH / "reports" / f).write_bytes(s.read_bytes())
+            run.log("R2a complete: " + json.dumps(res["summary"]["lambda_inside_A4A5"], ensure_ascii=False))
+        return
+
+    # Path E: R1-Q2 / R2b delegated modules — run under a Run record and copy outputs.
+    if name in ("r1q2", "r2b"):
+        import subprocess
+        import sys as _sys
+        mod = "src.r1_q2_compare" if name == "r1q2" else "src.r2b_source_quality"
+        pats = ("r1_q2_",) if name == "r1q2" else ("r2b_",)
+        with Run(name, command=" ".join(sys.argv)) as run:
+            proc = subprocess.run([_sys.executable, "-m", mod], capture_output=True, text=True,
+                                  cwd=str(RESEARCH))
+            (run.dir / "stdout.txt").write_text(proc.stdout, encoding="utf-8")
+            (run.dir / "stderr.txt").write_text(proc.stderr, encoding="utf-8")
+            copied = []
+            for f in sorted((RESEARCH / "reports").iterdir()):
+                if f.name.startswith(pats) and f.is_file():
+                    (RESEARCH / "reports" / f.name)  # keep in reports
+                    (run.dir / f.name).write_bytes(f.read_bytes())
+                    copied.append(f.name)
+            run.set_metrics({"returncode": proc.returncode, "reports": copied})
+            run.log(f"{mod} rc={proc.returncode}; copied {len(copied)} reports")
+            if proc.returncode != 0:
+                raise RuntimeError(f"{mod} failed rc={proc.returncode}: {proc.stderr[-400:]}")
+        return
+
     if name == "acceptance":
         from .checks import run_acceptance, summarize
         with Run("acceptance", command=" ".join(sys.argv)) as run:

@@ -1,0 +1,68 @@
+== R2b nested fits (M0..M3) ==
+          source model    n   delta   gamma       sse   rmse
+              B6    M0  360     NaN     NaN   16.9891 0.2172
+              B6    M1  360  0.1682     NaN    6.7998 0.1374
+              B6    M2  360  0.0007  0.3622    2.0832 0.0761
+              B6    M3  360  0.0007  0.3622    2.0832 0.0761
+              B7    M0  450     NaN     NaN   19.3391 0.2073
+              B7    M1  450  0.1638     NaN    7.2668 0.1271
+              B7    M2  450  0.0009  0.3620    2.4020 0.0731
+              B7    M3  450  0.0009  0.3620    2.4020 0.0731
+              B8    M0 1704     NaN     NaN 2382.5274 1.1825
+              B8    M1 1704 -0.9823     NaN  738.3256 0.6582
+              B8    M2 1704 -0.9823  0.0000  738.3256 0.6582
+              B8    M3 1704 -0.0739 -1.9830   48.0472 0.1679
+  B6::B1_support    M0  168     NaN     NaN    7.9823 0.2180
+  B6::B1_support    M1  168  0.1696     NaN    3.1512 0.1370
+  B6::B1_support    M2  168 -0.0020  0.3709    0.8440 0.0709
+  B6::B1_support    M3  168 -0.0020  0.3709    0.8440 0.0709
+  B8::calibrated    M0  984     NaN     NaN 1376.0185 1.1825
+  B8::calibrated    M1  984 -0.9725     NaN  445.3365 0.6727
+  B8::calibrated    M2  984 -0.9725  0.0000  445.3365 0.6727
+  B8::calibrated    M3  984 -0.0309 -2.0562   16.2537 0.1285
+B8::extrapolated    M0  720     NaN     NaN 1006.5088 1.1823
+B8::extrapolated    M1  720 -0.9956     NaN  292.7670 0.6377
+B8::extrapolated    M2  720 -0.9956  0.0000  292.7670 0.6377
+B8::extrapolated    M3  720 -0.1327 -1.8827   30.2977 0.2051
+
+== per-source: delta / gamma / CI / boundary / offset-dominated ==
+                B6: n= 360 delta=+0.1682 gamma=+0.3622 CI=[+0.3368,+0.3891] boundary=False separable=True residcorr=+0.8329
+                B7: n= 450 delta=+0.1638 gamma=+0.3620 CI=[+0.3361,+0.3860] boundary=False separable=True residcorr=+0.8182
+                B8: n=1704 delta=-0.9823 gamma=+0.0000 CI=[+0.0000,+0.0000] boundary=True separable=True residcorr=-0.9669
+    B6::B1_support: n= 168 delta=+0.1696 gamma=+0.3709 CI=[+0.3349,+0.4038] boundary=False separable=True residcorr=+0.8557
+    B8::calibrated: n= 984 delta=-0.9725 gamma=+0.0000 CI=[+0.0000,+0.0000] boundary=True separable=True residcorr=-0.9816
+  B8::extrapolated: n= 720 delta=-0.9956 gamma=+0.0000 CI=[+0.0000,+0.0000] boundary=True separable=True residcorr=-0.9468
+
+== verdict ==
+{
+  "source_offset_dominates": true,
+  "identifiable": false,
+  "quality_term_after_offset": {
+    "B6": {
+      "gamma": 0.3622474352286558,
+      "ci": [
+        0.33683241006095077,
+        0.3890829706443513
+      ],
+      "sign": "positive"
+    },
+    "B7": {
+      "gamma": 0.36199528619528615,
+      "ci": [
+        0.3360748745078039,
+        0.3860393889707081
+      ],
+      "sign": "positive"
+    },
+    "B8": {
+      "gamma": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "sign": "boundary_zero (unconstrained negative)"
+    }
+  }
+}
+
+files: /home/sshuser/projects/数学建模26/F题-研究整合/research/reports/r2b_nested_fits.csv, /home/sshuser/projects/数学建模26/F题-研究整合/research/reports/r2b_verdict.json, /home/sshuser/projects/数学建模26/F题-研究整合/research/reports/r2b_summary.md

@@ -1,0 +1,458 @@
+{
+  "meta": {
+    "experiment": "R2b source difference vs quality mechanism",
+    "seed": 20260924,
+    "n_bootstrap": 2000,
+    "classical_source": "line-a artifacts/baselines/Q2-A/loss_predictor.json (frozen, B1-fitted)",
+    "classical": {
+      "E": 1.6897975629236583,
+      "A": 0.3539803206605902,
+      "alpha": 0.33997658189968993,
+      "B": 1.2403055835508099,
+      "beta": 0.27987812854386446
+    },
+    "coordinate": "n=N_params_B=N_actual/1e9, d=D_tokens_B=D_actual/1e9 (billions)",
+    "a_root": "/home/sshuser/projects/数学建模26/F题-upstream/line-a",
+    "a_commit": "c8b97cf4dd596c40351acd7a5e09b7c3ebf6a932",
+    "inputs": {
+      "B6": {
+        "file": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/B_scaling_laws/supplementary_NQ_experiment.csv",
+        "sha256": "c7450ce0d67d8692535fef4709e60e2da60b2c184738bf96df160a4be0a33a7f",
+        "n": 360,
+        "label": "semi_synthetic"
+      },
+      "B7": {
+        "file": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/B_scaling_laws/supplementary_NQ_experiment_expanded.csv",
+        "sha256": "880fd265ca3e1d9bc93b4559af7ed7c18f89040634266c50bae03d88486e0f3a",
+        "n": 450,
+        "label": "semi_synthetic"
+      },
+      "B8": {
+        "file": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/B_scaling_laws/supplementary_NQ_experiment_large.csv",
+        "sha256": "bda0d449f75c73bbd04141e5cffbf4bea7002073e34b7fa95a638570fa095ffe",
+        "n": 1704,
+        "label": "real_large_scale"
+      }
+    }
+  },
+  "source_offset_dominates": {
+    "value": true,
+    "evidence": {
+      "B6": {
+        "rmse_M0": 0.2172371455329559,
+        "rmse_M1": 0.13743496643650632,
+        "rmse_M2": 0.07606939721140306,
+        "offset_gain_frac_sse": 0.5997546396587078,
+        "quality_gain_after_offset_frac_sse": 0.6936446505289277,
+        "gamma_M2": 0.3622474352286558,
+        "gamma_boundary_hit": false
+      },
+      "B7": {
+        "rmse_M0": 0.20730610735547228,
+        "rmse_M1": 0.12707689205024952,
+        "rmse_M2": 0.07305948293598293,
+        "offset_gain_frac_sse": 0.6242413597589856,
+        "quality_gain_after_offset_frac_sse": 0.6694630470608216,
+        "gamma_M2": 0.36199528619528615,
+        "gamma_boundary_hit": false
+      },
+      "B8": {
+        "rmse_M0": 1.1824537262265082,
+        "rmse_M1": 0.658247443338236,
+        "rmse_M2": 0.658247443338236,
+        "offset_gain_frac_sse": 0.690108222164322,
+        "quality_gain_after_offset_frac_sse": 0.0,
+        "gamma_M2": 0.0,
+        "gamma_boundary_hit": true
+      }
+    },
+    "basis": "On B8 (the only large-scale set) the additive source offset removes the dominant share of SSE and the non-negative quality term adds exactly nothing (gamma lands on the zero boundary). On the semi-synthetic B6/B7 the quality term adds more than the offset alone, but that family is not real quality evidence and its gamma has the opposite sign to B8, so no unified quality coefficient survives.",
+    "caveat": "value=true is driven by B8 + the B6/B7-vs-B8 sign conflict. Within B6/B7 alone the offset does NOT dominate the fit improvement.",
+    "b8_calibrated_only": {
+      "rmse": {
+        "M0": 1.1825366029157809,
+        "M1": 0.672738955008046,
+        "M2": 0.672738955008046,
+        "M3": 0.12852239773629517
+      },
+      "gamma_M2_constrained": 0.0,
+      "gamma_boundary_hit": true,
+      "quality_gain_after_offset_frac_sse": 0.0,
+      "resid_corr_1mQ": -0.9815815732674776
+    }
+  },
+  "quality_term_after_offset": {
+    "B6": {
+      "gamma": 0.3622474352286558,
+      "gamma_unconstrained": 0.3622474352286558,
+      "ci_lo": 0.33683241006095077,
+      "ci_hi": 0.3890829706443513,
+      "ci_excludes_zero": true,
+      "sign": "positive",
+      "boundary_hit": false,
+      "resid_corr_1mQ": 0.8328533187356152
+    },
+    "B7": {
+      "gamma": 0.36199528619528615,
+      "gamma_unconstrained": 0.36199528619528615,
+      "ci_lo": 0.3360748745078039,
+      "ci_hi": 0.3860393889707081,
+      "ci_excludes_zero": true,
+      "sign": "positive",
+      "boundary_hit": false,
+      "resid_corr_1mQ": 0.8182072152339047
+    },
+    "B8": {
+      "gamma": 0.0,
+      "gamma_unconstrained": -1.9830163361362358,
+      "ci_lo": 0.0,
+      "ci_hi": 0.0,
+      "ci_excludes_zero": false,
+      "sign": "boundary_zero (unconstrained negative)",
+      "boundary_hit": true,
+      "resid_corr_1mQ": -0.9669147490939961
+    },
+    "summary": "Positive and CI-excluding-zero on the semi-synthetic B6/B7, but censored to the zero boundary on B8 (unconstrained gamma<0). The two signs conflict, so the quality term is not a single portable effect."
+  },
+  "identifiable": false,
+  "identifiability_detail": {
+    "criteria": "A source counts as identifiable for a positive quality coefficient iff the [1, 1-Q] design is non-degenerate (Q varies within (N,D) cells, condition number moderate), gamma_M2 > 0, its bootstrap CI excludes 0, and the non-negative constraint does not bind.",
+    "per_source": {
+      "B6": {
+        "n": 360,
+        "delta_gamma_separable": true,
+        "cond_design": 3.9013716341861073,
+        "var_1mQ": 0.09984375000000002,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.3622474352286558,
+        "gamma_ci": [
+          0.33683241006095077,
+          0.3890829706443513
+        ],
+        "ci_excludes_zero": true,
+        "gamma_boundary_hit": false,
+        "identifiable_positive_gamma": true
+      },
+      "B7": {
+        "n": 450,
+        "delta_gamma_separable": true,
+        "cond_design": 4.237825694123533,
+        "var_1mQ": 0.08250000000000002,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.36199528619528615,
+        "gamma_ci": [
+          0.3360748745078039,
+          0.3860393889707081
+        ],
+        "ci_excludes_zero": true,
+        "gamma_boundary_hit": false,
+        "identifiable_positive_gamma": true
+      },
+      "B8": {
+        "n": 1704,
+        "delta_gamma_separable": true,
+        "cond_design": 3.829300712961463,
+        "var_1mQ": 0.10301539873041064,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.0,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "gamma_boundary_hit": true,
+        "identifiable_positive_gamma": false
+      },
+      "B6::B1_support": {
+        "n": 168,
+        "delta_gamma_separable": true,
+        "cond_design": 3.9013716341861078,
+        "var_1mQ": 0.09984375,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.37087912661152095,
+        "gamma_ci": [
+          0.33489676290464393,
+          0.4037565702741251
+        ],
+        "ci_excludes_zero": true,
+        "gamma_boundary_hit": false,
+        "identifiable_positive_gamma": true
+      },
+      "B8::calibrated": {
+        "n": 984,
+        "delta_gamma_separable": true,
+        "cond_design": 3.826567703024567,
+        "var_1mQ": 0.10313838488994646,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.0,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "gamma_boundary_hit": true,
+        "identifiable_positive_gamma": false
+      },
+      "B8::extrapolated": {
+        "n": 720,
+        "delta_gamma_separable": true,
+        "cond_design": 3.833045215428076,
+        "var_1mQ": 0.10284722222222221,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.0,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "gamma_boundary_hit": true,
+        "identifiable_positive_gamma": false
+      }
+    },
+    "unified_positive_gamma": false,
+    "reason": "B8's gamma is censored at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced."
+  },
+  "caveats": [
+    "A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a censored estimate and is reported as such.",
+    "resid_corr_1mQ is a residual ASSOCIATION, not the fitted gamma effect. B8's ~-0.97 correlation means higher 1-Q co-occurs with larger residuals under L0, confounded with scale/classical misfit; it must not be read as an estimated negative quality mechanism.",
+    "B6/B7 are semi-synthetic quality-supplementary families. A positive gamma there speaks to the functional form / separability, not to real-world data quality.",
+    "B8 mixes calibrated (984 rows) and extrapolated (720 rows); the extrapolated rows lie far outside A's B1 support (N up to 700B vs B1 max ~12B), so classical L0 misfit dominates. Calibrated-only is reported separately and shows the same sign/boundary behaviour.",
+    "The classical parameters are frozen from Q2-A/B1 for every source; no per-source classical refit is performed here (that would be a labelled alternative).",
+    "B6/B7 and B8 are not pooled (protocol: opposite gamma sign, non-poolable).",
+    "delta is a per-source additive offset, not a physical parameter.",
+    "Because M2 includes the source offset delta, the fitted gamma differs slightly from Q2-A's frozen no-intercept gamma on B6 (0.36225 here vs 0.36328 in gamma_estimates.json); the offset is part of the R2b protocol and this difference is expected, not a discrepancy.",
+    "No B quality-rebuild LFS data was available or used.",
+    "Only one quality-score column exists in these CSVs; score_definition_sensitivity therefore tests monotone reparameterisations/standardisations, not a genuinely different score definition."
+  ],
+  "score_definition_sensitivity": {
+    "what_it_is": "Sensitivity of the fitted quality coefficient to how the (single) text quality score is parameterised before entering as (1-Q): identity, within-source z-score, min-max, rank-uniform, square and sqrt.",
+    "is_supported": "The sign and boundary behaviour of gamma are stable under these monotone reparameterisations for each source; B6/B7 stay positive, B8 stays on the zero boundary.",
+    "is_not_supported": "The MAGNITUDE of gamma is not stable (e.g. identity vs z-score differ several-fold), and these data contain no second, independently defined quality score, so this does NOT test sensitivity to a genuinely different text-score definition or establish that the score content is correct.",
+    "per_source": {
+      "B6": {
+        "gamma_by_definition": {
+          "identity": 0.3622474352286558,
+          "zscore": 0.11446316790696211,
+          "minmax": 0.32602269170579035,
+          "rank": 0.3973654973544973,
+          "square": 0.38122924290577725,
+          "sqrt": 0.357792860723078
+        },
+        "boundary_by_definition": {
+          "identity": false,
+          "zscore": false,
+          "minmax": false,
+          "rank": false,
+          "square": false,
+          "sqrt": false
+        },
+        "sign_positive_under_all_definitions": true
+      },
+      "B7": {
+        "gamma_by_definition": {
+          "identity": 0.36199528619528615,
+          "zscore": 0.10397522996501421,
+          "minmax": 0.3257957575757575,
+          "rank": 0.362799720164609,
+          "square": 0.3719253711793758,
+          "sqrt": 0.35790745250984074
+        },
+        "boundary_by_definition": {
+          "identity": false,
+          "zscore": false,
+          "minmax": false,
+          "rank": false,
+          "square": false,
+          "sqrt": false
+        },
+        "sign_positive_under_all_definitions": true
+      },
+      "B8": {
+        "gamma_by_definition": {
+          "identity": 0.0,
+          "zscore": 0.0,
+          "minmax": 0.0,
+          "rank": 0.0,
+          "square": 0.0,
+          "sqrt": 0.0
+        },
+        "boundary_by_definition": {
+          "identity": true,
+          "zscore": true,
+          "minmax": true,
+          "rank": true,
+          "square": true,
+          "sqrt": true
+        },
+        "sign_positive_under_all_definitions": false
+      },
+      "B6::B1_support": {
+        "gamma_by_definition": {
+          "identity": 0.37087912661152095,
+          "zscore": 0.11719061507150673,
+          "minmax": 0.3337912139503688,
+          "rank": 0.4093496247705431,
+          "square": 0.3930001542781326,
+          "sqrt": 0.36472877226563133
+        },
+        "boundary_by_definition": {
+          "identity": false,
+          "zscore": false,
+          "minmax": false,
+          "rank": false,
+          "square": false,
+          "sqrt": false
+        },
+        "sign_positive_under_all_definitions": true
+      },
+      "B8::calibrated": {
+        "gamma_by_definition": {
+          "identity": 0.0,
+          "zscore": 0.0,
+          "minmax": 0.0,
+          "rank": 0.0,
+          "square": 0.0,
+          "sqrt": 0.0
+        },
+        "boundary_by_definition": {
+          "identity": true,
+          "zscore": true,
+          "minmax": true,
+          "rank": true,
+          "square": true,
+          "sqrt": true
+        },
+        "sign_positive_under_all_definitions": false
+      },
+      "B8::extrapolated": {
+        "gamma_by_definition": {
+          "identity": 0.0,
+          "zscore": 0.0,
+          "minmax": 0.0,
+          "rank": 0.0,
+          "square": 0.0,
+          "sqrt": 0.0
+        },
+        "boundary_by_definition": {
+          "identity": true,
+          "zscore": true,
+          "minmax": true,
+          "rank": true,
+          "square": true,
+          "sqrt": true
+        },
+        "sign_positive_under_all_definitions": false
+      }
+    }
+  },
+  "semi_synthetic_identifiability": {
+    "what_it_is": "Identifiability / separability of delta and gamma INSIDE the semi-synthetic quality families B6 and B7. Q varies within every (N,D) cell and 1-Q is orthogonal to L0, so the [1, 1-Q] design is well conditioned.",
+    "is_supported": "Within B6/B7 the source offset and the quality term ARE separable, gamma is positive and its bootstrap CI excludes 0. This establishes that the additive quality form is identifiable and fittable on a semi-synthetic grid.",
+    "is_not_supported": "It does NOT establish a real data-quality mechanism: B6/B7 are semi-synthetic, the effect may be present by construction, and the positive sign does not carry over to B8.",
+    "per_source": {
+      "B6": {
+        "n": 360,
+        "delta_gamma_separable": true,
+        "cond_design": 3.9013716341861073,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.3622474352286558,
+        "gamma_ci": [
+          0.33683241006095077,
+          0.3890829706443513
+        ],
+        "ci_excludes_zero": true,
+        "boundary_hit": false
+      },
+      "B7": {
+        "n": 450,
+        "delta_gamma_separable": true,
+        "cond_design": 4.237825694123533,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.36199528619528615,
+        "gamma_ci": [
+          0.3360748745078039,
+          0.3860393889707081
+        ],
+        "ci_excludes_zero": true,
+        "boundary_hit": false
+      },
+      "B6::B1_support": {
+        "n": 168,
+        "delta_gamma_separable": true,
+        "cond_design": 3.9013716341861078,
+        "frac_nd_cells_with_q_variation": 1.0,
+        "gamma": 0.37087912661152095,
+        "gamma_ci": [
+          0.33489676290464393,
+          0.4037565702741251
+        ],
+        "ci_excludes_zero": true,
+        "boundary_hit": false
+      }
+    }
+  },
+  "real_quality_evidence": {
+    "what_it_is": "Evidence from B8, the large-scale set with calibrated (observed-style) and extrapolated rows, including a calibrated-only subset.",
+    "is_supported": "Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is censored to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.",
+    "is_not_supported": "These data do NOT support a positive additive quality mechanism. The strong negative residual association (corr ~ -0.97) is an ASSOCIATION confounded with scale/classical misfit and data_type; it is not an estimated negative quality effect (the constraint prevents a negative gamma from being reported).",
+    "per_source": {
+      "B8": {
+        "n": 1704,
+        "rmse": {
+          "M0": 1.1824537262265082,
+          "M1": 0.658247443338236,
+          "M2": 0.658247443338236,
+          "M3": 0.1679187395705872
+        },
+        "offset_gain_frac_sse": 0.690108222164322,
+        "quality_gain_after_offset_frac_sse": 0.0,
+        "gamma_constrained": 0.0,
+        "gamma_unconstrained": -1.9830163361362358,
+        "gamma_boundary_hit": true,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "resid_corr_1mQ": -0.9669147490939961
+      },
+      "B8::calibrated": {
+        "n": 984,
+        "rmse": {
+          "M0": 1.1825366029157809,
+          "M1": 0.672738955008046,
+          "M2": 0.672738955008046,
+          "M3": 0.12852239773629517
+        },
+        "offset_gain_frac_sse": 0.6763586768988178,
+        "quality_gain_after_offset_frac_sse": 0.0,
+        "gamma_constrained": 0.0,
+        "gamma_unconstrained": -2.0561879521923716,
+        "gamma_boundary_hit": true,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "resid_corr_1mQ": -0.9815815732674776
+      },
+      "B8::extrapolated": {
+        "n": 720,
+        "rmse": {
+          "M0": 1.1823404520229404,
+          "M1": 0.637668331818618,
+          "M2": 0.637668331818618,
+          "M3": 0.20513444772187353
+        },
+        "offset_gain_frac_sse": 0.709126202009688,
+        "quality_gain_after_offset_frac_sse": 0.0,
+        "gamma_constrained": 0.0,
+        "gamma_unconstrained": -1.8826811051091603,
+        "gamma_boundary_hit": true,
+        "gamma_ci": [
+          0.0,
+          0.0
+        ],
+        "resid_corr_1mQ": -0.9468434905762616
+      }
+    }
+  }
+}

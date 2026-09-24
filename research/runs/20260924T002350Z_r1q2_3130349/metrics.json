@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "reports": [
+    "r1_q2_b_hashes.json",
+    "r1_q2_sources.csv",
+    "r1_q2_summary.md"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "generated_utc": "2026-09-24T00:23:52Z",
+  "line": "B",
+  "commit": "e498b2c6979a154c15a385a9a315827ef801a169",
+  "worktree": "/home/sshuser/projects/数学建模26/F题-upstream/line-b/results",
+  "provenance_note": "hash snapshot of currently-read B artifacts; this does NOT establish historical run provenance",
+  "files": {
+    "line-b/results/q2_derivative_check.csv": {
+      "sha256": "8f3777660e71ced84870b561c6be27bc72f0fc6a462492e78c1b4b3af5c27d07",
+      "bytes": 113
+    },
+    "line-b/results/q2_elasticities_classic.csv": {
+      "sha256": "023514fbe96064ef342f34119f5eb6dfb1c048e39262cd0b4b85d32d32469b00",
+      "bytes": 908
+    },
+    "line-b/results/q2_holdout_classic.csv": {
+      "sha256": "3582384acd5e95c35bca1db53d9062f7d76b6e2d35c05b61397fd7c7cb768613",
+      "bytes": 624
+    },
+    "line-b/results/q2_quality_alt_datasets.csv": {
+      "sha256": "5ee2afe861868eb336b53f9258ac474b9c5a7511eb56ab8cf916cc619d2cd5cc",
+      "bytes": 201
+    },
+    "line-b/results/q2_quality_equivalence.csv": {
+      "sha256": "bf4c0fa5d3974fd7a8b3a1a68a9a131456c66bc5d40f1cd5a07c9b21a5996eb6",
+      "bytes": 1581
+    },
+    "line-b/results/q2_scaling_model.npz": {
+      "sha256": "5c96f8068e68296e402743242d73d1aacb05076dc9d4ff998188856969db80e0",
+      "bytes": 906
+    },
+    "line-b/results/q2_scaling_parameters.json": {
+      "sha256": "f87ec4ce3cd3c83c7786cc7a48ce04a912af05742c4624d8e266e4820b3dd081",
+      "bytes": 5005
+    },
+    "line-b/results/q2_source_diagnosis.csv": {
+      "sha256": "ea00c58871819a51b1dd4d77b7c9772b77de75c13b030a0ba48ccfdb449dcd4b",
+      "bytes": 1082
+    },
+    "line-b/results/q2_validation_sources.csv": {
+      "sha256": "2746288da8d35c3f077529f349fd3288572a4d6d8f6dee3a4f2a0ed19c0407ce",
+      "bytes": 560
+    }
+  }
+}

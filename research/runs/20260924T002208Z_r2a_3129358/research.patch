@@ -1,0 +1,35 @@
+diff --git a/research/experiments.csv b/research/experiments.csv
+index d8e1e0c..8e23996 100644
+--- a/research/experiments.csv
++++ b/research/experiments.csv
+@@ -4,5 +4,5 @@ R1,unified_three_line_comparison,A|B|C,Q1-Q3,fixed_upstream_comparison,completed
+ R3,new_method_ablation_and_storyline_lock,A|B|C,ALL,method_development,pending,false,,python -m src.entry experiment --config configs/r3_*.yaml,runs/,新方法/消融与主线选择记录；更新完整大纲
+ R1-Q2,q2_stratified_comparison,A|B|C,Q2,fixed_upstream_comparison,planned,false,,python -m src.entry experiment --config configs/r1_q2.yaml,reports/r1_q2_*.csv,按 真实/半合成/插值/估算 × 经典/质量/来源偏移/配比 分层；未执行
+ R1-Cq1pred,c_q1_executable_predictor_rebuild,C,Q1,interface_repair,completed,true,rebuild+verify(c_q1_predictor),python -m src.c_q1_rebuild,artifacts/c_q1_predictor/,"variant=forest_none（训练内CV选择）；equivalent=true, n=9828, max abs diff 1.78e-15；fit sklearn 1.5.2"
+-R2a,channel_regret_discrimination,A|B|C,Q2-Q3,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2a_channels.yaml,reports/r2a_*.csv,候选甲辨别：经典/质量/配比 三通道 regret vs 随机期望
++R2a,channel_regret_discrimination,A|B|C,Q2-Q3,minimal_discrimination,completed,true,20260924T002151Z_r2a_3129192,python -m src.entry experiment --name r2a,reports/r2a_stability.csv,λ(A4/A5 内)=0，无增益；C 点选方三尺度优于随机，B 1B 劣于随机，A 三尺度劣于随机；A6-A11 探索性
+ R2b,quality_coordinate_reconciliation,A|C,Q1-Q2,minimal_discrimination,pending,false,,python -m src.entry experiment --config configs/r2b_quality.yaml,reports/r2b_*.csv,候选乙辨别：同一质量样本/预处理下比较质量项符号与 CI（B 需先 lfs pull）
+diff --git a/research/src/entry.py b/research/src/entry.py
+index 2d91b8d..c3fd570 100644
+--- a/research/src/entry.py
++++ b/research/src/entry.py
+@@ -97,6 +97,19 @@ def cmd_experiment(args):
+             run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
+         return
+ 
++    # Path D: R2a stability experiment.
++    if name == "r2a":
++        from .r2a_stability import run_r2a
++        with Run("r2a", command=" ".join(sys.argv)) as run:
++            res = run_r2a(outdir=run.dir)
++            run.set_metrics(res["summary"])
++            for f in ("r2a_stability.csv", "r2a_prereview.json", "r2a_summary.json"):
++                s = run.dir / f
++                if s.exists():
++                    (RESEARCH / "reports" / f).write_bytes(s.read_bytes())
++            run.log("R2a complete: " + json.dumps(res["summary"]["lambda_inside_A4A5"], ensure_ascii=False))
++        return
++
+     if name == "acceptance":
+         from .checks import run_acceptance, summarize
+         with Run("acceptance", command=" ".join(sys.argv)) as run:

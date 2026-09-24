@@ -1,0 +1,9 @@
+id: R2b
+name: quality_coordinate_reconciliation
+status: completed
+run: true
+completed_run_id: 20260924T002352Z_r2b_3130407
+entry: "python -m src.entry experiment --name r2b"
+model_sequence: [M0 classical, "M1 +source offset delta", "M2 +delta+gamma*(1-Q), gamma>=0", "M3 unconstrained (diagnostic)"]
+outputs: [reports/r2b_nested_fits.csv, reports/r2b_verdict.json, reports/r2b_summary.md]
+headline: "B6/B7 gamma≈0.362 CI 不含 0；B8 gamma 压至 0 边界；跨来源无统一正 gamma ⇒ 不可辨识；偏移与质量在来源内部可分离但无共同锚点"

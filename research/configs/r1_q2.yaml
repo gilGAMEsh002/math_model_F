@@ -1,0 +1,8 @@
+id: R1-Q2
+name: q2_stratified_comparison
+status: completed
+run: true
+completed_run_id: 20260924T002350Z_r1q2_3130349
+entry: "python -m src.entry experiment --name r1q2"
+outputs: [reports/r1_q2_sources.csv, reports/r1_q2_summary.md, reports/r1_q2_b_hashes.json]
+headline: "单一来源偏移占主要改进（C 嵌套 66.4%；逐来源 B2/B4/B5/B10 显著下降）；κ/ρ 仅在 B6/B7 半合成族内部可辨识"

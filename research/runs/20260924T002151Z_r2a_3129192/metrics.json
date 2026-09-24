@@ -1,0 +1,145 @@
+{
+  "B": 100,
+  "seed": 20260923,
+  "lambda_inside_A4A5": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0
+  },
+  "train_regret_at_lambda": {
+    "A": 0.1732746637784519,
+    "B": 0.035935310217049654,
+    "C": 0.018835021899295867
+  },
+  "exploratory": "A6-A11 已被查看；本结果为探索性外部复核，非首次盲测；A12-A15 仅诊断",
+  "prereview": {
+    "separable_mixture_channel": {
+      "claim": "h(p) 是 Q(p) 的正单调变换且与 (C,ell,kappa,omega) 无关 ⇒ argmin_p L = argmax_p Q(p)；配比通道不改变候选排序，无需重复运行必然同选方的实验。",
+      "form": "L = E + A n^-a + B (d Q^kappa h(p))^-b；A/B 第三问固定 p=p0（通道关闭）。",
+      "existing_numeric_evidence": {
+        "file": "artifacts/baselines/Q3-C/verify_p_channel.csv",
+        "cells": 720,
+        "argmin_L_is_argmax_h_true": 720
+      }
+    }
+  },
+  "per_set": [
+    {
+      "set": "1m",
+      "line": "A",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.7085578808417692,
+      "stable_top1_regret": 0.7085578808417692,
+      "point_top5_regret": 0.32959222243382413,
+      "stable_top5_regret": 0.32959222243382413,
+      "random_expected_regret": 0.5335057505334797,
+      "stable_beats_point": false,
+      "point_beats_random": false
+    },
+    {
+      "set": "1m",
+      "line": "B",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.4140189060798063,
+      "stable_top1_regret": 0.4140189060798063,
+      "point_top5_regret": 0.2821010607939504,
+      "stable_top5_regret": 0.2821010607939504,
+      "random_expected_regret": 0.5335057505334797,
+      "stable_beats_point": false,
+      "point_beats_random": true
+    },
+    {
+      "set": "1m",
+      "line": "C",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.0,
+      "stable_top1_regret": 0.0,
+      "point_top5_regret": 0.06349215690906237,
+      "stable_top5_regret": 0.06349215690906237,
+      "random_expected_regret": 0.5335057505334797,
+      "stable_beats_point": false,
+      "point_beats_random": true
+    },
+    {
+      "set": "60m",
+      "line": "A",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.617886084776659,
+      "stable_top1_regret": 0.617886084776659,
+      "point_top5_regret": 0.2596177596312306,
+      "stable_top5_regret": 0.2596177596312306,
+      "random_expected_regret": 0.38028355508756206,
+      "stable_beats_point": false,
+      "point_beats_random": false
+    },
+    {
+      "set": "60m",
+      "line": "B",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.2878156900405888,
+      "stable_top1_regret": 0.2878156900405888,
+      "point_top5_regret": 0.20117570620316744,
+      "stable_top5_regret": 0.20117570620316744,
+      "random_expected_regret": 0.38028355508756206,
+      "stable_beats_point": false,
+      "point_beats_random": true
+    },
+    {
+      "set": "60m",
+      "line": "C",
+      "n": 256,
+      "lambda": 0.0,
+      "point_top1_regret": 0.007963822438167067,
+      "stable_top1_regret": 0.007963822438167067,
+      "point_top5_regret": 0.05027532027317942,
+      "stable_top5_regret": 0.05027532027317942,
+      "random_expected_regret": 0.38028355508756206,
+      "stable_beats_point": false,
+      "point_beats_random": true
+    },
+    {
+      "set": "1B",
+      "line": "A",
+      "n": 64,
+      "lambda": 0.0,
+      "point_top1_regret": 0.11560340569230787,
+      "stable_top1_regret": 0.11560340569230787,
+      "point_top5_regret": 0.1197429635846154,
+      "stable_top5_regret": 0.1197429635846154,
+      "random_expected_regret": 0.11426107478004877,
+      "stable_beats_point": false,
+      "point_beats_random": false
+    },
+    {
+      "set": "1B",
+      "line": "B",
+      "n": 64,
+      "lambda": 0.0,
+      "point_top1_regret": 0.33293076746153805,
+      "stable_top1_regret": 0.33293076746153805,
+      "point_top5_regret": 0.13350691896923078,
+      "stable_top5_regret": 0.13350691896923078,
+      "random_expected_regret": 0.11426107478004877,
+      "stable_beats_point": false,
+      "point_beats_random": false
+    },
+    {
+      "set": "1B",
+      "line": "C",
+      "n": 64,
+      "lambda": 0.0,
+      "point_top1_regret": 0.06956565961538486,
+      "stable_top1_regret": 0.06956565961538486,
+      "point_top5_regret": 0.030470936261538562,
+      "stable_top5_regret": 0.030470936261538562,
+      "random_expected_regret": 0.11426107478004877,
+      "stable_beats_point": false,
+      "point_beats_random": true
+    }
+  ]
+}

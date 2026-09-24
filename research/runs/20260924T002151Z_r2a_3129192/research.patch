@@ -1,0 +1,24 @@
+diff --git a/research/src/entry.py b/research/src/entry.py
+index 2d91b8d..c3fd570 100644
+--- a/research/src/entry.py
++++ b/research/src/entry.py
+@@ -97,6 +97,19 @@ def cmd_experiment(args):
+             run.log("R1 complete: " + json.dumps(res["summary"], ensure_ascii=False))
+         return
+ 
++    # Path D: R2a stability experiment.
++    if name == "r2a":
++        from .r2a_stability import run_r2a
++        with Run("r2a", command=" ".join(sys.argv)) as run:
++            res = run_r2a(outdir=run.dir)
++            run.set_metrics(res["summary"])
++            for f in ("r2a_stability.csv", "r2a_prereview.json", "r2a_summary.json"):
++                s = run.dir / f
++                if s.exists():
++                    (RESEARCH / "reports" / f).write_bytes(s.read_bytes())
++            run.log("R2a complete: " + json.dumps(res["summary"]["lambda_inside_A4A5"], ensure_ascii=False))
++        return
++
+     if name == "acceptance":
+         from .checks import run_acceptance, summarize
+         with Run("acceptance", command=" ".join(sys.argv)) as run:

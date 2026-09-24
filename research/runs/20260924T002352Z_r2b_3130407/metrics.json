@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "reports": [
+    "r2b_nested_fits.csv",
+    "r2b_summary.md",
+    "r2b_verdict.json"
+  ]
+}
