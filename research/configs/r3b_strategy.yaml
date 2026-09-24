@@ -1,0 +1,9 @@
+id: R3b
+name: compatibility_effect_on_decisions
+status: completed
+run: true
+entry: "python -m src.entry experiment --name r3b"
+protocol: "统一坐标/成本/预算/可行域；逐参数组变更（截距 / 质量 κ / 规模 α,β）"
+outputs: [reports/r3b_strategy.csv, reports/r3b_summary.json, reports/r3b_summary.md]
+headline: "δ 为加性常数→argmin 不变（数值确认）；排除质量族后所有兼容性情景 regime 一致，max|ΔN|/N≤0.9%；只有质量参数 κ 改变投入方向"
+caveat: "情景重算，非新增真实训练实验；来源特有偏移不得在缺少目标来源依据时任意迁移"

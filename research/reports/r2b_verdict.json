@@ -31,7 +31,8 @@
         "file": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/B_scaling_laws/supplementary_NQ_experiment_large.csv",
         "sha256": "bda0d449f75c73bbd04141e5cffbf4bea7002073e34b7fa95a638570fa095ffe",
         "n": 1704,
-        "label": "real_large_scale"
+        "label": "semi_synthetic_extrapolated",
+        "label_note": "B8 = 半合成大规模矩阵，含更大参数外推（非真实观测）"
       }
     }
   },
@@ -112,108 +113,25 @@
       "boundary_hit": true,
       "resid_corr_1mQ": -0.9669147490939961
     },
-    "summary": "Positive and CI-excluding-zero on the semi-synthetic B6/B7, but censored to the zero boundary on B8 (unconstrained gamma<0). The two signs conflict, so the quality term is not a single portable effect."
+    "summary": "Positive and CI-excluding-zero on the semi-synthetic B6/B7, but zero-boundary (non-negative constrained) to the zero boundary on B8 (unconstrained gamma<0). The two signs conflict, so the quality term is not a single portable effect."
   },
   "identifiable": false,
   "identifiability_detail": {
-    "criteria": "A source counts as identifiable for a positive quality coefficient iff the [1, 1-Q] design is non-degenerate (Q varies within (N,D) cells, condition number moderate), gamma_M2 > 0, its bootstrap CI excludes 0, and the non-negative constraint does not bind.",
-    "per_source": {
-      "B6": {
-        "n": 360,
-        "delta_gamma_separable": true,
-        "cond_design": 3.9013716341861073,
-        "var_1mQ": 0.09984375000000002,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.3622474352286558,
-        "gamma_ci": [
-          0.33683241006095077,
-          0.3890829706443513
-        ],
-        "ci_excludes_zero": true,
-        "gamma_boundary_hit": false,
-        "identifiable_positive_gamma": true
-      },
-      "B7": {
-        "n": 450,
-        "delta_gamma_separable": true,
-        "cond_design": 4.237825694123533,
-        "var_1mQ": 0.08250000000000002,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.36199528619528615,
-        "gamma_ci": [
-          0.3360748745078039,
-          0.3860393889707081
-        ],
-        "ci_excludes_zero": true,
-        "gamma_boundary_hit": false,
-        "identifiable_positive_gamma": true
-      },
-      "B8": {
-        "n": 1704,
-        "delta_gamma_separable": true,
-        "cond_design": 3.829300712961463,
-        "var_1mQ": 0.10301539873041064,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.0,
-        "gamma_ci": [
-          0.0,
-          0.0
-        ],
-        "ci_excludes_zero": false,
-        "gamma_boundary_hit": true,
-        "identifiable_positive_gamma": false
-      },
-      "B6::B1_support": {
-        "n": 168,
-        "delta_gamma_separable": true,
-        "cond_design": 3.9013716341861078,
-        "var_1mQ": 0.09984375,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.37087912661152095,
-        "gamma_ci": [
-          0.33489676290464393,
-          0.4037565702741251
-        ],
-        "ci_excludes_zero": true,
-        "gamma_boundary_hit": false,
-        "identifiable_positive_gamma": true
-      },
-      "B8::calibrated": {
-        "n": 984,
-        "delta_gamma_separable": true,
-        "cond_design": 3.826567703024567,
-        "var_1mQ": 0.10313838488994646,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.0,
-        "gamma_ci": [
-          0.0,
-          0.0
-        ],
-        "ci_excludes_zero": false,
-        "gamma_boundary_hit": true,
-        "identifiable_positive_gamma": false
-      },
-      "B8::extrapolated": {
-        "n": 720,
-        "delta_gamma_separable": true,
-        "cond_design": 3.833045215428076,
-        "var_1mQ": 0.10284722222222221,
-        "frac_nd_cells_with_q_variation": 1.0,
-        "gamma": 0.0,
-        "gamma_ci": [
-          0.0,
-          0.0
-        ],
-        "ci_excludes_zero": false,
-        "gamma_boundary_hit": true,
-        "identifiable_positive_gamma": false
-      }
+    "within_source": {
+      "value": true,
+      "basis": "δ 与 γ 在各来源内部可分离（设计条件数≈3.9–4.2；每个 (N,D) 内 Q 有变化）"
     },
-    "unified_positive_gamma": false,
-    "reason": "B8's gamma is censored at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced."
+    "cross_source_support_for_common_quality_coefficient": {
+      "value": false,
+      "basis": "B6/B7 给出 γ≈0.362（CI 不含 0），B8 在非负约束下压到零边界且零改善；无共同锚点 ⇒ 不支持统一正 γ"
+    },
+    "real_quality_effect_identified": {
+      "value": false,
+      "basis": "B6/B7 为半合成；B8 为半合成/外推；缺少真实联合质量-收益观测 ⇒ 真实质量效应未被识别"
+    }
   },
   "caveats": [
-    "A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a censored estimate and is reported as such.",
+    "A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a zero-boundary (non-negative constrained) estimate and is reported as such.",
     "resid_corr_1mQ is a residual ASSOCIATION, not the fitted gamma effect. B8's ~-0.97 correlation means higher 1-Q co-occurs with larger residuals under L0, confounded with scale/classical misfit; it must not be read as an estimated negative quality mechanism.",
     "B6/B7 are semi-synthetic quality-supplementary families. A positive gamma there speaks to the functional form / separability, not to real-world data quality.",
     "B8 mixes calibrated (984 rows) and extrapolated (720 rows); the extrapolated rows lie far outside A's B1 support (N up to 700B vs B1 max ~12B), so classical L0 misfit dominates. Calibrated-only is reported separately and shows the same sign/boundary behaviour.",
@@ -393,7 +311,7 @@
   },
   "real_quality_evidence": {
     "what_it_is": "Evidence from B8, the large-scale set with calibrated (observed-style) and extrapolated rows, including a calibrated-only subset.",
-    "is_supported": "Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is censored to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.",
+    "is_supported": "Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is zero-boundary (non-negative constrained) to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.",
     "is_not_supported": "These data do NOT support a positive additive quality mechanism. The strong negative residual association (corr ~ -0.97) is an ASSOCIATION confounded with scale/classical misfit and data_type; it is not an estimated negative quality effect (the constraint prevents a negative gamma from being reported).",
     "per_source": {
       "B8": {
@@ -454,5 +372,17 @@
         "resid_corr_1mQ": -0.9468434905762616
       }
     }
-  }
+  },
+  "sse_improvement_basis": {
+    "denominator": "M0 的 SSE（同一来源、同一样本）",
+    "sample": "B6 n=360 / B7 n=450 / B8 n=1704（B8 含外推点）",
+    "inclusion_order": [
+      "M0 classical",
+      "M1 +source offset delta",
+      "M2 +delta+gamma*(1-Q), gamma>=0",
+      "M3 unconstrained (diagnostic only)"
+    ],
+    "note": "份额按上述顺序逐级计算，分母为 M0 SSE；不同来源/样本不可相加成单一占比"
+  },
+  "delta_note": "δ 等于 M1 下残差均值，属代数恒等核验，不作为独立来源机制证据；不得据此声称识别了来源机制。"
 }

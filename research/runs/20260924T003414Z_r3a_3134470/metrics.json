@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "reports": [
+    "r3a_score_alignment.csv",
+    "r3a_summary.json",
+    "r3a_summary.md"
+  ]
+}

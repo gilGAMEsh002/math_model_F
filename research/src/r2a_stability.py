@@ -152,6 +152,8 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
         lam[name], reg[name] = choose_lambda(batch.mean(0), batch.std(0), ytr)
         # lambda must be chosen on the *eval-loss* ensemble spread
     rows = []
+    from .r1_compare import load_a, load_b, load_c
+    ORIG = {"A": load_a(), "B": load_b(), "C": load_c("forest_none")}
     for mf, lf, key in POOLS:
         idx, P, Y = set_matrix(rt, mf, lf)
         y = Y @ V
@@ -162,13 +164,31 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
         for name in ("A", "B", "C"):
             pt = regret(y, mean[name])
             st = regret(y, mean[name] + lam[name] * std[name])
+            # original stored model (single fit / persisted forest), aligned by candidate id
+            orig = ORIG[name].get(key)
+            if orig is not None:
+                omap = {int(x): i for i, x in enumerate(orig["index"])}
+                osel = [omap[int(x)] for x in idx if int(x) in omap]
+                o_eval = orig["Yhat"][osel] @ V
+                o_true = orig["Y"][osel] @ V
+                o_pt = regret(o_true, o_eval)
+                o_top5 = regret(o_true, o_eval, 5)
+            else:
+                o_pt, o_top5 = float("nan"), float("nan")
+            # stability: agreement of ensemble members on the top-1 candidate
+            member_top1 = np.argmin(np.stack([_eval(mm) for mm in batches[name]]), axis=1)
+            agree = float(np.bincount(member_top1).max()) / len(member_top1)
             rows.append({"set": key, "line": name, "n": len(P), "lambda": lam[name],
-                         "point_top1_regret": pt, "stable_top1_regret": st,
-                         "point_top5_regret": regret(y, mean[name], 5),
-                         "stable_top5_regret": regret(y, mean[name] + lam[name] * std[name], 5),
+                         "original_model_top1_regret": o_pt,
+                         "original_model_top5_regret": o_top5,
+                         "ensemble_mean_top1_regret": pt,
+                         "ensemble_mean_plus_penalty_top1_regret": st,
+                         "ensemble_mean_top5_regret": regret(y, mean[name], 5),
+                         "ensemble_member_top1_agreement": agree,
                          "random_expected_regret": rand,
-                         "stable_beats_point": bool(st < pt - 1e-12),
-                         "point_beats_random": bool(pt < rand)})
+                         "penalty_beats_mean": bool(st < pt - 1e-12),
+                         "mean_beats_original": bool(pt < o_pt - 1e-12) if np.isfinite(o_pt) else None,
+                         "original_beats_random": bool(o_pt < rand) if np.isfinite(o_pt) else None})
     df = pd.DataFrame(rows)
     df.to_csv(outdir / "r2a_stability.csv", index=False)
     try:
@@ -176,17 +196,21 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         sets = ["1m", "60m", "1B"]
-        fig, ax = plt.subplots(figsize=(6.5, 3.2))
-        w = 0.25
-        for i, line in enumerate(["A", "B", "C"]):
-            pt = [df[(df.line == line) & (df.set == s)]["point_top1_regret"].mean() for s in sets]
-            ax.bar(np.arange(3) + (i - 1) * w, pt, width=w, label=f"{line} point")
+        fig, ax = plt.subplots(figsize=(7.5, 3.4))
+        w = 0.2
+        for i, (col, lab) in enumerate((("original_model_top1_regret", "original model"),
+                                        ("ensemble_mean_top1_regret", "ensemble mean"),
+                                        ("ensemble_mean_plus_penalty_top1_regret", "mean+penalty"))):
+            for j, line in enumerate(["A", "B", "C"]):
+                vals = [df[(df.line == line) & (df.set == s)][col].mean() for s in sets]
+                ax.bar(np.arange(3) + (j - 1) * w + (i - 1) * w / 3, vals, width=w / 3,
+                       label=f"{line} {lab}" if i == 0 or j == 0 else None)
         rnd = [df[df.set == s]["random_expected_regret"].mean() for s in sets]
         ax.plot(np.arange(3), rnd, "k--o", label="random expectation")
         ax.set_xticks(range(3)); ax.set_xticklabels(sets)
-        ax.set_ylabel("true top-1 regret"); ax.set_title(
-            "R2a: selection regret vs random (A6-A11, exploratory)", fontsize=9)
-        ax.legend(fontsize=7); fig.tight_layout()
+        ax.set_ylabel("true top-1 regret")
+        ax.set_title("R2a: original vs ensemble-mean vs mean+penalty (A6-A11, exploratory)", fontsize=8)
+        ax.legend(fontsize=6, ncol=2); fig.tight_layout()
         fig.savefig(outdir / "r2a_regret.png", dpi=160); plt.close(fig)
     except Exception as exc:
         print("figure failed:", exc)

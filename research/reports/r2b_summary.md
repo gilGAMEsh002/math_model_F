@@ -21,7 +21,7 @@
 - **来源偏移是否主导**：`True` — On B8 (the only large-scale set) the additive source offset removes the dominant share of SSE and the non-negative quality term adds exactly nothing (gamma lands on the zero boundary). On the semi-synthetic B6/B7 the quality term adds more than the offset alone, but that family is not real quality evidence and its gamma has the opposite sign to B8, so no unified quality coefficient survives.
   - 注意：value=true is driven by B8 + the B6/B7-vs-B8 sign conflict. Within B6/B7 alone the offset does NOT dominate the fit improvement.
 - **γ 是否可辨识（单一正系数）**：`False`
-  - B8's gamma is censored at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced.
+  - B8's gamma is zero-boundary at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced.
 
 ## 三段必须分开的结论
 
@@ -37,12 +37,12 @@
 
 ### 3. 真实质量证据
 - 是什么：Evidence from B8, the large-scale set with calibrated (observed-style) and extrapolated rows, including a calibrated-only subset.
-- 支持：Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is censored to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.
+- 支持：Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is zero-boundary to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.
 - **不支持**：These data do NOT support a positive additive quality mechanism. The strong negative residual association (corr ~ -0.97) is an ASSOCIATION confounded with scale/classical misfit and data_type; it is not an estimated negative quality effect (the constraint prevents a negative gamma from being reported).
 
 ## 约束与注意事项
 
-- A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a censored estimate and is reported as such.
+- A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a zero-boundary estimate and is reported as such.
 - resid_corr_1mQ is a residual ASSOCIATION, not the fitted gamma effect. B8's ~-0.97 correlation means higher 1-Q co-occurs with larger residuals under L0, confounded with scale/classical misfit; it must not be read as an estimated negative quality mechanism.
 - B6/B7 are semi-synthetic quality-supplementary families. A positive gamma there speaks to the functional form / separability, not to real-world data quality.
 - B8 mixes calibrated (984 rows) and extrapolated (720 rows); the extrapolated rows lie far outside A's B1 support (N up to 700B vs B1 max ~12B), so classical L0 misfit dominates. Calibrated-only is reported separately and shows the same sign/boundary behaviour.

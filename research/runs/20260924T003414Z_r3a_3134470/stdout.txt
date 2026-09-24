@@ -1,0 +1,9 @@
+{
+ "n_matched": 51230,
+ "spearman_S_A_equal_vs_S_Aprep_Cweight": 0.6874211565947428,
+ "spearman_S_A_equal_vs_S_Cprep_equal": 0.8941488027330596,
+ "spearman_S_A_equal_vs_S_C_entropy": 0.6993798903215552,
+ "spearman_S_A_equal_vs_S_C_resolved": 0.7069831065299897,
+ "spearman_S_A_equal_vs_S_C_entropy_recomputed": 0.6993798903215552,
+ "mean_abs_S_A_equal_minus_S_C_entropy": 0.2561838813402193
+}

@@ -1,0 +1,11 @@
+{
+  "separable_mixture_channel": {
+    "claim": "h(p) 是 Q(p) 的正单调变换且与 (C,ell,kappa,omega) 无关 ⇒ argmin_p L = argmax_p Q(p)；配比通道不改变候选排序，无需重复运行必然同选方的实验。",
+    "form": "L = E + A n^-a + B (d Q^kappa h(p))^-b；A/B 第三问固定 p=p0（通道关闭）。",
+    "existing_numeric_evidence": {
+      "file": "artifacts/baselines/Q3-C/verify_p_channel.csv",
+      "cells": 720,
+      "argmin_L_is_argmax_h_true": 720
+    }
+  }
+}

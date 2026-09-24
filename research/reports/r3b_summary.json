@@ -1,0 +1,146 @@
+{
+  "analytic": {
+    "claim": "来源偏移 δ 是加性常数，固定 Q 时 argmin(N,D,Q) 不变；无需重复跑全预算网格。",
+    "numeric_confirmation": [
+      {
+        "C": 1e+19,
+        "ell": 2048,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "interior",
+        "regime_b": "interior"
+      },
+      {
+        "C": 1e+19,
+        "ell": 8192,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "interior",
+        "regime_b": "interior"
+      },
+      {
+        "C": 1e+22,
+        "ell": 2048,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "upper_bound_Q1",
+        "regime_b": "upper_bound_Q1"
+      },
+      {
+        "C": 1e+22,
+        "ell": 8192,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "upper_bound_Q1",
+        "regime_b": "upper_bound_Q1"
+      },
+      {
+        "C": 1e+24,
+        "ell": 2048,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "upper_bound_Q1",
+        "regime_b": "upper_bound_Q1"
+      },
+      {
+        "C": 1e+24,
+        "ell": 8192,
+        "argmin_same_NQ": true,
+        "dL": 0.16823714553295588,
+        "regime_a": "upper_bound_Q1",
+        "regime_b": "upper_bound_Q1"
+      }
+    ],
+    "invariant": true
+  },
+  "scale_param_ci_source": "artifacts/baselines/Q2-C/validation_bootstrap_M0.csv",
+  "direction_changing_parameter_group": "只有质量通道参数 κ（quality_off / boot_lo / boot_hi）改变投入方向；来源偏移（加性常数）与规模参数 α/β 不改变 Q* 状态。",
+  "stable_regions_all_scenarios": [
+    {
+      "C": 1e+19,
+      "ell": 2048,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 1,
+      "max_abs_N_rel_change": 0.09023492285569545
+    },
+    {
+      "C": 1e+19,
+      "ell": 8192,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 1,
+      "max_abs_N_rel_change": 0.09152959350513368
+    },
+    {
+      "C": 1e+22,
+      "ell": 2048,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 3,
+      "max_abs_N_rel_change": 0.11534828626908311
+    },
+    {
+      "C": 1e+22,
+      "ell": 8192,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 3,
+      "max_abs_N_rel_change": 0.1074789308607349
+    },
+    {
+      "C": 1e+24,
+      "ell": 2048,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 1,
+      "max_abs_N_rel_change": 0.017556254162575113
+    },
+    {
+      "C": 1e+24,
+      "ell": 8192,
+      "all_scenarios_same_regime": false,
+      "direction_flips": 1,
+      "max_abs_N_rel_change": 0.013196299927588528
+    }
+  ],
+  "stable_regions_excluding_quality_family": [
+    {
+      "C": 1e+19,
+      "ell": 2048,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.0
+    },
+    {
+      "C": 1e+19,
+      "ell": 8192,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.008816996797551657
+    },
+    {
+      "C": 1e+22,
+      "ell": 2048,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.0
+    },
+    {
+      "C": 1e+22,
+      "ell": 8192,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.0
+    },
+    {
+      "C": 1e+24,
+      "ell": 2048,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.0
+    },
+    {
+      "C": 1e+24,
+      "ell": 8192,
+      "all_scenarios_same_regime": true,
+      "max_abs_N_rel_change": 0.0
+    }
+  ],
+  "which_changes_move_direction": [
+    "kappa_boot_hi",
+    "kappa_boot_lo",
+    "quality_off_kappa0"
+  ],
+  "caveat": "情景重算，不是新增真实训练实验；来源特有偏移在缺少目标来源依据时不得任意迁移。"
+}

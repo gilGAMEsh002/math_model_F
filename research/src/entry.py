@@ -111,11 +111,13 @@ def cmd_experiment(args):
         return
 
     # Path E: R1-Q2 / R2b delegated modules — run under a Run record and copy outputs.
-    if name in ("r1q2", "r2b"):
+    if name in ("r1q2", "r2b", "r3a", "r3b"):
         import subprocess
         import sys as _sys
-        mod = "src.r1_q2_compare" if name == "r1q2" else "src.r2b_source_quality"
-        pats = ("r1_q2_",) if name == "r1q2" else ("r2b_",)
+        mod = {"r1q2": "src.r1_q2_compare", "r2b": "src.r2b_source_quality",
+               "r3a": "src.r3a_score_alignment", "r3b": "src.r3b_strategy"}[name]
+        pats = {"r1q2": ("r1_q2_",), "r2b": ("r2b_",),
+                "r3a": ("r3a_",), "r3b": ("r3b_",)}[name]
         with Run(name, command=" ".join(sys.argv)) as run:
             proc = subprocess.run([_sys.executable, "-m", mod], capture_output=True, text=True,
                                   cwd=str(RESEARCH))

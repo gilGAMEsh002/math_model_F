@@ -1,0 +1,8 @@
+{
+  "returncode": 0,
+  "reports": [
+    "r3b_strategy.csv",
+    "r3b_summary.json",
+    "r3b_summary.md"
+  ]
+}

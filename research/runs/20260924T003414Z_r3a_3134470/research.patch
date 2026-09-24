@@ -1,0 +1,623 @@
+diff --git a/research/decisions.md b/research/decisions.md
+index 808526b..1fe16f0 100644
+--- a/research/decisions.md
++++ b/research/decisions.md
+@@ -53,16 +53,17 @@
+ 
+ - **R1-Q2**（run `20260924T002350Z_r1q2_3130349`，`reports/r1_q2_*`）：按来源分层 51 行，区分 fixed_model_cross_source 与 refit_per_source_internal。**单一来源偏移解释了主要改进**：C 的嵌套 SSE 在 B1∪B6 上 M0 16.989→M0+δ 6.800（占降幅 **66.4%**，δ=0.168237 恰等于 B6 的 M0 偏差），之后 κ 22.0%、ρ 11.6%。逐来源同样：B2 RMSE 1.243→0.0108、B4 0.293→0.0882、B5 0.198→0.132、B10 1.09e-3→2.91e-5（fixed→refit）。B 的哈希快照仅记录当前读取产物，不构成历史运行溯源。
+ - **R2a**（run `20260924T002208Z_r2a_3129358`，`reports/r2a_*`）：预审确认配比通道是 Q(p) 的正单调变换，不改变排序（复用 C 的 `verify_p_channel.csv`）。实验：稳定选方（集成均值+λ·标准差）的 **λ 在 A4/A5 内被选为 0（A/B/C 全部）⇒ 无增益**；真实 top-1 后悔值：C 三尺度均优于随机（0/0.008/0.070），B 在 1B 劣于随机（0.333>0.114），A 三尺度均劣于随机。
+-- **R2b**（run `20260924T002352Z_r2b_3130407`，`reports/r2b_*`）：同一协议下 M0/M1(+δ)/M2(+δ+γ≥0)/M3(诊断)。B6 γ=0.362 [0.337,0.389]、B7 γ=0.362 [0.336,0.386] 均不含 0；**B8 γ 压到 0 边界且不改善**；δ 与 γ 在各来源内部可分离（条件数≈3.9–4.2），但跨来源无统一正 γ ⇒ `identifiable=false`。B8 的负 γ 记为**删失**，不表述为已估出负质量效应。未使用 B 的 LFS 重建数据，未用 A6–A15。
++- **R2b**（run `20260924T002352Z_r2b_3130407`，`reports/r2b_*`）：同一协议下 M0/M1(+δ)/M2(+δ+γ≥0)/M3(诊断)。B6 γ=0.362 [0.337,0.389]、B7 γ=0.362 [0.336,0.386] 均不含 0；**B8 γ 压到 0 边界且不改善**；δ 与 γ 在各来源内部可分离（条件数≈3.9–4.2），但跨来源无统一正 γ ⇒ `identifiable=false`。B8 在非负约束下估计到**零边界**（记为“非负约束下的零边界估计”），不表述为已估出负质量效应。未使用 B 的 LFS 重建数据，未用 A6–A15。
+ 
+-## 7. 主线选择记录（本轮定稿）
++## 7. 主线选择记录（工作主线，非终局结论）
+ 
+-**选择：主线 = 候选乙 ——「来源兼容与数据价值的适用边界」；候选甲（跨尺度预测→可靠资源决策）降为稳健性/边界检查。**
++**工作主线 = 候选乙 ——「来源兼容与数据价值的适用边界」；候选甲（跨尺度预测→可靠资源决策）降为稳健性/边界检查。**
++> 说明：实验已执行 ≠ 原结论必然正确。本节为**基于现有证据的工作选择**，其判据、范围与反证均如下；任何超出证据的表述已删除。
+ 
+-- 判据对照（任务五）：稳定选方**未能**改善真实尺度决策（λ=0，无增益）⇒ 不选甲为主线；来源处理**显著**影响质量效应与可比性（δ 占降幅 60–69%；γ 在半合成内成立、在真实大尺度删失）且选方改进不稳定 ⇒ 选乙。
++- 判据对照（任务五）：稳定选方**未能**改善真实尺度决策（λ=0，无增益）⇒ 不选甲为主线；来源处理**显著**影响质量效应与可比性（δ 占降幅 60–69%；B8 为半合成/外推、其质量参数在非负约束下压到零边界）且选方改进不稳定 ⇒ 选乙。
+ - **支持证据**：R1-Q2 的 δ 占比与 δ=偏差恒等；R2b 的 B8 零边界与跨来源无统一 γ；R1 Layer B 三线经典项一致（说明差异确实来自来源/质量通道而非求解器）。
+-- **反证/限制**：① 仅在 B6/B7 内部时偏移并不主导（γ 强显著），故“偏移主导”**以把 B8 视为唯一大尺度真实证据为前提**；② B8 为“校准+外推”半合成/外推性质、与 B6/B7 符号冲突，可能是 Q 坐标不兼容而非真实负效应；③ 三线 Q 定义不同，跨线 Q 数值不可排名；④ B 的质量重建数据仍未 pull（LFS），B 的质量评分属不同样本。
+-- **适用范围**：半合成来源族内部的质量可辨识性；真实大尺度上的质量效应**不可辨识**。主线的可主张范围止于“来源兼容是首要项、质量机制需共同锚点后才可谈收益”。
++- **反证/限制**：① 仅在 B6/B7 内部时偏移并不主导（γ 强显著），故“偏移主导”**以把 B8 视为唯一大规模证据（且其为半合成/外推）为前提**；② B8 为半合成/外推性质（非真实观测）、与 B6/B7 符号冲突，可能是 Q 坐标不兼容而非真实负效应；③ 三线 Q 定义不同，跨线 Q 数值不可排名；④ B 的质量重建数据仍未 pull（LFS），B 的质量评分属不同样本。
++- **适用范围**：半合成来源族内部的质量可辨识性；半合成/外推的大规模来源（B8）上的质量效应**不可辨识**。主线的可主张范围止于“来源兼容是首要项、质量机制需共同锚点后才可谈收益”。
+ - **仍缺的实验**：见 §8。
+ 
+ ## 8. R3 任务（只列实现该主线所必需）
+@@ -72,3 +73,15 @@
+ - **R3b｜来源偏移对下游策略的影响**：用来源偏移校正后的模型（δ 或分来源截距）重算 C 的 Q3 固定质量/预算路径，比较校正前后 N*/D*/成本份额是否变号或跨界，检验“来源兼容改变资源配置结论”这一主线主张。
+   - 验收：给出校正前后策略表与差异；无显著变化则如实记为“不影响下游”。
+ - （非必需，暂不排）跨尺度选方稳定性的真实大规模证据需要新的真实配方实验，不在当前数据范围内。
++
++## 9. 修订记录（2026-09-24，依据复核意见）
++
++1. **B8 定性**：全部由“真实大尺度”更正为**半合成/外推的大规模来源**（`r2b_verdict.json` 的 `label=semi_synthetic_extrapolated`；报告与大纲同步）。
++2. **措辞**：“删失”统一改为**“非负约束下的零边界估计”**（不表述为已估出负质量效应）。
++3. **可分性三分解**（写入 `r2b_verdict.json.identifiability_detail`）：
++   - 来源内部可辨识性 = **是**（δ、γ 可分离，条件数≈3.9–4.2）；
++   - 共同质量系数的跨来源支持 = **否**（B6/B7 显著、B8 零边界）；
++   - 真实质量效应是否被识别 = **否**（缺真实联合质量-收益观测）。
++4. **SSE 分母/样本/加入顺序**：写入 `r2b_verdict.json.sse_improvement_basis`（分母=M0 SSE；样本=B6/B7/B8 各自；顺序 M0→M1→M2→M3）。**δ=残差均值仅为代数核验**，不作独立来源机制证据。
++5. **R2a 三者并列**：见新版 `reports/r2a_stability.csv`（`original_stored_model` / `ensemble_mean` / `ensemble_mean_plus_penalty` / `random`）。**不以 λ=0 单独推出整个稳定化方法无效**；λ=0 只说明在该集成与惩罚族内、A4/A5 内部准则下未获增益。
++6. **主线表述**：保留乙为工作主线，删除超出证据的“定稿/首选机制”式理由；§7 已改为工作选择并列出反证与范围。
+diff --git a/research/reports/r2a_regret.png b/research/reports/r2a_regret.png
+index 5d22473..fffdc95 100644
+Binary files a/research/reports/r2a_regret.png and b/research/reports/r2a_regret.png differ
+diff --git a/research/reports/r2a_stability.csv b/research/reports/r2a_stability.csv
+index 13c1a38..5eb9fb4 100644
+--- a/research/reports/r2a_stability.csv
++++ b/research/reports/r2a_stability.csv
+@@ -1,10 +1,10 @@
+-set,line,n,lambda,point_top1_regret,stable_top1_regret,point_top5_regret,stable_top5_regret,random_expected_regret,stable_beats_point,point_beats_random
+-1m,A,256,0.0,0.7085578808417692,0.7085578808417692,0.32959222243382413,0.32959222243382413,0.5335057505334797,False,False
+-1m,B,256,0.0,0.4140189060798063,0.4140189060798063,0.2821010607939504,0.2821010607939504,0.5335057505334797,False,True
+-1m,C,256,0.0,0.0,0.0,0.06349215690906237,0.06349215690906237,0.5335057505334797,False,True
+-60m,A,256,0.0,0.617886084776659,0.617886084776659,0.2596177596312306,0.2596177596312306,0.38028355508756206,False,False
+-60m,B,256,0.0,0.2878156900405888,0.2878156900405888,0.20117570620316744,0.20117570620316744,0.38028355508756206,False,True
+-60m,C,256,0.0,0.007963822438167067,0.007963822438167067,0.05027532027317942,0.05027532027317942,0.38028355508756206,False,True
+-1B,A,64,0.0,0.11560340569230787,0.11560340569230787,0.1197429635846154,0.1197429635846154,0.11426107478004877,False,False
+-1B,B,64,0.0,0.33293076746153805,0.33293076746153805,0.13350691896923078,0.13350691896923078,0.11426107478004877,False,False
+-1B,C,64,0.0,0.06956565961538486,0.06956565961538486,0.030470936261538562,0.030470936261538562,0.11426107478004877,False,True
++set,line,n,lambda,original_model_top1_regret,original_model_top5_regret,ensemble_mean_top1_regret,ensemble_mean_plus_penalty_top1_regret,ensemble_mean_top5_regret,ensemble_member_top1_agreement,random_expected_regret,penalty_beats_mean,mean_beats_original,original_beats_random
++1m,A,256,0.0,0.7085578808417683,0.3332107837383559,0.7085578808417692,0.7085578808417692,0.32959222243382413,0.62,0.5335057505334797,False,False,False
++1m,B,256,0.0,0.4140189060798054,0.2682448093707741,0.4140189060798063,0.4140189060798063,0.2821010607939504,0.29,0.5335057505334797,False,False,True
++1m,C,256,0.0,0.0,0.06349215690906203,0.0,0.0,0.06349215690906237,0.08333333333333333,0.5335057505334797,False,False,True
++60m,A,256,0.0,0.617886084776659,0.29899783134460484,0.617886084776659,0.617886084776659,0.2596177596312306,0.62,0.38028355508756206,False,False,False
++60m,B,256,0.0,0.2878156900405884,0.18613541859846894,0.2878156900405888,0.2878156900405888,0.20117570620316744,0.29,0.38028355508756206,False,False,True
++60m,C,256,0.0,0.007963822438167067,0.05027532027317969,0.007963822438167067,0.007963822438167067,0.05027532027317942,0.08333333333333333,0.38028355508756206,False,False,True
++1B,A,64,0.0,0.11560340569230743,0.11974296358461514,0.11560340569230787,0.11560340569230787,0.1197429635846154,0.64,0.11426107478004877,False,False,False
++1B,B,64,0.0,0.33293076746153805,0.13350691896923053,0.33293076746153805,0.33293076746153805,0.13350691896923078,0.93,0.11426107478004877,False,False,False
++1B,C,64,0.0,0.06956565961538486,0.030470936261538562,0.06956565961538486,0.06956565961538486,0.030470936261538562,0.3016666666666667,0.11426107478004877,False,False,True
+diff --git a/research/reports/r2a_summary.json b/research/reports/r2a_summary.json
+index 2bba059..8ac98f2 100644
+--- a/research/reports/r2a_summary.json
++++ b/research/reports/r2a_summary.json
+@@ -29,117 +29,144 @@
+       "line": "A",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.7085578808417692,
+-      "stable_top1_regret": 0.7085578808417692,
+-      "point_top5_regret": 0.32959222243382413,
+-      "stable_top5_regret": 0.32959222243382413,
++      "original_model_top1_regret": 0.7085578808417683,
++      "original_model_top5_regret": 0.3332107837383559,
++      "ensemble_mean_top1_regret": 0.7085578808417692,
++      "ensemble_mean_plus_penalty_top1_regret": 0.7085578808417692,
++      "ensemble_mean_top5_regret": 0.32959222243382413,
++      "ensemble_member_top1_agreement": 0.62,
+       "random_expected_regret": 0.5335057505334797,
+-      "stable_beats_point": false,
+-      "point_beats_random": false
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": false
+     },
+     {
+       "set": "1m",
+       "line": "B",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.4140189060798063,
+-      "stable_top1_regret": 0.4140189060798063,
+-      "point_top5_regret": 0.2821010607939504,
+-      "stable_top5_regret": 0.2821010607939504,
++      "original_model_top1_regret": 0.4140189060798054,
++      "original_model_top5_regret": 0.2682448093707741,
++      "ensemble_mean_top1_regret": 0.4140189060798063,
++      "ensemble_mean_plus_penalty_top1_regret": 0.4140189060798063,
++      "ensemble_mean_top5_regret": 0.2821010607939504,
++      "ensemble_member_top1_agreement": 0.29,
+       "random_expected_regret": 0.5335057505334797,
+-      "stable_beats_point": false,
+-      "point_beats_random": true
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": true
+     },
+     {
+       "set": "1m",
+       "line": "C",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.0,
+-      "stable_top1_regret": 0.0,
+-      "point_top5_regret": 0.06349215690906237,
+-      "stable_top5_regret": 0.06349215690906237,
++      "original_model_top1_regret": 0.0,
++      "original_model_top5_regret": 0.06349215690906203,
++      "ensemble_mean_top1_regret": 0.0,
++      "ensemble_mean_plus_penalty_top1_regret": 0.0,
++      "ensemble_mean_top5_regret": 0.06349215690906237,
++      "ensemble_member_top1_agreement": 0.08333333333333333,
+       "random_expected_regret": 0.5335057505334797,
+-      "stable_beats_point": false,
+-      "point_beats_random": true
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": true
+     },
+     {
+       "set": "60m",
+       "line": "A",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.617886084776659,
+-      "stable_top1_regret": 0.617886084776659,
+-      "point_top5_regret": 0.2596177596312306,
+-      "stable_top5_regret": 0.2596177596312306,
++      "original_model_top1_regret": 0.617886084776659,
++      "original_model_top5_regret": 0.29899783134460484,
++      "ensemble_mean_top1_regret": 0.617886084776659,
++      "ensemble_mean_plus_penalty_top1_regret": 0.617886084776659,
++      "ensemble_mean_top5_regret": 0.2596177596312306,
++      "ensemble_member_top1_agreement": 0.62,
+       "random_expected_regret": 0.38028355508756206,
+-      "stable_beats_point": false,
+-      "point_beats_random": false
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": false
+     },
+     {
+       "set": "60m",
+       "line": "B",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.2878156900405888,
+-      "stable_top1_regret": 0.2878156900405888,
+-      "point_top5_regret": 0.20117570620316744,
+-      "stable_top5_regret": 0.20117570620316744,
++      "original_model_top1_regret": 0.2878156900405884,
++      "original_model_top5_regret": 0.18613541859846894,
++      "ensemble_mean_top1_regret": 0.2878156900405888,
++      "ensemble_mean_plus_penalty_top1_regret": 0.2878156900405888,
++      "ensemble_mean_top5_regret": 0.20117570620316744,
++      "ensemble_member_top1_agreement": 0.29,
+       "random_expected_regret": 0.38028355508756206,
+-      "stable_beats_point": false,
+-      "point_beats_random": true
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": true
+     },
+     {
+       "set": "60m",
+       "line": "C",
+       "n": 256,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.007963822438167067,
+-      "stable_top1_regret": 0.007963822438167067,
+-      "point_top5_regret": 0.05027532027317942,
+-      "stable_top5_regret": 0.05027532027317942,
++      "original_model_top1_regret": 0.007963822438167067,
++      "original_model_top5_regret": 0.05027532027317969,
++      "ensemble_mean_top1_regret": 0.007963822438167067,
++      "ensemble_mean_plus_penalty_top1_regret": 0.007963822438167067,
++      "ensemble_mean_top5_regret": 0.05027532027317942,
++      "ensemble_member_top1_agreement": 0.08333333333333333,
+       "random_expected_regret": 0.38028355508756206,
+-      "stable_beats_point": false,
+-      "point_beats_random": true
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": true
+     },
+     {
+       "set": "1B",
+       "line": "A",
+       "n": 64,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.11560340569230787,
+-      "stable_top1_regret": 0.11560340569230787,
+-      "point_top5_regret": 0.1197429635846154,
+-      "stable_top5_regret": 0.1197429635846154,
++      "original_model_top1_regret": 0.11560340569230743,
++      "original_model_top5_regret": 0.11974296358461514,
++      "ensemble_mean_top1_regret": 0.11560340569230787,
++      "ensemble_mean_plus_penalty_top1_regret": 0.11560340569230787,
++      "ensemble_mean_top5_regret": 0.1197429635846154,
++      "ensemble_member_top1_agreement": 0.64,
+       "random_expected_regret": 0.11426107478004877,
+-      "stable_beats_point": false,
+-      "point_beats_random": false
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": false
+     },
+     {
+       "set": "1B",
+       "line": "B",
+       "n": 64,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.33293076746153805,
+-      "stable_top1_regret": 0.33293076746153805,
+-      "point_top5_regret": 0.13350691896923078,
+-      "stable_top5_regret": 0.13350691896923078,
++      "original_model_top1_regret": 0.33293076746153805,
++      "original_model_top5_regret": 0.13350691896923053,
++      "ensemble_mean_top1_regret": 0.33293076746153805,
++      "ensemble_mean_plus_penalty_top1_regret": 0.33293076746153805,
++      "ensemble_mean_top5_regret": 0.13350691896923078,
++      "ensemble_member_top1_agreement": 0.93,
+       "random_expected_regret": 0.11426107478004877,
+-      "stable_beats_point": false,
+-      "point_beats_random": false
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": false
+     },
+     {
+       "set": "1B",
+       "line": "C",
+       "n": 64,
+       "lambda": 0.0,
+-      "point_top1_regret": 0.06956565961538486,
+-      "stable_top1_regret": 0.06956565961538486,
+-      "point_top5_regret": 0.030470936261538562,
+-      "stable_top5_regret": 0.030470936261538562,
++      "original_model_top1_regret": 0.06956565961538486,
++      "original_model_top5_regret": 0.030470936261538562,
++      "ensemble_mean_top1_regret": 0.06956565961538486,
++      "ensemble_mean_plus_penalty_top1_regret": 0.06956565961538486,
++      "ensemble_mean_top5_regret": 0.030470936261538562,
++      "ensemble_member_top1_agreement": 0.3016666666666667,
+       "random_expected_regret": 0.11426107478004877,
+-      "stable_beats_point": false,
+-      "point_beats_random": true
++      "penalty_beats_mean": false,
++      "mean_beats_original": false,
++      "original_beats_random": true
+     }
+   ]
+ }
+\ No newline at end of file
+diff --git a/research/reports/r2b_nested_fits.csv b/research/reports/r2b_nested_fits.csv
+index 9789998..73d2a83 100644
+--- a/research/reports/r2b_nested_fits.csv
++++ b/research/reports/r2b_nested_fits.csv
+@@ -9,7 +9,7 @@ B7,full,M2,450,2,0.0008924922774797006,0.36199528619528615,0.3360748745078039,0.
+ B7,full,M3,450,2,0.0008924922774797006,0.36199528619528615,,,False,,2.4019596210929315,0.07305948293598293,-0.6475767942007311,0.8182072152339047,4.237825694123533,True,True,diagnostic UNCONSTRAINED (not a deployable sign)
+ B8,full,M0,1704,0,,,,,False,,2382.5273721924896,1.1824537262265082,0.0,-0.9669147490939961,3.829300712961463,True,False,classical frozen L0
+ B8,full,M1,1704,1,-0.9822968583914078,,,,False,,738.3256431108966,0.658247443338236,-0.44332075857305586,-0.9669147490939961,3.829300712961463,True,False,source offset only
+-B8,full,M2,1704,2,-0.9822968583914078,0.0,0.0,0.0,True,1.0,738.3256431108966,0.658247443338236,-0.44332075857305586,-0.9669147490939961,3.829300712961463,True,False,gamma>=0 BOUNDARY (censored from negative unconstrained)
++B8,full,M2,1704,2,-0.9822968583914078,0.0,0.0,0.0,True,1.0,738.3256431108966,0.658247443338236,-0.44332075857305586,-0.9669147490939961,3.829300712961463,True,False,gamma>=0 BOUNDARY (zero-boundary from negative unconstrained)
+ B8,full,M3,1704,2,-0.07387986778815325,-1.9830163361362358,,,True,,48.047182080652874,0.1679187395705872,-0.8579912804651935,-0.9669147490939961,3.829300712961463,True,False,diagnostic UNCONSTRAINED (not a deployable sign)
+ B6::B1_support,B1_support,M0,168,0,,,,,False,,7.982274464653027,0.21797600436763112,0.0,0.8556724154079413,3.9013716341861078,True,False,classical frozen L0
+ B6::B1_support,B1_support,M1,168,1,0.16957660927692414,,,,False,,3.1512284271247806,0.13695733666444793,-0.3716861768258666,0.8556724154079413,3.9013716341861078,True,False,source offset only
+@@ -17,9 +17,9 @@ B6::B1_support,B1_support,M2,168,2,-0.0019549867809042776,0.37087912661152095,0.
+ B6::B1_support,B1_support,M3,168,2,-0.0019549867809042776,0.37087912661152095,,,False,,0.8439768633039859,0.07087786541213603,-0.6748363856941071,0.8556724154079413,3.9013716341861078,True,True,diagnostic UNCONSTRAINED (not a deployable sign)
+ B8::calibrated,calibrated,M0,984,0,,,,,False,,1376.018532159826,1.1825366029157809,0.0,-0.9815815732674776,3.826567703024567,True,False,classical frozen L0
+ B8::calibrated,calibrated,M1,984,1,-0.9725302646448992,,,,False,,445.33645835995276,0.672738955008046,-0.43110517395463843,-0.9815815732674776,3.826567703024567,True,False,source offset only
+-B8::calibrated,calibrated,M2,984,2,-0.9725302646448992,0.0,0.0,0.0,True,1.0,445.33645835995276,0.672738955008046,-0.43110517395463843,-0.9815815732674776,3.826567703024567,True,False,gamma>=0 BOUNDARY (censored from negative unconstrained)
++B8::calibrated,calibrated,M2,984,2,-0.9725302646448992,0.0,0.0,0.0,True,1.0,445.33645835995276,0.672738955008046,-0.43110517395463843,-0.9815815732674776,3.826567703024567,True,False,gamma>=0 BOUNDARY (zero-boundary from negative unconstrained)
+ B8::calibrated,calibrated,M3,984,2,-0.030946635317782634,-2.0561879521923716,,,True,,16.253718612368267,0.12852239773629517,-0.8913163470632558,-0.9815815732674776,3.826567703024567,True,False,diagnostic UNCONSTRAINED (not a deployable sign)
+ B8::extrapolated,extrapolated,M0,720,0,,,,,False,,1006.5088400326638,1.1823404520229404,0.0,-0.9468434905762616,3.833045215428076,True,False,classical frozen L0
+ B8::extrapolated,extrapolated,M1,720,1,-0.9956445365116366,,,,False,,292.76704901112424,0.637668331818618,-0.4606728284331376,-0.9468434905762616,3.833045215428076,True,False,source offset only
+-B8::extrapolated,extrapolated,M2,720,2,-0.9956445365116366,0.0,0.0,0.0,True,1.0,292.76704901112424,0.637668331818618,-0.4606728284331376,-0.9468434905762616,3.833045215428076,True,False,gamma>=0 BOUNDARY (censored from negative unconstrained)
++B8::extrapolated,extrapolated,M2,720,2,-0.9956445365116366,0.0,0.0,0.0,True,1.0,292.76704901112424,0.637668331818618,-0.4606728284331376,-0.9468434905762616,3.833045215428076,True,False,gamma>=0 BOUNDARY (zero-boundary from negative unconstrained)
+ B8::extrapolated,extrapolated,M3,720,2,-0.13274903000327154,-1.8826811051091603,,,True,,30.297701982353807,0.20513444772187353,-0.8265013707592461,-0.9468434905762616,3.833045215428076,True,False,diagnostic UNCONSTRAINED (not a deployable sign)
+diff --git a/research/reports/r2b_summary.md b/research/reports/r2b_summary.md
+index bc35888..5bacd4b 100644
+--- a/research/reports/r2b_summary.md
++++ b/research/reports/r2b_summary.md
+@@ -21,7 +21,7 @@
+ - **来源偏移是否主导**：`True` — On B8 (the only large-scale set) the additive source offset removes the dominant share of SSE and the non-negative quality term adds exactly nothing (gamma lands on the zero boundary). On the semi-synthetic B6/B7 the quality term adds more than the offset alone, but that family is not real quality evidence and its gamma has the opposite sign to B8, so no unified quality coefficient survives.
+   - 注意：value=true is driven by B8 + the B6/B7-vs-B8 sign conflict. Within B6/B7 alone the offset does NOT dominate the fit improvement.
+ - **γ 是否可辨识（单一正系数）**：`False`
+-  - B8's gamma is censored at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced.
++  - B8's gamma is zero-boundary at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced.
+ 
+ ## 三段必须分开的结论
+ 
+@@ -37,12 +37,12 @@
+ 
+ ### 3. 真实质量证据
+ - 是什么：Evidence from B8, the large-scale set with calibrated (observed-style) and extrapolated rows, including a calibrated-only subset.
+-- 支持：Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is censored to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.
++- 支持：Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is zero-boundary to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.
+ - **不支持**：These data do NOT support a positive additive quality mechanism. The strong negative residual association (corr ~ -0.97) is an ASSOCIATION confounded with scale/classical misfit and data_type; it is not an estimated negative quality effect (the constraint prevents a negative gamma from being reported).
+ 
+ ## 约束与注意事项
+ 
+-- A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a censored estimate and is reported as such.
++- A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a zero-boundary estimate and is reported as such.
+ - resid_corr_1mQ is a residual ASSOCIATION, not the fitted gamma effect. B8's ~-0.97 correlation means higher 1-Q co-occurs with larger residuals under L0, confounded with scale/classical misfit; it must not be read as an estimated negative quality mechanism.
+ - B6/B7 are semi-synthetic quality-supplementary families. A positive gamma there speaks to the functional form / separability, not to real-world data quality.
+ - B8 mixes calibrated (984 rows) and extrapolated (720 rows); the extrapolated rows lie far outside A's B1 support (N up to 700B vs B1 max ~12B), so classical L0 misfit dominates. Calibrated-only is reported separately and shows the same sign/boundary behaviour.
+diff --git a/research/reports/r2b_verdict.json b/research/reports/r2b_verdict.json
+index 19e6756..b03fd03 100644
+--- a/research/reports/r2b_verdict.json
++++ b/research/reports/r2b_verdict.json
+@@ -31,7 +31,8 @@
+         "file": "/home/sshuser/projects/数学建模26/F题-upstream/line-a/real_attachments/B_scaling_laws/supplementary_NQ_experiment_large.csv",
+         "sha256": "bda0d449f75c73bbd04141e5cffbf4bea7002073e34b7fa95a638570fa095ffe",
+         "n": 1704,
+-        "label": "real_large_scale"
++        "label": "semi_synthetic_extrapolated",
++        "label_note": "B8 = 半合成大规模矩阵，含更大参数外推（非真实观测）"
+       }
+     }
+   },
+@@ -112,108 +113,25 @@
+       "boundary_hit": true,
+       "resid_corr_1mQ": -0.9669147490939961
+     },
+-    "summary": "Positive and CI-excluding-zero on the semi-synthetic B6/B7, but censored to the zero boundary on B8 (unconstrained gamma<0). The two signs conflict, so the quality term is not a single portable effect."
++    "summary": "Positive and CI-excluding-zero on the semi-synthetic B6/B7, but zero-boundary (non-negative constrained) to the zero boundary on B8 (unconstrained gamma<0). The two signs conflict, so the quality term is not a single portable effect."
+   },
+   "identifiable": false,
+   "identifiability_detail": {
+-    "criteria": "A source counts as identifiable for a positive quality coefficient iff the [1, 1-Q] design is non-degenerate (Q varies within (N,D) cells, condition number moderate), gamma_M2 > 0, its bootstrap CI excludes 0, and the non-negative constraint does not bind.",
+-    "per_source": {
+-      "B6": {
+-        "n": 360,
+-        "delta_gamma_separable": true,
+-        "cond_design": 3.9013716341861073,
+-        "var_1mQ": 0.09984375000000002,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.3622474352286558,
+-        "gamma_ci": [
+-          0.33683241006095077,
+-          0.3890829706443513
+-        ],
+-        "ci_excludes_zero": true,
+-        "gamma_boundary_hit": false,
+-        "identifiable_positive_gamma": true
+-      },
+-      "B7": {
+-        "n": 450,
+-        "delta_gamma_separable": true,
+-        "cond_design": 4.237825694123533,
+-        "var_1mQ": 0.08250000000000002,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.36199528619528615,
+-        "gamma_ci": [
+-          0.3360748745078039,
+-          0.3860393889707081
+-        ],
+-        "ci_excludes_zero": true,
+-        "gamma_boundary_hit": false,
+-        "identifiable_positive_gamma": true
+-      },
+-      "B8": {
+-        "n": 1704,
+-        "delta_gamma_separable": true,
+-        "cond_design": 3.829300712961463,
+-        "var_1mQ": 0.10301539873041064,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.0,
+-        "gamma_ci": [
+-          0.0,
+-          0.0
+-        ],
+-        "ci_excludes_zero": false,
+-        "gamma_boundary_hit": true,
+-        "identifiable_positive_gamma": false
+-      },
+-      "B6::B1_support": {
+-        "n": 168,
+-        "delta_gamma_separable": true,
+-        "cond_design": 3.9013716341861078,
+-        "var_1mQ": 0.09984375,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.37087912661152095,
+-        "gamma_ci": [
+-          0.33489676290464393,
+-          0.4037565702741251
+-        ],
+-        "ci_excludes_zero": true,
+-        "gamma_boundary_hit": false,
+-        "identifiable_positive_gamma": true
+-      },
+-      "B8::calibrated": {
+-        "n": 984,
+-        "delta_gamma_separable": true,
+-        "cond_design": 3.826567703024567,
+-        "var_1mQ": 0.10313838488994646,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.0,
+-        "gamma_ci": [
+-          0.0,
+-          0.0
+-        ],
+-        "ci_excludes_zero": false,
+-        "gamma_boundary_hit": true,
+-        "identifiable_positive_gamma": false
+-      },
+-      "B8::extrapolated": {
+-        "n": 720,
+-        "delta_gamma_separable": true,
+-        "cond_design": 3.833045215428076,
+-        "var_1mQ": 0.10284722222222221,
+-        "frac_nd_cells_with_q_variation": 1.0,
+-        "gamma": 0.0,
+-        "gamma_ci": [
+-          0.0,
+-          0.0
+-        ],
+-        "ci_excludes_zero": false,
+-        "gamma_boundary_hit": true,
+-        "identifiable_positive_gamma": false
+-      }
++    "within_source": {
++      "value": true,
++      "basis": "δ 与 γ 在各来源内部可分离（设计条件数≈3.9–4.2；每个 (N,D) 内 Q 有变化）"
+     },
+-    "unified_positive_gamma": false,
+-    "reason": "B8's gamma is censored at the zero boundary (unconstrained estimate is negative), so a positive quality coefficient is not identified there; B6/B7 are separable but semi-synthetic. A single unified gamma across sources is therefore NOT forced."
++    "cross_source_support_for_common_quality_coefficient": {
++      "value": false,
++      "basis": "B6/B7 给出 γ≈0.362（CI 不含 0），B8 在非负约束下压到零边界且零改善；无共同锚点 ⇒ 不支持统一正 γ"
++    },
++    "real_quality_effect_identified": {
++      "value": false,
++      "basis": "B6/B7 为半合成；B8 为半合成/外推；缺少真实联合质量-收益观测 ⇒ 真实质量效应未被识别"
++    }
+   },
+   "caveats": [
+-    "A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a censored estimate and is reported as such.",
++    "A non-negative constraint that pushes gamma to the zero boundary (B8) is NOT a negative quality effect; it is a zero-boundary (non-negative constrained) estimate and is reported as such.",
+     "resid_corr_1mQ is a residual ASSOCIATION, not the fitted gamma effect. B8's ~-0.97 correlation means higher 1-Q co-occurs with larger residuals under L0, confounded with scale/classical misfit; it must not be read as an estimated negative quality mechanism.",
+     "B6/B7 are semi-synthetic quality-supplementary families. A positive gamma there speaks to the functional form / separability, not to real-world data quality.",
+     "B8 mixes calibrated (984 rows) and extrapolated (720 rows); the extrapolated rows lie far outside A's B1 support (N up to 700B vs B1 max ~12B), so classical L0 misfit dominates. Calibrated-only is reported separately and shows the same sign/boundary behaviour.",
+@@ -393,7 +311,7 @@
+   },
+   "real_quality_evidence": {
+     "what_it_is": "Evidence from B8, the large-scale set with calibrated (observed-style) and extrapolated rows, including a calibrated-only subset.",
+-    "is_supported": "Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is censored to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.",
++    "is_supported": "Under the frozen classical model, a single additive source offset absorbs the bulk of the improvement, and no non-negative quality term is supported: gamma is zero-boundary (non-negative constrained) to the zero boundary and its CI includes 0. This holds on the calibrated-only subset too.",
+     "is_not_supported": "These data do NOT support a positive additive quality mechanism. The strong negative residual association (corr ~ -0.97) is an ASSOCIATION confounded with scale/classical misfit and data_type; it is not an estimated negative quality effect (the constraint prevents a negative gamma from being reported).",
+     "per_source": {
+       "B8": {
+@@ -454,5 +372,17 @@
+         "resid_corr_1mQ": -0.9468434905762616
+       }
+     }
+-  }
++  },
++  "sse_improvement_basis": {
++    "denominator": "M0 的 SSE（同一来源、同一样本）",
++    "sample": "B6 n=360 / B7 n=450 / B8 n=1704（B8 含外推点）",
++    "inclusion_order": [
++      "M0 classical",
++      "M1 +source offset delta",
++      "M2 +delta+gamma*(1-Q), gamma>=0",
++      "M3 unconstrained (diagnostic only)"
++    ],
++    "note": "份额按上述顺序逐级计算，分母为 M0 SSE；不同来源/样本不可相加成单一占比"
++  },
++  "delta_note": "δ 等于 M1 下残差均值，属代数恒等核验，不作为独立来源机制证据；不得据此声称识别了来源机制。"
+ }
+\ No newline at end of file
+diff --git "a/research/reports/\350\256\272\346\226\207\345\244\247\347\272\262_\344\270\273\347\272\277.md" "b/research/reports/\350\256\272\346\226\207\345\244\247\347\272\262_\344\270\273\347\272\277.md"
+index d401a78..3802592 100644
+--- "a/research/reports/\350\256\272\346\226\207\345\244\247\347\272\262_\344\270\273\347\272\277.md"
++++ "b/research/reports/\350\256\272\346\226\207\345\244\247\347\272\262_\344\270\273\347\272\277.md"
+@@ -5,9 +5,9 @@
+ > 本轮**不定稿**，只按 R2 结果给出主线与逐节状态。
+ 
+ ## 0. 主线主张（R2 定稿）
+-- **主张**：在算力约束下谈“数据价值”之前，必须先处理**来源兼容**；未锚定质量坐标时，质量收益的符号与幅度不可作为可迁移结论。选方增益（把预测改善转成可靠决策）在当前证据下**不稳定**，只作边界讨论。
+-- **主要机制**：来源偏移（δ）解释主要改进；质量项在半合成族内可辨识、在真实大尺度上删失。
+-- **适用边界**：半合成来源族内部；真实大尺度质量效应记“不可辨识”。
++- **工作主张（非终局）**：在算力约束下谈“数据价值”之前，必须先处理**来源兼容**；未锚定质量坐标时，质量收益的符号与幅度不可作为可迁移结论。选方增益（把预测改善转成可靠决策）在当前证据下**不稳定**，只作边界讨论。
++- **主要机制**：来源偏移（δ）解释主要改进；质量项在半合成族内可辨识；B8（半合成/外推）的质量参数在非负约束下压到零边界。
++- **适用边界**：半合成来源族内部可辨识；半合成/外推的大规模来源质量效应记“不可辨识”。
+ 
+ ## 1. 问题重述与符号 **[已有]**
+ - 题面/干净版数据说明、单位（N,D,C,η）、成本模型。
+@@ -27,8 +27,8 @@
+ ## 4. 第二问：广义标度律与来源 **[已有，本轮补齐 R1-Q2]**
+ - [已有] 三线经典项一致（A/B/C 退化最优 1.4e-7）。
+ - [已有 R1-Q2] 来源偏移解释主要改进：C 嵌套 SSE M0 16.989→+δ 6.800（**66.4%**，δ=0.168237 等于 B6 的 M0 偏差）；κ 22.0%、ρ 11.6%。逐来源 fixed→refit：B2 1.243→0.0108、B4 0.293→0.0882、B5 0.198→0.132、B10 1.09e-3→2.91e-5。
+-- [已有 R2b] 加性质量：B6 γ=0.362 [0.337,0.389]、B7 γ=0.362 [0.336,0.386]（CI 不含 0）；**B8 γ 压 0 边界且零改善**；跨来源无统一正 γ ⇒ `identifiable=false`。δ 与 γ 在来源内部可分离（条件数≈3.9–4.2）。
+-- [边界] 位置偏移主导的结论**以 B8 为唯一大尺度真实证据为前提**；B6/B7 内部并不主导。
++- [已有 R2b] 加性质量：B6 γ=0.362 [0.337,0.389]、B7 γ=0.362 [0.336,0.386]（CI 不含 0）；**B8 γ 在非负约束下压到零边界且零改善**；跨来源无统一正 γ ⇒ `identifiable=false`。δ 与 γ 在来源内部可分离（条件数≈3.9–4.2）。
++- [边界] 位置偏移主导的结论**以把 B8 视为唯一大规模（半合成/外推）证据为前提**；B6/B7 内部并不主导。
+ - [待完成] 单一坐标下的 κ/ρ 联合辨识；A/B/C 质量坐标互校。
+ 
+ ## 5. 第三问：算力约束下的资源配置 **[已有 + 待完成]**
+diff --git a/research/src/entry.py b/research/src/entry.py
+index ef4e11a..58c835d 100644
+--- a/research/src/entry.py
++++ b/research/src/entry.py
+@@ -111,11 +111,13 @@ def cmd_experiment(args):
+         return
+ 
+     # Path E: R1-Q2 / R2b delegated modules — run under a Run record and copy outputs.
+-    if name in ("r1q2", "r2b"):
++    if name in ("r1q2", "r2b", "r3a", "r3b"):
+         import subprocess
+         import sys as _sys
+-        mod = "src.r1_q2_compare" if name == "r1q2" else "src.r2b_source_quality"
+-        pats = ("r1_q2_",) if name == "r1q2" else ("r2b_",)
++        mod = {"r1q2": "src.r1_q2_compare", "r2b": "src.r2b_source_quality",
++               "r3a": "src.r3a_score_alignment", "r3b": "src.r3b_strategy"}[name]
++        pats = {"r1q2": ("r1_q2_",), "r2b": ("r2b_",),
++                "r3a": ("r3a_",), "r3b": ("r3b_",)}[name]
+         with Run(name, command=" ".join(sys.argv)) as run:
+             proc = subprocess.run([_sys.executable, "-m", mod], capture_output=True, text=True,
+                                   cwd=str(RESEARCH))
+diff --git a/research/src/r2a_stability.py b/research/src/r2a_stability.py
+index 8c71785..de6e2a0 100644
+--- a/research/src/r2a_stability.py
++++ b/research/src/r2a_stability.py
+@@ -152,6 +152,8 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
+         lam[name], reg[name] = choose_lambda(batch.mean(0), batch.std(0), ytr)
+         # lambda must be chosen on the *eval-loss* ensemble spread
+     rows = []
++    from .r1_compare import load_a, load_b, load_c
++    ORIG = {"A": load_a(), "B": load_b(), "C": load_c("forest_none")}
+     for mf, lf, key in POOLS:
+         idx, P, Y = set_matrix(rt, mf, lf)
+         y = Y @ V
+@@ -162,13 +164,31 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
+         for name in ("A", "B", "C"):
+             pt = regret(y, mean[name])
+             st = regret(y, mean[name] + lam[name] * std[name])
++            # original stored model (single fit / persisted forest), aligned by candidate id
++            orig = ORIG[name].get(key)
++            if orig is not None:
++                omap = {int(x): i for i, x in enumerate(orig["index"])}
++                osel = [omap[int(x)] for x in idx if int(x) in omap]
++                o_eval = orig["Yhat"][osel] @ V
++                o_true = orig["Y"][osel] @ V
++                o_pt = regret(o_true, o_eval)
++                o_top5 = regret(o_true, o_eval, 5)
++            else:
++                o_pt, o_top5 = float("nan"), float("nan")
++            # stability: agreement of ensemble members on the top-1 candidate
++            member_top1 = np.argmin(np.stack([_eval(mm) for mm in batches[name]]), axis=1)
++            agree = float(np.bincount(member_top1).max()) / len(member_top1)
+             rows.append({"set": key, "line": name, "n": len(P), "lambda": lam[name],
+-                         "point_top1_regret": pt, "stable_top1_regret": st,
+-                         "point_top5_regret": regret(y, mean[name], 5),
+-                         "stable_top5_regret": regret(y, mean[name] + lam[name] * std[name], 5),
++                         "original_model_top1_regret": o_pt,
++                         "original_model_top5_regret": o_top5,
++                         "ensemble_mean_top1_regret": pt,
++                         "ensemble_mean_plus_penalty_top1_regret": st,
++                         "ensemble_mean_top5_regret": regret(y, mean[name], 5),
++                         "ensemble_member_top1_agreement": agree,
+                          "random_expected_regret": rand,
+-                         "stable_beats_point": bool(st < pt - 1e-12),
+-                         "point_beats_random": bool(pt < rand)})
++                         "penalty_beats_mean": bool(st < pt - 1e-12),
++                         "mean_beats_original": bool(pt < o_pt - 1e-12) if np.isfinite(o_pt) else None,
++                         "original_beats_random": bool(o_pt < rand) if np.isfinite(o_pt) else None})
+     df = pd.DataFrame(rows)
+     df.to_csv(outdir / "r2a_stability.csv", index=False)
+     try:
+@@ -176,17 +196,21 @@ def run_r2a(seed=20260923, B=100, outdir: Path | None = None) -> dict:
+         matplotlib.use("Agg")
+         import matplotlib.pyplot as plt
+         sets = ["1m", "60m", "1B"]
+-        fig, ax = plt.subplots(figsize=(6.5, 3.2))
+-        w = 0.25
+-        for i, line in enumerate(["A", "B", "C"]):
+-            pt = [df[(df.line == line) & (df.set == s)]["point_top1_regret"].mean() for s in sets]
+-            ax.bar(np.arange(3) + (i - 1) * w, pt, width=w, label=f"{line} point")
++        fig, ax = plt.subplots(figsize=(7.5, 3.4))
++        w = 0.2
++        for i, (col, lab) in enumerate((("original_model_top1_regret", "original model"),
++                                        ("ensemble_mean_top1_regret", "ensemble mean"),
++                                        ("ensemble_mean_plus_penalty_top1_regret", "mean+penalty"))):
++            for j, line in enumerate(["A", "B", "C"]):
++                vals = [df[(df.line == line) & (df.set == s)][col].mean() for s in sets]
++                ax.bar(np.arange(3) + (j - 1) * w + (i - 1) * w / 3, vals, width=w / 3,
++                       label=f"{line} {lab}" if i == 0 or j == 0 else None)
+         rnd = [df[df.set == s]["random_expected_regret"].mean() for s in sets]
+         ax.plot(np.arange(3), rnd, "k--o", label="random expectation")
+         ax.set_xticks(range(3)); ax.set_xticklabels(sets)
+-        ax.set_ylabel("true top-1 regret"); ax.set_title(
+-            "R2a: selection regret vs random (A6-A11, exploratory)", fontsize=9)
+-        ax.legend(fontsize=7); fig.tight_layout()
++        ax.set_ylabel("true top-1 regret")
++        ax.set_title("R2a: original vs ensemble-mean vs mean+penalty (A6-A11, exploratory)", fontsize=8)
++        ax.legend(fontsize=6, ncol=2); fig.tight_layout()
+         fig.savefig(outdir / "r2a_regret.png", dpi=160); plt.close(fig)
+     except Exception as exc:
+         print("figure failed:", exc)

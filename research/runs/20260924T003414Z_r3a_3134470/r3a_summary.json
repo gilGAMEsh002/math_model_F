@@ -1,0 +1,36 @@
+{
+  "corr": {
+    "n_matched": 51230,
+    "spearman_S_A_equal_vs_S_Aprep_Cweight": 0.6874211565947428,
+    "spearman_S_A_equal_vs_S_Cprep_equal": 0.8941488027330596,
+    "spearman_S_A_equal_vs_S_C_entropy": 0.6993798903215552,
+    "spearman_S_A_equal_vs_S_C_resolved": 0.7069831065299897,
+    "spearman_S_A_equal_vs_S_C_entropy_recomputed": 0.6993798903215552,
+    "mean_abs_S_A_equal_minus_S_C_entropy": 0.2561838813402193
+  },
+  "verdict": {
+    "text_score_alignment": {
+      "A_vs_C_spearman": 0.6993798903215552,
+      "monotone_mapping": {
+        "method": "isotonic",
+        "valid_spearman": 0.7015397492521693,
+        "valid_rmse": 0.057053496012467717
+      }
+    },
+    "decomposition": {
+      "preprocessing": "S_Cprep_equal vs S_A_equal",
+      "weighting": "S_Aprep_Cweight vs S_A_equal",
+      "conflict_rule": "S_C_resolved vs S_C_entropy"
+    },
+    "b_rule": {
+      "status": "blocked/hypothetical",
+      "reason": "B 同源重建样本(A1=50412≠51230)且重建数据 LFS 未 pull；未在 A1 上应用 B 规则"
+    },
+    "critical": "文本评分对齐 ≠ 与 B6–B8 的 Q_score 建立真实训练收益锚点；两类 Q 缺共同观测，跨附件映射只能作假设情景。"
+  },
+  "A_subprocess": "Z_A rows 51230",
+  "inputs": {
+    "A1_sha256": "40b1b79169989c651e7ded1cfb79a9d60edad1f12dc3953c99c478db0e7edf06",
+    "C_preprocessed_sha256": "334ceab3446b0c3a15b251f15f2111b631ba799e94a206fcc8920ef9eb8fb5d3"
+  }
+}
