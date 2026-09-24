@@ -69,7 +69,7 @@ def render_pdf():
     from reportlab.lib.units import mm
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.platypus import Paragraph, Preformatted, SimpleDocTemplate, Spacer
+    from reportlab.platypus import Image, Paragraph, Preformatted, SimpleDocTemplate, Spacer
 
     font = _cjk_font()
     base = "Helvetica"
@@ -90,7 +90,26 @@ def render_pdf():
             story.append(Preformatted("\n".join(buf_pre), pre))
             story.append(Spacer(1, 4)); buf_pre.clear()
 
+    figdir = RESEARCH / "reports"
     for ln in md:
+        if ln.startswith("[[FIG:"):
+            flush()
+            spec = ln.strip()[6:-2]
+            name, _, cap = spec.partition("|")
+            fp = figdir / name if not name.startswith("figures/") else figdir / name
+            if fp.exists():
+                from PIL import Image as PILImage  # noqa: F401
+                try:
+                    from reportlab.lib.utils import ImageReader
+                    ir = ImageReader(str(fp)); iw, ih = ir.getSize()
+                    w = 170 * mm
+                    story.append(Image(str(fp), width=w, height=w * ih / iw))
+                    story.append(Paragraph(cap, pre)); story.append(Spacer(1, 4))
+                except Exception as exc:
+                    story.append(Paragraph("(图嵌入失败: %s)" % exc, pre))
+            else:
+                story.append(Paragraph("(缺图: %s)" % name, pre))
+            continue
         if ln.startswith("|") or ln.startswith("$$") or ln.strip().startswith("\\["):
             buf_pre.append(ln); continue
         flush()
@@ -103,7 +122,10 @@ def render_pdf():
         elif ln.strip() == "" or ln.strip() == "---":
             story.append(Spacer(1, 2))
         else:
+            import re as _re
+            ln = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", ln)
             esc = (ln.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+            esc = esc.replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>")
             story.append(Paragraph(esc, body))
     flush()
     out = MAN / "正文.pdf"
