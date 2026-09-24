@@ -12,3 +12,4 @@ work/
 artifacts/**/*.joblib
 artifacts/**/*.npz
 artifacts/**/*.parquet
+reports/_*
